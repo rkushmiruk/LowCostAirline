@@ -83,7 +83,7 @@ CREATE TABLE `baggage` (
   `ticket_id` INT(11) NOT NULL,
   `weight`    INT(11) NOT NULL,
   `amount`    INT(11) NOT NULL,
-  `price`     INT(11) DEFAULT 0,
+  `price`     INT(11)          DEFAULT 0,
   PRIMARY KEY (`id`)
 );
 
@@ -153,11 +153,6 @@ ALTER TABLE `flight`
   ON DELETE NO ACTION
   ON UPDATE NO ACTION;
 
-ALTER TABLE `extra_price`
-  ADD CONSTRAINT `extra_price_baggage_fk` FOREIGN KEY (`baggage_id`) REFERENCES `baggage` (`id`)
-  ON DELETE NO ACTION
-  ON UPDATE NO ACTION;
-
 ALTER TABLE `baggage`
   ADD CONSTRAINT `baggage_ticket_fk` FOREIGN KEY (`ticket_id`) REFERENCES `ticket` (`id`)
   ON DELETE NO ACTION
@@ -211,7 +206,7 @@ INSERT INTO `user` (first_name, last_name, login, PASSWORD, email, role_id) VALU
 INSERT INTO `ticket_status` (status) VALUES
   ('OPENED'),
   ('BLOCKED'),
-  ('CLOSED');
+  ('PAID');
 
 INSERT INTO `country` (name) VALUES
   ('Ukraine'),
