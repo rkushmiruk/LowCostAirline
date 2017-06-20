@@ -230,7 +230,7 @@ INSERT INTO `airport` (city_id, name) VALUES
   (1, 'Boryspol Airport'),
   (2, 'Minsk Airport'),
   (3, 'Heathrow Airport'),
-  (3, 'City Airport'),
+  (3, 'London City Airport'),
   (4, 'Paris-Charles-de-Gaulle Airport'),
   (4, 'Paris-Orly a]Airport'),
   (5, 'John F. Kennedy International Airport'),
