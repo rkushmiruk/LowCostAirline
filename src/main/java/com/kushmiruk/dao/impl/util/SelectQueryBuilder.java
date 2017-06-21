@@ -1,5 +1,7 @@
 package com.kushmiruk.dao.impl.util;
 
+import com.kushmiruk.util.LoggerMessage;
+import com.kushmiruk.util.QueryMessage;
 import org.apache.log4j.Logger;
 
 /**
@@ -7,8 +9,10 @@ import org.apache.log4j.Logger;
  */
 public class SelectQueryBuilder {
     private final Logger LOGGER = Logger.getLogger(SelectQueryBuilder.class.getName());
+    private static final int NUMBER_OF_FINISH_SYMBOLS_IN_QUERY = 2;
     private StringBuilder query;
-    public String tableName;
+    private String tableName;
+
 
     public SelectQueryBuilder(String tableName) {
         queryInit();
@@ -18,89 +22,95 @@ public class SelectQueryBuilder {
     public SelectQueryBuilder addField(String field) {
         query
                 .append(tableName)
-                .append(".")
+                .append(QueryMessage.DOT)
                 .append(field)
-                .append(", ");
+                .append(QueryMessage.COMMA);
 
+        return this;
+    }
+
+    public SelectQueryBuilder getAll() {
+        query.append(QueryMessage.SIGH_ALL);
         return this;
     }
 
     public SelectQueryBuilder from() {
-        query.deleteCharAt(query.length() - 2);
+        query.deleteCharAt(query.length() - NUMBER_OF_FINISH_SYMBOLS_IN_QUERY);
         query
                 .append('\n')
-                .append("FROM")
-                .append(" ")
+                .append(QueryMessage.FROM)
                 .append(tableName)
-                .append("; ");
+                .append(QueryMessage.SEMICOLON);
         return this;
     }
 
-    public SelectQueryBuilder join(JoinType type, Class<?> classFrom, String joinField, String commonField2) {
-        query.deleteCharAt(query.length() - 1);
+    public SelectQueryBuilder join(JoinType type, Class<?> classFrom, String joinField, String similarField) {
+        query.deleteCharAt(query.length() - NUMBER_OF_FINISH_SYMBOLS_IN_QUERY);
         query
                 .append('\n')
                 .append(type)
-                .append(" JOIN ")
+                .append(QueryMessage.JOIN)
                 .append(classFrom.getSimpleName())
-                .append(" ON ")
+                .append(QueryMessage.ON)
                 .append(tableName)
-                .append(".")
+                .append(QueryMessage.DOT)
                 .append(joinField)
-                .append(" = ")
+                .append(QueryMessage.EQUAL)
                 .append(classFrom.getSimpleName())
-                .append(".")
-                .append(commonField2)
-                .append("; ");
+                .append(QueryMessage.DOT)
+                .append(similarField)
+                .append(QueryMessage.SEMICOLON);
         return this;
     }
 
     public SelectQueryBuilder where() {
-        query.deleteCharAt(query.length() - 2);
+        query.deleteCharAt(query.length() - NUMBER_OF_FINISH_SYMBOLS_IN_QUERY);
         query
                 .append('\n')
-                .append("where ");
+                .append(QueryMessage.WHERE);
         return this;
     }
 
     public SelectQueryBuilder condition(String field) {
         query
                 .append(tableName)
-                .append(".")
+                .append(QueryMessage.DOT)
                 .append(field)
-                .append(" = ?");
+                .append(QueryMessage.EQUAL + QueryMessage.QUESTION_MARK);
         return this;
     }
 
     public SelectQueryBuilder limit(int start, int end) {
         query
-                .deleteCharAt(query.length() - 2)
-                .append(" Limit ")
+                .deleteCharAt(query.length() - NUMBER_OF_FINISH_SYMBOLS_IN_QUERY)
+                .append(QueryMessage.LIMIT)
                 .append(start)
-                .append(", ")
+                .append(QueryMessage.COMMA)
                 .append(end)
-                .append(";");
+                .append(QueryMessage.SEMICOLON);
         return this;
     }
 
     public SelectQueryBuilder limit(int total) {
         query
-                .deleteCharAt(query.length() - 2)
-                .append(" Limit ")
+                .deleteCharAt(query.length() - NUMBER_OF_FINISH_SYMBOLS_IN_QUERY)
+                .append(QueryMessage.LIMIT)
                 .append(total)
-                .append(";");
+                .append(QueryMessage.SEMICOLON);
         return this;
 
     }
 
     public String build() {
+        LOGGER.info(LoggerMessage.BUILD_SELECT_QUERY + query.toString());
         StringBuilder tmp = query;
         queryInit();
-        if (tmp.toString().contains("where") || tmp.charAt(tmp.length() - 2) != ',') {
+        if (tmp.toString().contains(QueryMessage.WHERE)
+                || tmp.charAt(tmp.length() - NUMBER_OF_FINISH_SYMBOLS_IN_QUERY) != QueryMessage.COMMA) {
             return tmp.toString();
         } else {
             return query
-                    .deleteCharAt(tmp.length() - 2)
+                    .deleteCharAt(tmp.length() - NUMBER_OF_FINISH_SYMBOLS_IN_QUERY)
                     .toString();
 
         }
@@ -108,7 +118,7 @@ public class SelectQueryBuilder {
 
     private void queryInit() {
         query = new StringBuilder();
-        query.append("SELECT ");
+        query.append(QueryMessage.SELECT);
     }
 
 }

@@ -1,6 +1,8 @@
 package com.kushmiruk.dao.factory;
 
 import com.kushmiruk.dao.datasource.ConnectionPool;
+import com.kushmiruk.util.LoggerMessage;
+import com.kushmiruk.util.StringMessage;
 import org.apache.log4j.Logger;
 
 import javax.sql.DataSource;
@@ -16,8 +18,8 @@ public class DataSourceFactory {
         try {
             dataSource = ConnectionPool.getDataSource();
         } catch (Exception e) {
-            LOGGER.error("Datasource init error:" + e.getMessage());
-            throw new RuntimeException("Error in database connection init");
+            LOGGER.error(LoggerMessage.DATASOURCE_INIT_ERROR + e.getMessage());
+            throw new RuntimeException(StringMessage.ERROR_CONNECTION_INIT);
         }
     }
 

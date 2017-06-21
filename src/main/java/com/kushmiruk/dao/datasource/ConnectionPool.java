@@ -9,7 +9,7 @@ import java.util.ResourceBundle;
  * BasicDataSource connection pool
  */
 public class ConnectionPool {
-    private static final String DB_BUNDLE = "jdbc";
+    private static final String DB_BUNDLE = "sql/jdbc";
     private static final String DB_URL = "jdbc.url";
     private static final String DB_DRIVER = "jdbc.driver";
     private static final String DB_USER = "jdbc.user";
