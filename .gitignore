@@ -14,3 +14,4 @@ dist/
 nbdist/
 
 
+/src/main/resources/log4j/log

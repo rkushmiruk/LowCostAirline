@@ -13,6 +13,11 @@ public class Airport extends Entity implements Cloneable {
     public Airport() {
     }
 
+    public Airport(Long id, String name) {
+        this.id = id;
+        this.name = name;
+    }
+
     public Airport(Airport airport) {
         this.id = airport.id;
         this.name = airport.name;
@@ -71,7 +76,7 @@ public class Airport extends Entity implements Cloneable {
 
     @Override
     public String toString() {
-        return "Airport{" +
+        return "Airport {" +
                 "id=" + id +
                 ", name='" + name + '\'' +
                 ", city=" + city +

@@ -1,11 +1,7 @@
-2017-06-20 22:13:56 INFO  EntityDao:43 - com.mysql.cj.jdbc.PreparedStatement@527740a2: SELECT airport.* 
+2017-06-21 00:50:56 INFO  SelectQueryBuilder:105 - Build select query: SELECT *
 FROM airport 
-where airport.id = 1
-2017-06-20 22:14:09 INFO  EntityDao:43 - com.mysql.cj.jdbc.PreparedStatement@527740a2: SELECT airport.* 
+WHERE airport.id = ?
+2017-06-21 00:50:56 INFO  EntityDao:48 - com.mysql.cj.jdbc.PreparedStatement@3108bc: SELECT *
 FROM airport 
-where airport.id = 1
-2017-06-20 22:14:26 ERROR EntityDao:50 - Database error while searching in table Airport item with id = 1, exception message: Parameter index out of range (3 > number of parameters, which is 1).
-2017-06-20 22:16:17 ERROR EntityDao:50 - Database error while searching in table Airport item with id = 1, exception message: Parameter index out of range (3 > number of parameters, which is 1).
-2017-06-20 22:17:32 INFO  EntityDao:43 - com.mysql.cj.jdbc.PreparedStatement@527740a2: SELECT airport.* 
-FROM airport 
-where airport.id = 1
+WHERE airport.id = 1
+2017-06-21 00:50:56 INFO  EntityDao:51 - Item Airport with id = 1 found in table
