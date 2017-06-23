@@ -7,16 +7,17 @@ import org.apache.log4j.Logger;
 /**
  * Util class for build Select queries
  */
-public class SelectQueryBuilder {
+public class SelectQueryBuilder extends QueryBuilder {
     private final Logger LOGGER = Logger.getLogger(SelectQueryBuilder.class.getName());
-    private static final int NUMBER_OF_FINISH_SYMBOLS_IN_QUERY = 2;
     private StringBuilder query;
-    private String tableName;
 
-
-    public SelectQueryBuilder(String tableName) {
+    public SelectQueryBuilder() {
         queryInit();
+    }
+
+    public SelectQueryBuilder addTable(String tableName) {
         this.tableName = tableName.toLowerCase();
+        return this;
     }
 
     public SelectQueryBuilder addField(String field) {
@@ -25,12 +26,11 @@ public class SelectQueryBuilder {
                 .append(QueryMessage.DOT)
                 .append(field)
                 .append(QueryMessage.COMMA);
-
         return this;
     }
 
     public SelectQueryBuilder getAll() {
-        query.append(QueryMessage.SIGH_ALL);
+        query.append(QueryMessage.SIGN_ALL);
         return this;
     }
 
@@ -39,40 +39,31 @@ public class SelectQueryBuilder {
         query
                 .append('\n')
                 .append(QueryMessage.FROM)
-                .append(tableName)
-                .append(QueryMessage.SEMICOLON);
+                .append(tableName);
         return this;
     }
 
-    public SelectQueryBuilder join(JoinType type, Class<?> classFrom, String joinField, String similarField) {
+    public SelectQueryBuilder join(JoinType type, Class<?> classTo, String joinField, String similarField) {
         query.deleteCharAt(query.length() - NUMBER_OF_FINISH_SYMBOLS_IN_QUERY);
         query
-                .append('\n')
                 .append(type)
                 .append(QueryMessage.JOIN)
-                .append(classFrom.getSimpleName())
+                .append(classTo.getSimpleName())
                 .append(QueryMessage.ON)
                 .append(tableName)
                 .append(QueryMessage.DOT)
                 .append(joinField)
                 .append(QueryMessage.EQUAL)
-                .append(classFrom.getSimpleName())
+                .append(classTo.getSimpleName())
                 .append(QueryMessage.DOT)
                 .append(similarField)
                 .append(QueryMessage.SEMICOLON);
         return this;
     }
 
-    public SelectQueryBuilder where() {
-        query.deleteCharAt(query.length() - NUMBER_OF_FINISH_SYMBOLS_IN_QUERY);
-        query
-                .append('\n')
-                .append(QueryMessage.WHERE);
-        return this;
-    }
-
     public SelectQueryBuilder condition(String field) {
         query
+                .append(QueryMessage.WHERE)
                 .append(tableName)
                 .append(QueryMessage.DOT)
                 .append(field)
@@ -109,7 +100,7 @@ public class SelectQueryBuilder {
                 || tmp.charAt(tmp.length() - NUMBER_OF_FINISH_SYMBOLS_IN_QUERY) != QueryMessage.COMMA) {
             return tmp.toString();
         } else {
-            return query
+            return tmp
                     .deleteCharAt(tmp.length() - NUMBER_OF_FINISH_SYMBOLS_IN_QUERY)
                     .toString();
 

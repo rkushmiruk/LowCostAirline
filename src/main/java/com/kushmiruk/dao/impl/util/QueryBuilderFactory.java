@@ -6,27 +6,26 @@ package com.kushmiruk.dao.impl.util;
 public class QueryBuilderFactory {
 
     private QueryBuilderFactory() {
-
     }
 
     private static class QueryBuilderFactoryHolder {
         private static final QueryBuilderFactory instance = new QueryBuilderFactory();
     }
 
-    public SelectQueryBuilder createSelectQueryBuilder(String tableName) {
-        return new SelectQueryBuilder(tableName);
+    public SelectQueryBuilder createSelectQueryBuilder() {
+        return new SelectQueryBuilder();
     }
 
-    public UpdateQueryBuilder createUpdateQueryBuilder(String tableName) {
-        return new UpdateQueryBuilder(tableName);
+    public UpdateQueryBuilder createUpdateQueryBuilder() {
+        return new UpdateQueryBuilder();
     }
 
-    public InsertQueryBuilder createInsertQueryBuilder(String tableName) {
-        return new InsertQueryBuilder(tableName);
+    public InsertQueryBuilder createInsertQueryBuilder() {
+        return new InsertQueryBuilder();
     }
 
-    public DeleteQueryBuilder createDeleteQueryBuilder(String tableName) {
-        return new DeleteQueryBuilder(tableName);
+    public DeleteQueryBuilder createDeleteQueryBuilder() {
+        return new DeleteQueryBuilder();
     }
 
     public static QueryBuilderFactory getInstance() {
