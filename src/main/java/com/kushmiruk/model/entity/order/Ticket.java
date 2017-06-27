@@ -7,8 +7,8 @@ import com.kushmiruk.model.entity.Entity;
  */
 public class Ticket extends Entity implements Cloneable {
     private Long id;
-    private String passangerFirstName;
-    private String passangerLastName;
+    private String passengerFirstName;
+    private String passengerLastName;
     private String email;
     private Boolean hasPriorityRegistration;
     private Boolean hasBaggage;
@@ -20,8 +20,8 @@ public class Ticket extends Entity implements Cloneable {
 
     public Ticket(Ticket ticket) {
         this.id = ticket.id;
-        this.passangerFirstName = ticket.passangerFirstName;
-        this.passangerLastName = ticket.passangerLastName;
+        this.passengerFirstName = ticket.passengerFirstName;
+        this.passengerLastName = ticket.passengerLastName;
         this.email = ticket.email;
         this.hasPriorityRegistration = ticket.hasPriorityRegistration;
         this.hasBaggage = ticket.hasBaggage;
@@ -34,8 +34,8 @@ public class Ticket extends Entity implements Cloneable {
 
     private Ticket(Builder builder) {
         this.id = builder.id;
-        this.passangerFirstName = builder.passangerFirstName;
-        this.passangerLastName = builder.passangerLastName;
+        this.passengerFirstName = builder.passengerFirstName;
+        this.passengerLastName = builder.passengerLastName;
         this.email = builder.email;
         this.hasPriorityRegistration = builder.hasPriorityRegistration;
         this.hasBaggage = builder.hasBaggage;
@@ -51,8 +51,8 @@ public class Ticket extends Entity implements Cloneable {
      */
     public static class Builder {
         private Long id;
-        private String passangerFirstName;
-        private String passangerLastName;
+        private String passengerFirstName;
+        private String passengerLastName;
         private String email;
         private Boolean hasPriorityRegistration;
         private Boolean hasBaggage;
@@ -68,12 +68,12 @@ public class Ticket extends Entity implements Cloneable {
         }
 
         public Builder passangerFirstName(String passangerFirstName) {
-            this.passangerFirstName = passangerFirstName;
+            this.passengerFirstName = passangerFirstName;
             return this;
         }
 
         public Builder passangerLastName(String passangerLastName) {
-            this.passangerLastName = passangerLastName;
+            this.passengerLastName = passangerLastName;
             return this;
         }
 
@@ -131,19 +131,19 @@ public class Ticket extends Entity implements Cloneable {
     }
 
     public String getPassangerFirstName() {
-        return passangerFirstName;
+        return passengerFirstName;
     }
 
     public void setPassangerFirstName(String passangerFirstName) {
-        this.passangerFirstName = passangerFirstName;
+        this.passengerFirstName = passangerFirstName;
     }
 
     public String getPassngerLastName() {
-        return passangerLastName;
+        return passengerLastName;
     }
 
     public void setPassngerLastName(String passngerLastName) {
-        this.passangerLastName = passngerLastName;
+        this.passengerLastName = passngerLastName;
     }
 
     public String getEmail() {
@@ -223,9 +223,9 @@ public class Ticket extends Entity implements Cloneable {
         Ticket ticket = (Ticket) o;
 
         if (id != null ? !id.equals(ticket.id) : ticket.id != null) return false;
-        if (passangerFirstName != null ? !passangerFirstName.equals(ticket.passangerFirstName) : ticket.passangerFirstName != null)
+        if (passengerFirstName != null ? !passengerFirstName.equals(ticket.passengerFirstName) : ticket.passengerFirstName != null)
             return false;
-        if (passangerLastName != null ? !passangerLastName.equals(ticket.passangerLastName) : ticket.passangerLastName != null)
+        if (passengerLastName != null ? !passengerLastName.equals(ticket.passengerLastName) : ticket.passengerLastName != null)
             return false;
         if (email != null ? !email.equals(ticket.email) : ticket.email != null) return false;
         if (hasPriorityRegistration != null ? !hasPriorityRegistration.equals(ticket.hasPriorityRegistration) : ticket.hasPriorityRegistration != null)
@@ -241,8 +241,8 @@ public class Ticket extends Entity implements Cloneable {
     @Override
     public int hashCode() {
         int result = id != null ? id.hashCode() : 0;
-        result = 61 * result + (passangerFirstName != null ? passangerFirstName.hashCode() : 0);
-        result = 61 * result + (passangerLastName != null ? passangerLastName.hashCode() : 0);
+        result = 61 * result + (passengerFirstName != null ? passengerFirstName.hashCode() : 0);
+        result = 61 * result + (passengerLastName != null ? passengerLastName.hashCode() : 0);
         result = 61 * result + (email != null ? email.hashCode() : 0);
         result = 61 * result + (hasPriorityRegistration != null ? hasPriorityRegistration.hashCode() : 0);
         result = 61 * result + (hasBaggage != null ? hasBaggage.hashCode() : 0);
@@ -258,8 +258,8 @@ public class Ticket extends Entity implements Cloneable {
     public String toString() {
         return "Ticket{" +
                 "id=" + id +
-                ", passangerFirstName='" + passangerFirstName + '\'' +
-                ", passangerLastName='" + passangerLastName + '\'' +
+                ", passangerFirstName='" + passengerFirstName + '\'' +
+                ", passangerLastName='" + passengerLastName + '\'' +
                 ", email='" + email + '\'' +
                 ", hasPriorityRegistration=" + hasPriorityRegistration +
                 ", hasBaggage=" + hasBaggage +

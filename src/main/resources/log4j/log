@@ -1,7 +1,0 @@
-2017-06-21 17:47:36 INFO  SelectQueryBuilder:105 - Build select query: SELECT *
-FROM airport 
-WHERE airport.id = ?
-2017-06-21 17:47:36 INFO  EntityDao:48 - com.mysql.cj.jdbc.PreparedStatement@3108bc: SELECT *
-FROM airport 
-WHERE airport.id = 1
-2017-06-21 17:47:36 INFO  EntityDao:51 - Item Airport with id = 1 found in table

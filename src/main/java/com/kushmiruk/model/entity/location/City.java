@@ -11,7 +11,11 @@ public class City extends Entity implements Cloneable {
     private Integer timeZone;
     private Country country;
 
-    public City() {
+    public City(Long id, String name, Integer timeZone, Country country) {
+        this.id = id;
+        this.name = name;
+        this.timeZone = timeZone;
+        this.country = country;
     }
 
     public City(City city) {

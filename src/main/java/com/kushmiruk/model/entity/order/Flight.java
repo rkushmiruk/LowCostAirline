@@ -3,7 +3,7 @@ package com.kushmiruk.model.entity.order;
 import com.kushmiruk.model.entity.Entity;
 import com.kushmiruk.model.entity.location.Airport;
 
-import java.util.Date;
+import java.sql.Date;
 
 /**
  * Entity to table Flight

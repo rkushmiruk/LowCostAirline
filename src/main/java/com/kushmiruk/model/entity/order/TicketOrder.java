@@ -12,7 +12,11 @@ public class TicketOrder extends Entity implements Cloneable {
     private PaymentMethod paymentMethod;
     private User user;
 
-    public TicketOrder() {
+    public TicketOrder(Long id, String email, PaymentMethod paymentMethod, User user) {
+        this.id = id;
+        this.email = email;
+        this.paymentMethod = paymentMethod;
+        this.user = user;
     }
 
     public TicketOrder(TicketOrder ticketOrder) {

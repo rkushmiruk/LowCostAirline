@@ -2,7 +2,7 @@ package com.kushmiruk.model.entity.order;
 
 import com.kushmiruk.model.entity.Entity;
 
-import java.util.Date;
+import java.sql.Date;
 
 /**
  * Entity to table ExtraPrice
@@ -12,7 +12,10 @@ public class ExtraPrice extends Entity implements Cloneable {
     private Integer priorityRegistrationPrice;
     private Date purchaseDateTime;
 
-    public ExtraPrice() {
+    public ExtraPrice(Long id, Integer priorityRegistrationPrice, Date purchaseDateTime) {
+        this.id = id;
+        this.priorityRegistrationPrice = priorityRegistrationPrice;
+        this.purchaseDateTime = purchaseDateTime;
     }
 
     public ExtraPrice(ExtraPrice extraPrice) {

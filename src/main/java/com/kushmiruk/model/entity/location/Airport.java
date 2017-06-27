@@ -10,12 +10,10 @@ public class Airport extends Entity implements Cloneable {
     private String name;
     private City city;
 
-    public Airport() {
-    }
-
-    public Airport(Long id, String name) {
+    public Airport(Long id, String name,City city) {
         this.id = id;
         this.name = name;
+        this.city = city;
     }
 
     public Airport(Airport airport) {
