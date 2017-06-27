@@ -1,6 +1,7 @@
 SET FOREIGN_KEY_CHECKS = 0;
 DROP TABLE IF EXISTS `user`;
 DROP TABLE IF EXISTS `user_role`;
+DROP TABLE IF EXISTS `user_authentication`;
 DROP TABLE IF EXISTS `ticket_order`;
 DROP TABLE IF EXISTS `ticket`;
 DROP TABLE IF EXISTS `ticket_status`;
@@ -17,16 +18,22 @@ CREATE TABLE `user` (
   `id`         INT(11)      NOT NULL AUTO_INCREMENT,
   `first_name` VARCHAR(50)  NOT NULL,
   `last_name`  VARCHAR(50)  NOT NULL,
-  `login`      VARCHAR(255) NOT NULL UNIQUE,
-  `password`   VARCHAR(50)  NOT NULL,
   `email`      VARCHAR(255) NOT NULL UNIQUE,
   `role_id`    INT(11)      NOT NULL,
+  `auth_id`    INT(11)      NOT NULL,
   PRIMARY KEY (`id`)
 );
 
 CREATE TABLE `user_role` (
   `id`   INT(11)     NOT NULL AUTO_INCREMENT,
   `role` VARCHAR(50) NOT NULL UNIQUE,
+  PRIMARY KEY (`id`)
+);
+
+CREATE TABLE `user_authentication` (
+  `id`       INT(11)      NOT NULL AUTO_INCREMENT,
+  `login`    VARCHAR(255) NOT NULL UNIQUE,
+  `password` VARCHAR(50)  NOT NULL,
   PRIMARY KEY (`id`)
 );
 
@@ -43,8 +50,8 @@ CREATE TABLE `ticket` (
   `flight_id`                 INT(11) NOT NULL,
   `status_id`                 INT(11) NOT NULL,
   `extra_price_id`            INT(11) NOT NULL,
-  `passanger_first_name`      VARCHAR(50),
-  `passanger_last_name`       VARCHAR(50),
+  `passenger_first_name`      VARCHAR(50),
+  `passenger_last_name`       VARCHAR(50),
   `passanger_email`           VARCHAR(255),
   `has_priority_registration` BOOLEAN          DEFAULT FALSE,
   `has_baggage`               BOOLEAN          DEFAULT FALSE,
@@ -108,13 +115,18 @@ CREATE TABLE `airport` (
   PRIMARY KEY (`id`)
 );
 
-ALTER TABLE `user`
+ALTER TABLE `user_authentication`
   ADD UNIQUE INDEX `user_unique_login_idx` (`login`);
-ALTER TABLE `user`
-  ADD UNIQUE INDEX `user_unique_email_idx` (`email`);
+ALTER TABLE `user_authentication`
+  ADD UNIQUE INDEX `user_unique_email_idx` (`password`);
 
 ALTER TABLE `user`
   ADD CONSTRAINT `user_role_fk` FOREIGN KEY (`role_id`) REFERENCES `user_role` (`id`)
+  ON DELETE NO ACTION
+  ON UPDATE NO ACTION;
+
+ALTER TABLE `user`
+  ADD CONSTRAINT `user_auth_fk` FOREIGN KEY (`auth_id`) REFERENCES `user_authentication` (`id`)
   ON DELETE NO ACTION
   ON UPDATE NO ACTION;
 
@@ -196,12 +208,20 @@ INSERT INTO `user_role` (role) VALUES
   ('admin'),
   ('user');
 
-INSERT INTO `user` (first_name, last_name, login, PASSWORD, email, role_id) VALUES
-  ('Roman', 'Kushmiruk', 'rKushmiruk', 'admin', 'rKushmiruk@gmail.com', 1),
-  ('Ivan', 'Ivanov', 'ivanov', 'ivan', 'Ivanov@gmail.com', 2),
-  ('Evgeniya', 'Ermolaeva', 'eva', 'eva15', 'Eva@gmail.com', 2),
-  ('James', 'Bond', '007', 'bondik', 'Bond@gmail.com', 2),
-  ('Petr', 'Petrov', 'petrs', 'user', 'petrov@gmail.com', 2);
+INSERT INTO `user_authentication` (login, password) VALUES
+  ('Roma','111'),
+  ('Ivan','222'),
+  ('Evgenia','333'),
+  ('James','444'),
+  ('Petr','555');
+
+
+INSERT INTO `user` (first_name, last_name, email, role_id, auth_id) VALUES
+  ('Roman', 'Kushmiruk', 'rKushmiruk@gmail.com', 1, 1),
+  ('Ivan', 'Ivanov', 'Ivanov@gmail.com', 2,2),
+  ('Evgeniya', 'Ermolaeva', 'Eva@gmail.com', 2,3),
+  ('James', 'Bond', 'Bond@gmail.com', 2,4),
+  ('Petr', 'Petrov', 'petrov@gmail.com', 2,5);
 
 INSERT INTO `ticket_status` (status) VALUES
   ('OPENED'),
@@ -252,3 +272,5 @@ VALUES
   (6, 1, '2017-07-05 09:00', 250, 150),
   (6, 2, '2017-07-02 09:00', 260, 150),
   (1, 7, '2017-07-01 09:00', 210, 150);
+
+

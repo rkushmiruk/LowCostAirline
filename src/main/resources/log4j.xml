@@ -18,7 +18,7 @@
                value="/Users/roman/Desktop/Epam/webProjectExample/LowCostAirline/src/main/resources/log4j/log"/>
         <layout class="org.apache.log4j.PatternLayout">
             <param name="ConversionPattern"
-                   value="%d{yyyy-MM-dd HH:mm:ss} %-5p %c{1}:%L - %m%n"/>
+                   value="%d{yyyy-MM-dd HH:mm:ss} %-5p %c{1}:%L%n - %m%n"/>
         </layout>
     </appender>
 
