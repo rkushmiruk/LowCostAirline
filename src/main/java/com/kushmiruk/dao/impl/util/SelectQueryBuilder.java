@@ -22,10 +22,10 @@ public class SelectQueryBuilder extends QueryBuilder {
 
     public SelectQueryBuilder addField(String field) {
         query
-                .append(tableName)
-                .append(QueryMessage.DOT)
                 .append(field)
-                .append(QueryMessage.COMMA);
+                .append(QueryMessage.SPACE)
+                .append(QueryMessage.COMMA)
+                .append(QueryMessage.SPACE);
         return this;
     }
 
@@ -43,21 +43,20 @@ public class SelectQueryBuilder extends QueryBuilder {
         return this;
     }
 
-    public SelectQueryBuilder join(JoinType type, Class<?> classTo, String joinField, String similarField) {
-        query.deleteCharAt(query.length() - NUMBER_OF_FINISH_SYMBOLS_IN_QUERY);
+    public SelectQueryBuilder join(JoinType type, String joinTableName, String joinField, String similarField) {
         query
+                .append(QueryMessage.SPACE)
                 .append(type)
                 .append(QueryMessage.JOIN)
-                .append(classTo.getSimpleName())
+                .append(joinTableName)
                 .append(QueryMessage.ON)
                 .append(tableName)
                 .append(QueryMessage.DOT)
                 .append(joinField)
                 .append(QueryMessage.EQUAL)
-                .append(classTo.getSimpleName())
+                .append(joinTableName)
                 .append(QueryMessage.DOT)
-                .append(similarField)
-                .append(QueryMessage.SEMICOLON);
+                .append(similarField);
         return this;
     }
 
@@ -90,6 +89,17 @@ public class SelectQueryBuilder extends QueryBuilder {
                 .append(QueryMessage.SEMICOLON);
         return this;
 
+    }
+
+    public SelectQueryBuilder orderBy(String column){
+        query
+                .append(QueryMessage.SPACE)
+                .append("ORDER BY")
+                .append(QueryMessage.SPACE)
+                .append(column)
+                .append(QueryMessage.SPACE)
+                .append("ASC");
+        return this;
     }
 
     public String build() {

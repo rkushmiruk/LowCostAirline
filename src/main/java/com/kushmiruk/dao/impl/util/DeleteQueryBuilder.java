@@ -34,7 +34,7 @@ public class DeleteQueryBuilder extends QueryBuilder {
     }
 
     public String build() {
-        LOGGER.info(LoggerMessage.BUILD_INSERT_QUERY + query.toString());
+        LOGGER.info(LoggerMessage.BUILD_DELETE_QUERY + query.toString());
         StringBuilder tmp = query;
         queryInit();
         return tmp.toString();
