@@ -2,6 +2,8 @@ package com.kushmiruk.dao.datasource;
 
 import org.apache.commons.dbcp2.BasicDataSource;
 
+import javax.naming.Context;
+import javax.naming.InitialContext;
 import javax.sql.DataSource;
 import java.util.ResourceBundle;
 
@@ -32,5 +34,6 @@ public class ConnectionPool {
         dataSource.setPassword(bundle.getString(DB_PASSWORD));
         dataSource.setInitialSize(Integer.valueOf(bundle.getString(DB_POOL_SIZE)));
         return dataSource;
+
     }
 }

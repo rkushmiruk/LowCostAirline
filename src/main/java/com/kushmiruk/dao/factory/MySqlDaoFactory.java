@@ -1,13 +1,23 @@
 package com.kushmiruk.dao.factory;
 
 import com.kushmiruk.dao.daointerface.*;
-import com.kushmiruk.dao.impl.jdbc.MySqlAirportDao;
+import com.kushmiruk.dao.impl.jdbc.*;
+import com.kushmiruk.model.entity.user.UserAuthentication;
 
 /**
  * MySql implementation for DaoFactory
  */
 public class MySqlDaoFactory extends DaoFactory {
     private static final AirportDao airportDao = MySqlAirportDao.getInstance();
+    private static final CountryDao countryDao = MySqlCountryDao.getInstance();
+    private static final CityDao cityDao = MySqlCityDao.getInstance();
+    private static final UserDao userDao = MySqlUserDao.getInstance();
+    private static final UserAuthenticationDao userAuthenticationDao = MySqlUserAuthenticationDao.getInstance();
+    private static final BaggageDao baggageDao = MySqlBaggageDao.getInstance();
+    private static final FlightDao flightDao = MySqlFlightDao.getInstance();
+    private static final TicketDao ticketDao = MySqlTicketDao.getInstance();
+    private static final ExtraPriceDao extraPriceDao = MySqlExtraPriceDao.getInstance();
+    private static final TicketOrderDao ticketOrderDao = MySqlTicketOrderDao.getInstance();
 
     private MySqlDaoFactory() {
     }
@@ -27,41 +37,46 @@ public class MySqlDaoFactory extends DaoFactory {
 
     @Override
     public BaggageDao createBaggageDao() {
-        return null;
+        return baggageDao;
     }
 
     @Override
     public CityDao createCityDao() {
-        return null;
+        return cityDao;
     }
 
     @Override
     public CountryDao createCountryDao() {
-        return null;
+        return countryDao;
     }
 
     @Override
     public ExtraPriceDao createExtraPriceDao() {
-        return null;
+        return extraPriceDao;
     }
 
     @Override
     public FlightDao createFlightDao() {
-        return null;
+        return flightDao;
     }
 
     @Override
     public TicketDao createTicketDao() {
-        return null;
+        return ticketDao;
     }
 
     @Override
     public TicketOrderDao createTicketOrderDao() {
-        return null;
+        return ticketOrderDao;
     }
 
     @Override
     public UserDao createUserDao() {
-        return null;
+        return userDao;
+    }
+
+    @Override
+    public UserAuthenticationDao createUserAuthenticationDao() {
+        return userAuthenticationDao;
     }
 }

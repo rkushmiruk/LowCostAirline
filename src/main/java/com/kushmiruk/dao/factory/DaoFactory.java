@@ -24,6 +24,8 @@ public abstract class DaoFactory {
 
     public abstract UserDao createUserDao();
 
+    public abstract UserAuthenticationDao createUserAuthenticationDao();
+
     public static DaoFactory getDaoFactory() {
         return MySqlDaoFactory.getInstance();
     }

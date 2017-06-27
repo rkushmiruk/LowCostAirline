@@ -8,19 +8,12 @@ import java.util.Optional;
  * DAO interface for CRUD operations with entity User
  */
 public interface UserDao extends GenericDao<User, Long> {
-    /**
-     * Retrieve  entity user from database identified by email.
-     *
-     * @param email identifier of user
-     * @return optional, which contains entity User or null
-     */
-    Optional<User> findOneByEmail(String email);
 
     /**
-     * Retrieve  entity user from database identified by login.
+     * Retrieve  entity role from database identified by id.
      *
-     * @param login identifier of user
-     * @return optional, which contains entity User or null
+     * @param id identifier of user
+     * @return user role
      */
-    Optional<User> findOneByLogin(String login);
+    Optional<String> findUserRole(Long id);
 }
