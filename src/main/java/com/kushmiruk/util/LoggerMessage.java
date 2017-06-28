@@ -2,6 +2,7 @@ package com.kushmiruk.util;
 
 public final class LoggerMessage {
     public static final String ITEM_WITH_ID = " item with id = ";
+    public static final String DB_ERROR_CONNECTION = "Database error connection ";
     public static final String DB_ERROR_SEARCH = "Database error while searching in table ";
     public static final String DB_ERROR_INSERT = "Database error while insert to table ";
     public static final String EXCEPTION_MESSAGE = ", exception message: ";
