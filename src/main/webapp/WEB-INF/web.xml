@@ -4,6 +4,24 @@
          xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/javaee http://xmlns.jcp.org/xml/ns/javaee/web-app_3_1.xsd"
          version="3.1">
 
+    <display-name>Airline</display-name>
+    <welcome-file-list>
+        <welcome-file>/WEB-INF/index.jsp</welcome-file>
+    </welcome-file-list>
+
+    <session-config>
+        <session-timeout>30</session-timeout>
+    </session-config>
+
+    <servlet>
+    <servlet-name>MainServlet</servlet-name>
+    <servlet-class>com.kushmiruk.controller.MainServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+    <servlet-name>MainServlet</servlet-name>
+    <url-pattern>/index</url-pattern>
+    </servlet-mapping>
+
     <resource-ref>
         <description>Connection Pool</description>
         <res-ref-name>jdbc/Airplane</res-ref-name>
