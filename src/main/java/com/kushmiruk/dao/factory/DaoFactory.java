@@ -2,6 +2,8 @@ package com.kushmiruk.dao.factory;
 
 import com.kushmiruk.dao.daointerface.*;
 
+import java.sql.Connection;
+
 /**
  * Abstract factory for application DAO
  */

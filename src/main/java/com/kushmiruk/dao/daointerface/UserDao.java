@@ -10,7 +10,7 @@ import java.util.Optional;
 public interface UserDao extends GenericDao<User, Long> {
 
     /**
-     * Retrieve  entity role from database identified by id.
+     * Retrieve user role from database identified by id.
      *
      * @param id identifier of user
      * @return user role

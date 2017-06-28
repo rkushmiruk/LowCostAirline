@@ -28,7 +28,7 @@ public class MySqlAirportDao extends EntityDao<Airport> implements AirportDao {
     }
 
     private static class MySqlAirportDaoHolder {
-        private final static MySqlAirportDao instance = new MySqlAirportDao();
+        private static MySqlAirportDao instance = new MySqlAirportDao();
     }
 
     public static MySqlAirportDao getInstance() {

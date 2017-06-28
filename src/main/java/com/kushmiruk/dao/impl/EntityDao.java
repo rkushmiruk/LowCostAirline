@@ -12,6 +12,7 @@ import javax.sql.DataSource;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 
 /**
@@ -80,52 +81,66 @@ public abstract class EntityDao<T extends Entity> implements GenericDao<T, Long>
                     result.add(getEntityFromResultSet(resultSet).get());
                 }
             }
+            LOGGER.info(LoggerMessage.ITEMS + tableName + LoggerMessage.FOUND_IN_TABLE);
         } catch (SQLException e) {
             LOGGER.error(LoggerMessage.DB_ERROR_SEARCH + tableName + LoggerMessage.EXCEPTION_MESSAGE + e.getMessage());
         }
-        LOGGER.info(LoggerMessage.ITEMS + tableName + LoggerMessage.FOUND_IN_TABLE);
         return result;
-
     }
 
     @Override
     public boolean insert(T entity) {
+        Objects.requireNonNull(entity);
         query = insertQueryBuilder
                 .addTable(tableName)
-                .addValue(arrayOfEntityParameters(entity))
+                .addValues(arrayOfEntityParameters(entity))
                 .build();
-        try (Connection connection = dataSource.getConnection();
-             PreparedStatement statement = connection.prepareStatement(query)) {
-            setEntityToParameters(entity, statement);
-            LOGGER.info(statement.toString());
-            statement.executeUpdate();
-            LOGGER.info(entity.toString() + LoggerMessage.INSERT_INTO_TABLE + tableName);
-            return true;
-        } catch (SQLIntegrityConstraintViolationException e) {
-            LOGGER.error(LoggerMessage.DUPLICATE_ERROR + tableName + LoggerMessage.EXCEPTION_MESSAGE + e.getMessage());
+        try (Connection connection = dataSource.getConnection()) {
+            connection.setAutoCommit(false);
+            try (PreparedStatement statement = connection.prepareStatement(query)) {
+                setEntityToParameters(entity, statement);
+                LOGGER.info(statement.toString());
+                statement.executeUpdate();
+                connection.commit();
+                LOGGER.info(entity.toString() + LoggerMessage.INSERT_INTO_TABLE + tableName);
+                return true;
+            } catch (SQLIntegrityConstraintViolationException e) {
+                LOGGER.error(LoggerMessage.DUPLICATE_ERROR + tableName + LoggerMessage.EXCEPTION_MESSAGE + e.getMessage());
+                connection.rollback();
+            } catch (SQLException e) {
+                LOGGER.error(LoggerMessage.DB_ERROR_INSERT + tableName + LoggerMessage.EXCEPTION_MESSAGE + e.getMessage());
+                connection.rollback();
+            }
         } catch (SQLException e) {
-            LOGGER.error(LoggerMessage.DB_ERROR_INSERT + tableName + LoggerMessage.EXCEPTION_MESSAGE + e.getMessage());
+            LOGGER.error(LoggerMessage.DB_ERROR_CONNECTION + LoggerMessage.EXCEPTION_MESSAGE + e.getMessage());
         }
         return false;
     }
 
     @Override
     public boolean update(T entity) {
+        Objects.requireNonNull(entity);
         query = updateQueryBuilder
                 .addTable(tableName)
                 .addValues(arrayOfEntityParameters(entity))
                 .condition(QueryMessage.ID)
                 .build();
-        try (Connection connection = dataSource.getConnection();
-             PreparedStatement statement = connection.prepareStatement(query)) {
-            setEntityToParameters(entity, statement);
-            statement.executeUpdate();
-            LOGGER.info(statement.toString());
-            int rowUpdated = statement.getUpdateCount();
-            LOGGER.info(rowUpdated + " row(s) updated");
-            return rowUpdated > 0;
+        try (Connection connection = dataSource.getConnection()) {
+            connection.setAutoCommit(false);
+            try (PreparedStatement statement = connection.prepareStatement(query)) {
+                setEntityToParameters(entity, statement);
+                statement.executeUpdate();
+                LOGGER.info(statement.toString());
+                int rowUpdated = statement.getUpdateCount();
+                connection.commit();
+                LOGGER.info(rowUpdated + " row(s) updated");
+                return rowUpdated > 0;
+            } catch (SQLException e) {
+                LOGGER.error(LoggerMessage.DB_ERROR_SEARCH + tableName + LoggerMessage.EXCEPTION_MESSAGE + e.getMessage());
+                connection.rollback();
+            }
         } catch (SQLException e) {
-            LOGGER.error(LoggerMessage.DB_ERROR_SEARCH + tableName + LoggerMessage.EXCEPTION_MESSAGE + e.getMessage());
+            LOGGER.error(LoggerMessage.DB_ERROR_CONNECTION + LoggerMessage.EXCEPTION_MESSAGE + e.getMessage());
         }
         return false;
     }
@@ -136,15 +151,21 @@ public abstract class EntityDao<T extends Entity> implements GenericDao<T, Long>
                 .addTable(tableName)
                 .condition(QueryMessage.ID)
                 .build();
-        try (Connection connection = dataSource.getConnection();
-             PreparedStatement statement = connection.prepareStatement(query)) {
-            statement.setLong(ID_INDEX, id);
-            LOGGER.info(statement.toString());
-            int rowUpdated = statement.executeUpdate();
-            LOGGER.info(rowUpdated + " row(s) deleted");
-            return statement.getUpdateCount() > 0;
+        try (Connection connection = dataSource.getConnection()) {
+            connection.setAutoCommit(false);
+            try (PreparedStatement statement = connection.prepareStatement(query)) {
+                statement.setLong(ID_INDEX, id);
+                LOGGER.info(statement.toString());
+                int rowUpdated = statement.executeUpdate();
+                connection.commit();
+                LOGGER.info(rowUpdated + " row(s) deleted");
+                return statement.getUpdateCount() > 0;
+            } catch (SQLException e) {
+                LOGGER.error(LoggerMessage.DB_ERROR_SEARCH + tableName + LoggerMessage.EXCEPTION_MESSAGE + e.getMessage());
+                connection.rollback();
+            }
         } catch (SQLException e) {
-            LOGGER.error(LoggerMessage.DB_ERROR_SEARCH + tableName + LoggerMessage.EXCEPTION_MESSAGE + e.getMessage());
+            LOGGER.error(LoggerMessage.DB_ERROR_CONNECTION + LoggerMessage.EXCEPTION_MESSAGE + e.getMessage());
         }
         return false;
     }
@@ -168,6 +189,7 @@ public abstract class EntityDao<T extends Entity> implements GenericDao<T, Long>
      * @param entity    our entity in query
      * @param statement current statement
      */
+
     protected abstract void setEntityToParameters(T entity, PreparedStatement statement)
             throws SQLException;
 

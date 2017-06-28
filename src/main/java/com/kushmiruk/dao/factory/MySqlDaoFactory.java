@@ -2,7 +2,6 @@ package com.kushmiruk.dao.factory;
 
 import com.kushmiruk.dao.daointerface.*;
 import com.kushmiruk.dao.impl.jdbc.*;
-import com.kushmiruk.model.entity.user.UserAuthentication;
 
 /**
  * MySql implementation for DaoFactory

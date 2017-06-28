@@ -25,7 +25,7 @@ public class InsertQueryBuilder extends QueryBuilder {
         return this;
     }
 
-    public InsertQueryBuilder addValue(String[] values) {
+    public InsertQueryBuilder addValues(String[] values) {
         for (String value : values) {
             query
                     .append(value)

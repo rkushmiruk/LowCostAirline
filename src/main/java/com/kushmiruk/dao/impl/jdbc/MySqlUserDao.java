@@ -6,6 +6,8 @@ import com.kushmiruk.dao.impl.util.JoinType;
 import com.kushmiruk.model.entity.user.User;
 import com.kushmiruk.model.entity.user.UserAuthentication;
 import com.kushmiruk.model.entity.user.UserRole;
+import com.kushmiruk.util.LoggerMessage;
+import org.apache.log4j.Logger;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -17,13 +19,14 @@ import java.util.Optional;
  * MySql implementation for UserDao interface
  */
 public class MySqlUserDao extends EntityDao<User> implements UserDao {
+    private static final Logger LOGGER = Logger.getLogger(MySqlUserDao.class);
     private static final String TABLE_NAME = "user";
     private static final String PARAMETER_ID = "id";
     private static final String PARAMETER_FIRST_NAME = "first_name";
     private static final String PARAMETER_LAST_NAME = "last_name";
     private static final String PARAMETER_EMAIL = "email";
-    private static final String PARAMETER_USER_AUTH = "auth_id";
     private static final String PARAMETER_ROLE_ID = "role_id";
+    private static final String PARAMETER_USER_AUTH = "auth_id";
     private static final String PARAMETER_ROLE = "role";
     private static final String ROLE_TABLE = "user_role";
     private static final Integer PARAMETER_NUMBERS_WITHOUT_ID = 5;
@@ -34,7 +37,6 @@ public class MySqlUserDao extends EntityDao<User> implements UserDao {
     private static final Integer USER_ROLE_INDEX = 5;
     private static final Integer USER_ID_INDEX = 6;
     private static final Integer ID_INDEX = 1;
-
 
     private MySqlUserDao() {
         super(TABLE_NAME);
@@ -60,12 +62,17 @@ public class MySqlUserDao extends EntityDao<User> implements UserDao {
         try (Connection connection = dataSource.getConnection();
              PreparedStatement statement = connection.prepareStatement(query)) {
             statement.setLong(ID_INDEX, id);
+            LOGGER.info(statement.toString());
             try (ResultSet resultSet = statement.executeQuery()) {
                 if (resultSet.next()) {
+                    LOGGER.info(LoggerMessage.ITEM + ROLE_TABLE + LoggerMessage.WITH_ID + id +
+                            LoggerMessage.FOUND_IN_TABLE);
                     return Optional.of(resultSet.getString(PARAMETER_ROLE));
                 }
             }
         } catch (SQLException e) {
+            LOGGER.error(LoggerMessage.DB_ERROR_SEARCH + ROLE_TABLE + LoggerMessage.ITEM_WITH_ID + id +
+                    LoggerMessage.EXCEPTION_MESSAGE + e.getMessage());
         }
         return Optional.empty();
     }
@@ -102,7 +109,6 @@ public class MySqlUserDao extends EntityDao<User> implements UserDao {
         statement.setString(EMAIL_INDEX, entity.getEmail());
         statement.setLong(USER_AUTHENTICATION_INDEX, entity.getUserAuthentication().getId());
         statement.setLong(USER_ROLE_INDEX, entity.getUserRole().getId());
-
         if (statement.getParameterMetaData().getParameterCount() == USER_ID_INDEX) {
             statement.setLong(USER_ID_INDEX, entity.getId());
         }
