@@ -17,6 +17,7 @@ public class Ticket extends Entity implements Cloneable {
     private TicketOrder ticketOrder;
     private Flight flight;
     private ExtraPrice extraPrice;
+    private TicketStatus ticketStatus;
 
     public Ticket(Ticket ticket) {
         this.id = ticket.id;
@@ -30,6 +31,7 @@ public class Ticket extends Entity implements Cloneable {
         this.ticketOrder = ticket.ticketOrder;
         this.flight = ticket.flight;
         this.extraPrice = ticket.extraPrice;
+        this.ticketStatus = ticket.ticketStatus;
     }
 
     private Ticket(Builder builder) {
@@ -61,19 +63,20 @@ public class Ticket extends Entity implements Cloneable {
         private TicketOrder ticketOrder;
         private Flight flight;
         private ExtraPrice extraPrice;
+        private TicketStatus ticketStatus;
 
         public Builder id(Long id) {
             this.id = id;
             return this;
         }
 
-        public Builder passangerFirstName(String passangerFirstName) {
-            this.passengerFirstName = passangerFirstName;
+        public Builder passengerFirstName(String passengerFirstName) {
+            this.passengerFirstName = passengerFirstName;
             return this;
         }
 
-        public Builder passangerLastName(String passangerLastName) {
-            this.passengerLastName = passangerLastName;
+        public Builder passengerLastName(String passengerLastName) {
+            this.passengerLastName = passengerLastName;
             return this;
         }
 
@@ -117,6 +120,11 @@ public class Ticket extends Entity implements Cloneable {
             return this;
         }
 
+        public Builder ticketStatus(TicketStatus ticketStatus) {
+            this.ticketStatus = ticketStatus;
+            return this;
+        }
+
         public Ticket build() {
             return new Ticket(this);
         }
@@ -134,16 +142,16 @@ public class Ticket extends Entity implements Cloneable {
         return passengerFirstName;
     }
 
-    public void setPassangerFirstName(String passangerFirstName) {
-        this.passengerFirstName = passangerFirstName;
+    public void setPassengerFirstName(String passengerFirstName) {
+        this.passengerFirstName = passengerFirstName;
     }
 
     public String getPassngerLastName() {
         return passengerLastName;
     }
 
-    public void setPassngerLastName(String passngerLastName) {
-        this.passengerLastName = passngerLastName;
+    public void setPassengerLastName(String passengerLastName) {
+        this.passengerLastName = passengerLastName;
     }
 
     public String getEmail() {
@@ -210,6 +218,15 @@ public class Ticket extends Entity implements Cloneable {
         this.extraPrice = extraPrice;
     }
 
+    public TicketStatus getTicketStatus() {
+        return ticketStatus;
+    }
+
+    public void setTicketStatus(TicketStatus ticketStatus) {
+        this.ticketStatus = ticketStatus;
+    }
+
+
     @Override
     protected Object clone() throws CloneNotSupportedException {
         return new Ticket(this);
@@ -258,8 +275,8 @@ public class Ticket extends Entity implements Cloneable {
     public String toString() {
         return "Ticket{" +
                 "id=" + id +
-                ", passangerFirstName='" + passengerFirstName + '\'' +
-                ", passangerLastName='" + passengerLastName + '\'' +
+                ", passengerFirstName='" + passengerFirstName + '\'' +
+                ", passengerLastName='" + passengerLastName + '\'' +
                 ", email='" + email + '\'' +
                 ", hasPriorityRegistration=" + hasPriorityRegistration +
                 ", hasBaggage=" + hasBaggage +
