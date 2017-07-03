@@ -1,5 +1,8 @@
 package com.kushmiruk.util;
 
+/**
+ * Util class for queries part for sql builders
+ */
 public final class QueryMessage {
     public static final String SELECT = "SELECT ";
     public static final String UPDATE = "UPDATE ";
@@ -23,5 +26,12 @@ public final class QueryMessage {
     public static final String VALUES = "VALUES";
     public static final String SET = "SET";
     public static final String LOGIN = "login";
+    
+    public static final String FIND_FLIGHTS = "Select * from flight \n" +
+"  inner join airport dep on departure_airport_id =  dep.id\n" +
+"  inner join airport des on destination_airport_id  = des.id\n" +
+"  inner join city departure on dep.city_id = departure.id\n" +
+"  inner join city destination on des.city_id = destination.id\n" +
+"  where departure.name = ? AND destination.name=? AND DATE(departure_datetime) = ?";
 
 }

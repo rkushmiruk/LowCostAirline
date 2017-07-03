@@ -1,5 +1,8 @@
 package com.kushmiruk.util;
 
+/**
+ * Util class for logger message constants
+ */
 public final class LoggerMessage {
     public static final String ITEM_WITH_ID = " item with id = ";
     public static final String DB_ERROR_CONNECTION = "Database error connection ";
@@ -17,5 +20,7 @@ public final class LoggerMessage {
     public static final String BUILD_DELETE_QUERY = "Build delete query: ";
     public static final String DUPLICATE_ERROR = "This entity is already in database ";
     public static final String INSERT_INTO_TABLE = " insert into table ";
-
+    public static final String OPEN_PAGE = "Open ";
+    public static final String LANGUAGE = "Language: ";
+    public static final String COMMAND = "Command: ";
 }
