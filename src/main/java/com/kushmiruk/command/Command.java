@@ -7,7 +7,7 @@ import javax.servlet.http.HttpServletResponse;
 
 public interface Command {
     /**
-     * executes some action, returns address to JSP page which will be forwarded by servlet to show results
+     * executes some command, returns address to JSP page which will be forwarded by servlet to show results
      *
      * @param request  HTTP request from servlet
      * @param response HTTP response from servlet
