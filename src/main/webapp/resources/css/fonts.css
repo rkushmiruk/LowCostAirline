@@ -1,0 +1,13 @@
+@font-face {
+  font-family: 'Open Sans';
+  font-style: normal;
+  font-weight: 300;
+  src: '../fonts/Open_Sans/OpenSans-Light.ttf';
+}
+/* cyrillic */
+@font-face {
+  font-family: 'Open Sans';
+  font-style: normal;
+  font-weight: 400;
+  src: '../fonts/Open_Sans/OpenSans-Regular.ttf';
+}
