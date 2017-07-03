@@ -60,9 +60,13 @@ public class Country extends Entity implements Cloneable {
 
     @Override
     public String toString() {
-        return "Country{" +
-                "id=" + id +
-                ", name='" + name + '\'' +
-                '}';
+        return new StringBuilder()
+                .append("Country{")
+                .append("id=")
+                .append(id)
+                .append(", name='")
+                .append(name)
+                .append('\'')
+                .append('}').toString();
     }
 }

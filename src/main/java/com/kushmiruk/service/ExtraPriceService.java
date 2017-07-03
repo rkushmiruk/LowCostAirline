@@ -3,6 +3,9 @@ package com.kushmiruk.service;
 import com.kushmiruk.dao.daointerface.ExtraPriceDao;
 import com.kushmiruk.model.entity.order.ExtraPrice;
 
+/**
+ *  Service for interact with DAO layer interface ExtraPriceDao
+ */
 public class ExtraPriceService extends GenericService<ExtraPrice> {
     private static ExtraPriceDao extraPriceDao = daoFactory.createExtraPriceDao();
 

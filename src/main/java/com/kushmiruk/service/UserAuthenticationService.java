@@ -6,6 +6,9 @@ import com.kushmiruk.model.entity.user.UserAuthentication;
 
 import java.util.Optional;
 
+/**
+ *  Service for interact with DAO layer interface UserAuthenticationDao
+ */
 public class UserAuthenticationService extends GenericService<UserAuthentication> {
     private static UserAuthenticationDao userAuthenticationDao = daoFactory.createUserAuthenticationDao();
 

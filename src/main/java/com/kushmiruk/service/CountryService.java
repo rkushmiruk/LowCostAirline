@@ -3,6 +3,9 @@ package com.kushmiruk.service;
 import com.kushmiruk.dao.daointerface.CountryDao;
 import com.kushmiruk.model.entity.location.Country;
 
+/**
+ *  Service for interact with DAO layer interface CountryDao
+ */
 public class CountryService extends GenericService<Country> {
     private static CountryDao countryDao = daoFactory.createCountryDao();
 

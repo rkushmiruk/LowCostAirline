@@ -2,13 +2,10 @@ package com.kushmiruk.service;
 
 import com.kushmiruk.dao.daointerface.GenericDao;
 import com.kushmiruk.dao.factory.DaoFactory;
-import com.kushmiruk.dao.factory.DataSourceFactory;
 import com.kushmiruk.exception.DaoException;
 import com.kushmiruk.model.entity.Entity;
 import org.apache.log4j.Logger;
 
-import javax.sql.DataSource;
-import java.sql.Connection;
 import java.util.List;
 import java.util.Optional;
 
@@ -62,7 +59,7 @@ public abstract class GenericService<T extends Entity> {
      * @param entity entity to insert
      * @return true if operation succeed
      */
-    boolean insert(T entity) throws DaoException {
+    boolean save(T entity) throws DaoException {
         boolean value = dao.insert(entity);
         if (!value) {
             throw new DaoException("");

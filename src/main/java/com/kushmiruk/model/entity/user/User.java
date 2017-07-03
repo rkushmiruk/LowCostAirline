@@ -159,13 +159,14 @@ public class User extends Entity implements Cloneable {
 
     @Override
     public String toString() {
-        return "User{" +
-                "id=" + id +
-                ", firstName='" + firstName + '\'' +
-                ", lastName='" + lastName + '\'' +
-                ", email='" + email + '\'' +
-                ", userAuthentication=" + userAuthentication +
-                ", userRole=" + userRole +
-                '}';
+        return new StringBuilder()
+                .append("User{")
+                .append("id=").append(id)
+                .append(", firstName='").append(firstName)
+                .append(", lastName='").append(lastName)
+                .append(", email='").append(email)
+                .append(", userAuthentication=").append(userAuthentication)
+                .append(", userRole=").append(userRole)
+                .append('}').toString();
     }
 }

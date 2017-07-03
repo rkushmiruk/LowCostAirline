@@ -3,6 +3,9 @@ package com.kushmiruk.service;
 import com.kushmiruk.dao.daointerface.CityDao;
 import com.kushmiruk.model.entity.location.City;
 
+/**
+ *  Service for interact with DAO layer interface CityDao
+ */
 public class CityService extends GenericService<City> {
     private static CityDao cityDao = daoFactory.createCityDao();
 

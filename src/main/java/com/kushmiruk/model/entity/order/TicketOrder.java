@@ -87,11 +87,12 @@ public class TicketOrder extends Entity implements Cloneable {
 
     @Override
     public String toString() {
-        return "TicketOrder{" +
-                "id=" + id +
-                ", email='" + email + '\'' +
-                ", paymentMethod=" + paymentMethod +
-                ", user=" + user +
-                '}';
+        return new StringBuilder()
+                .append("TicketOrder{")
+                .append("id=").append(id)
+                .append(", email='").append(email)
+                .append(", paymentMethod=").append(paymentMethod)
+                .append(", user=").append(user)
+                .append('}').toString();
     }
 }

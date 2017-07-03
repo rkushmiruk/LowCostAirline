@@ -148,12 +148,13 @@ public class Baggage extends Entity implements Cloneable {
 
     @Override
     public String toString() {
-        return "Baggage{" +
-                "id=" + id +
-                ", weight=" + weight +
-                ", amount=" + amount +
-                ", price=" + price +
-                ", ticket=" + ticket +
-                '}';
+        return new StringBuilder()
+                .append("Baggage{")
+                .append("id=").append(id)
+                .append(", weight=").append(weight)
+                .append(", amount=").append(amount)
+                .append(", price=").append(price)
+                .append(", ticket=").append(ticket)
+                .append('}').toString();
     }
 }

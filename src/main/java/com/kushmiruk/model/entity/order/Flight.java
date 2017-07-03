@@ -191,14 +191,15 @@ public class Flight extends Entity implements Cloneable {
 
     @Override
     public String toString() {
-        return "Flight{" +
-                "id=" + id +
-                ", departureAirport=" + departureAirport +
-                ", destinationAirport=" + destinationAirport +
-                ", departureDateTime=" + departureDateTime +
-                ", destinationDateTime=" + destinationDateTime +
-                ", flightTime=" + flightTime +
-                ", totalSeatsNumber=" + totalSeatsNumber +
-                '}';
+        return new StringBuilder()
+                .append("Flight{")
+                .append("id=").append(id)
+                .append(", departureAirport=").append(departureAirport)
+                .append(", destinationAirport=").append(destinationAirport)
+                .append(", departureDateTime=").append(departureDateTime)
+                .append(", destinationDateTime=").append(destinationDateTime)
+                .append(", flightTime=").append(flightTime)
+                .append(", totalSeatsNumber=").append(totalSeatsNumber)
+                .append('}').toString();
     }
 }

@@ -70,11 +70,12 @@ public class UserAuthentication extends Entity implements Cloneable {
 
     @Override
     public String toString() {
-        final StringBuilder sb = new StringBuilder("UserAuthentication{");
-        sb.append("id=").append(id);
-        sb.append(", login='").append(login).append('\'');
-        sb.append(", password='").append(password).append('\'');
-        sb.append('}');
-        return sb.toString();
+        return new StringBuilder()
+                .append("UserAuthentication {")
+                .append("id=").append(id)
+                .append(", login='").append(login)
+                .append(", password='").append(password)
+                .append('}').toString();
+
     }
 }

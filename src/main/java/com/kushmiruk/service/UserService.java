@@ -5,6 +5,9 @@ import com.kushmiruk.model.entity.user.User;
 
 import java.sql.Connection;
 
+/**
+ *  Service for interact with DAO layer interface UserDao
+ */
 public class UserService extends GenericService<User> {
     private static UserDao userDao = daoFactory.createUserDao();
 

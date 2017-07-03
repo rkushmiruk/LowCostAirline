@@ -76,10 +76,10 @@ public class ExtraPrice extends Entity implements Cloneable {
 
     @Override
     public String toString() {
-        return "ExtraPrice{" +
-                "id=" + id +
-                ", priorityRegistrationPrice=" + priorityRegistrationPrice +
-                ", purchaseDateTime=" + purchaseDateTime +
-                '}';
+        return new StringBuilder().append("ExtraPrice{")
+                .append("id=").append(id)
+                .append(", priorityRegistrationPrice=").append(priorityRegistrationPrice)
+                .append(", purchaseDateTime=").append(purchaseDateTime)
+                .append('}').toString();
     }
 }

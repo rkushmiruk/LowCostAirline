@@ -86,11 +86,18 @@ public class City extends Entity implements Cloneable {
 
     @Override
     public String toString() {
-        return "City{" +
-                "id=" + id +
-                ", name='" + name + '\'' +
-                ", timeZone=" + timeZone +
-                ", country=" + country +
-                '}';
+        return new StringBuilder()
+                .append("City{")
+                .append("id=")
+                .append(id)
+                .append(", name='")
+                .append(name)
+                .append('\'')
+                .append(", timeZone=")
+                .append(timeZone)
+                .append(", country=")
+                .append(country)
+                .append('}')
+                .toString();
     }
 }

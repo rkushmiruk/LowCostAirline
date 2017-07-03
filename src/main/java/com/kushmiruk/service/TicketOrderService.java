@@ -3,6 +3,9 @@ package com.kushmiruk.service;
 import com.kushmiruk.dao.daointerface.TicketOrderDao;
 import com.kushmiruk.model.entity.order.TicketOrder;
 
+/**
+ *  Service for interact with DAO layer interface TicketOrderDao
+ */
 public class TicketOrderService extends GenericService<TicketOrder> {
     private static TicketOrderDao ticketOrderDao = daoFactory.createTicketOrderDao();
 
