@@ -3,18 +3,28 @@ package com.kushmiruk.dao.impl.jdbc;
 import com.kushmiruk.dao.daointerface.FlightDao;
 import com.kushmiruk.dao.impl.EntityDao;
 import com.kushmiruk.model.entity.location.Airport;
+import com.kushmiruk.model.entity.location.City;
 import com.kushmiruk.model.entity.order.Flight;
+import com.kushmiruk.util.LoggerMessage;
+import com.kushmiruk.util.QueryMessage;
+
+import java.sql.Connection;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Date;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
+
+import org.apache.log4j.Logger;
 
 /**
  * MySql implementation for CountryDao interface
  */
 public class MySqlFlightDao extends EntityDao<Flight> implements FlightDao {
+    private static final Logger LOGGER = Logger.getLogger(MySqlFlightDao.class);
     private static final String TABLE_NAME = "flight";
     private static final String PARAMETER_ID = "id";
     private static final String PARAMETER_DEPARTURE_AIRPORT = "departure_airport_id";
@@ -22,7 +32,7 @@ public class MySqlFlightDao extends EntityDao<Flight> implements FlightDao {
     private static final String PARAMETER_DEPARTURE_DATE = "departure_datetime";
     private static final String PARAMETER_DESTINATION_DATE = "destination_datetime";
     private static final String PARAMETER_FLIGHT_TIME = "flight_time";
-    private static final String PARAMETER_TOTAL_SEATS_NUMBER = "total_seats_number";
+    private static final String PARAMETER_TOTAL_SEATS_NUMBER = "total_seat_number";
     private static final Integer PARAMETER_NUMBERS_WITHOUT_ID = 6;
     private static final Integer DEPARTURE_AIRPORT_INDEX = 1;
     private static final Integer DESTINATION_AIRPORT_INDEX = 2;
@@ -37,6 +47,7 @@ public class MySqlFlightDao extends EntityDao<Flight> implements FlightDao {
     }
 
     private static class MySqlFlightDaoHolder {
+
         private static final MySqlFlightDao instance = new MySqlFlightDao();
     }
 
@@ -45,12 +56,37 @@ public class MySqlFlightDao extends EntityDao<Flight> implements FlightDao {
     }
 
     @Override
+    public List<Flight> findFlights(String fromCityName, String toCityName, String date) {
+        List<Flight> result = new ArrayList<>();
+        String query = QueryMessage.FIND_FLIGHTS;
+        try (Connection connection = dataSource.getConnection();
+             PreparedStatement statement = connection.prepareStatement(query)) {
+            statement.setString(1, fromCityName);
+            statement.setString(2, toCityName);
+            statement.setString(3, date);
+            LOGGER.info(statement.toString());
+            try (ResultSet resultSet = statement.executeQuery()) {
+                while (resultSet.next()) {
+                    if (getEntityFromResultSet(resultSet).isPresent()) {
+                        result.add(getEntityFromResultSet(resultSet).get());
+                    }
+                    LOGGER.info(LoggerMessage.ITEMS + tableName + LoggerMessage.FOUND_IN_TABLE);
+                }
+            }
+        } catch (SQLException e) {
+            LOGGER.error(LoggerMessage.DB_ERROR_SEARCH + tableName + LoggerMessage.EXCEPTION_MESSAGE + e.getMessage());
+        }
+        return result;
+
+    }
+
+    @Override
     protected Optional<Flight> getEntityFromResultSet(ResultSet resultSet) throws SQLException {
         Long id = resultSet.getLong(PARAMETER_ID);
         Airport departureAirport = null;
         Airport destinationAirport = null;
-        if (MySqlAirportDao.getInstance().findById(resultSet.getLong(PARAMETER_DEPARTURE_AIRPORT)).isPresent() &&
-                MySqlAirportDao.getInstance().findById(resultSet.getLong(PARAMETER_DESTINATION_AIRPORT)).isPresent()) {
+        if (MySqlAirportDao.getInstance().findById(resultSet.getLong(PARAMETER_DEPARTURE_AIRPORT)).isPresent()
+                && MySqlAirportDao.getInstance().findById(resultSet.getLong(PARAMETER_DESTINATION_AIRPORT)).isPresent()) {
             departureAirport = MySqlAirportDao.getInstance().findById(resultSet.getLong(PARAMETER_DEPARTURE_AIRPORT)).get();
             destinationAirport = MySqlAirportDao.getInstance().findById(resultSet.getLong(PARAMETER_DESTINATION_AIRPORT)).get();
         }
@@ -58,13 +94,15 @@ public class MySqlFlightDao extends EntityDao<Flight> implements FlightDao {
         Integer flightTime = resultSet.getInt(PARAMETER_FLIGHT_TIME);
         Integer totalSeatsNumber = resultSet.getInt(PARAMETER_TOTAL_SEATS_NUMBER);
 
+        System.out.println(id + " " + departureAirport + destinationAirport + departureDateTime + flightTime);
+
         return Optional.of(new Flight.Builder()
                 .id(id)
                 .departureAirport(departureAirport)
                 .destinationAirport(destinationAirport)
                 .departureDateTime(departureDateTime)
-                .destinationDateTime()
                 .flightTime(flightTime)
+                .destinationDateTime()
                 .totalSeatsNumber(totalSeatsNumber)
                 .build());
     }
