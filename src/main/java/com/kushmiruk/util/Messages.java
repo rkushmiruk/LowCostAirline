@@ -3,7 +3,12 @@ package com.kushmiruk.util;
 import java.util.Locale;
 import java.util.ResourceBundle;
 
-public class Messages {
+/**
+ * Util class for i18n messages to user on jsp
+ */
+public final class Messages {
+    public static final String successMessage = "Registration success: ";
+
     public static final Locale ENGLISH = new Locale("en", "US");
     public static final Locale UKRAINIAN = new Locale("uk", "UA");
 

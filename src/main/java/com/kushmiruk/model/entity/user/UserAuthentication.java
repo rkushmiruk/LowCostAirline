@@ -2,10 +2,18 @@ package com.kushmiruk.model.entity.user;
 
 import com.kushmiruk.model.entity.Entity;
 
+/**
+ * Entity to table UserAuthentication
+ */
 public class UserAuthentication extends Entity implements Cloneable {
     private Long id;
     private String login;
     private String password;
+    
+    public UserAuthentication(String login,String password){
+        this.login = login;
+        this.password = password;
+    }
 
     public UserAuthentication(Long id, String login, String password) {
         this.id = id;
@@ -73,8 +81,8 @@ public class UserAuthentication extends Entity implements Cloneable {
         return new StringBuilder()
                 .append("UserAuthentication {")
                 .append("id=").append(id)
-                .append(", login='").append(login)
-                .append(", password='").append(password)
+                .append(", LOGIN='").append(login)
+                .append(", PASSWORD='").append(password)
                 .append('}').toString();
 
     }

@@ -162,9 +162,9 @@ public class User extends Entity implements Cloneable {
         return new StringBuilder()
                 .append("User{")
                 .append("id=").append(id)
-                .append(", firstName='").append(firstName)
-                .append(", lastName='").append(lastName)
-                .append(", email='").append(email)
+                .append(", FIRST_NAME='").append(firstName)
+                .append(", LAST_NAME='").append(lastName)
+                .append(", EMAIL='").append(email)
                 .append(", userAuthentication=").append(userAuthentication)
                 .append(", userRole=").append(userRole)
                 .append('}').toString();

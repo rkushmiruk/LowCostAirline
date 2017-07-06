@@ -2,6 +2,7 @@ package com.kushmiruk.model.entity.order;
 
 import com.kushmiruk.model.entity.Entity;
 import com.kushmiruk.model.entity.user.User;
+import java.sql.Date;
 
 /**
  * Entity to table TicketOrder
@@ -11,12 +12,14 @@ public class TicketOrder extends Entity implements Cloneable {
     private String email;
     private PaymentMethod paymentMethod;
     private User user;
+    private Date dateTime;
 
-    public TicketOrder(Long id, String email, PaymentMethod paymentMethod, User user) {
+    public TicketOrder(Long id, String email, PaymentMethod paymentMethod, User user,Date dateTime) {
         this.id = id;
         this.email = email;
         this.paymentMethod = paymentMethod;
         this.user = user;
+        this.dateTime = dateTime;
     }
 
     public TicketOrder(TicketOrder ticketOrder) {
@@ -24,6 +27,7 @@ public class TicketOrder extends Entity implements Cloneable {
         this.email = ticketOrder.email;
         this.paymentMethod = ticketOrder.paymentMethod;
         this.user = ticketOrder.user;
+        this.dateTime = ticketOrder.dateTime;
     }
 
     public Long getId() {
@@ -58,6 +62,14 @@ public class TicketOrder extends Entity implements Cloneable {
         this.user = user;
     }
 
+    public Date getDateTime() {
+        return dateTime;
+    }
+
+    public void setDateTime(Date dateTime) {
+        this.dateTime = dateTime;
+    }
+    
     @Override
     protected Object clone() throws CloneNotSupportedException {
         return new TicketOrder(this);
@@ -90,9 +102,10 @@ public class TicketOrder extends Entity implements Cloneable {
         return new StringBuilder()
                 .append("TicketOrder{")
                 .append("id=").append(id)
-                .append(", email='").append(email)
+                .append(", EMAIL='").append(email)
                 .append(", paymentMethod=").append(paymentMethod)
                 .append(", user=").append(user)
+                .append(", dateTime=").append(dateTime)
                 .append('}').toString();
     }
 }

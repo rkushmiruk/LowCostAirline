@@ -13,11 +13,11 @@ public class Baggage extends Entity implements Cloneable {
     private Ticket ticket;
 
     private Baggage(Builder builder) {
-        this.id = id;
-        this.weight = weight;
-        this.amount = amount;
-        this.price = price;
-        this.ticket = ticket;
+        this.id = builder.id;
+        this.weight = builder.weight;
+        this.amount = builder.amount;
+        this.price = builder.price;
+        this.ticket = builder.ticket;
     }
 
     public Baggage(Long id, Integer weight, Integer amount, Integer price, Ticket ticket) {

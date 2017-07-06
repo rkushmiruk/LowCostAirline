@@ -1,7 +1,7 @@
 package com.kushmiruk.util;
 
 /**
- * Util class for queries part for sql builders
+ * Util class for queries part for sql builders and sql queries
  */
 public final class QueryMessage {
     public static final String SELECT = "SELECT ";
@@ -34,4 +34,15 @@ public final class QueryMessage {
 "  inner join city destination on des.city_id = destination.id\n" +
 "  where departure.name = ? AND destination.name=? AND DATE(departure_datetime) = ?";
 
+    
+    public static final String FIND_TICKET_ORDERS = "Select * from user_authentication\n" +
+"  inner join user On user_authentication.id = auth_id\n" +
+"  inner join ticket_order On user.id = user_id\n" +
+"  inner join ticket On ticket_order.id = order_id\n" +
+"  inner join flight On flight_id = flight.id\n" +
+"  inner join airport dep on departure_airport_id =  dep.id\n" +
+"  inner join airport des on destination_airport_id  = des.id\n" +
+"  inner join city departure on dep.city_id = departure.id\n" +
+"  inner join city destination on des.city_id = destination.id\n" +
+"  where user_authentication.LOGIN = ?";
 }

@@ -278,7 +278,7 @@ public class Ticket extends Entity implements Cloneable {
                 .append("id=").append(id)
                 .append(", passengerFirstName='").append(passengerFirstName)
                 .append(", passengerLastName='").append(passengerLastName)
-                .append(", email='").append(email)
+                .append(", EMAIL='").append(email)
                 .append(", hasPriorityRegistration=").append(hasPriorityRegistration)
                 .append(", hasBaggage=").append(hasBaggage)
                 .append(", price=").append(price)

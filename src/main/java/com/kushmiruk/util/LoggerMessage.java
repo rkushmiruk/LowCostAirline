@@ -22,5 +22,7 @@ public final class LoggerMessage {
     public static final String INSERT_INTO_TABLE = " insert into table ";
     public static final String OPEN_PAGE = "Open ";
     public static final String LANGUAGE = "Language: ";
-    public static final String COMMAND = "Command: ";
+    public static final String COMMAND = "CommandNames: ";
+    public static final String FLIGHTS = "Flights: ";
+    public static final String USER_LOGOUT = "User logout";
 }
