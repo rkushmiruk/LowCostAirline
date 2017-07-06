@@ -8,16 +8,32 @@
     <link href='<c:url value="../resources/css/style.css"/>' rel="stylesheet" type="text/css">
     </head>
     <body>
+        
         <%@include file="/WEB-INF/jsp/i18n.jsp" %>
         <header class="header">
-    <div class="logo">
-    </div>
+            <a href="Airline?command=index"><div class="logo"></div></a>
     <nav class="navbar">
         <ul>
-            <li><a href = "/Airline?command=setLang&lang=en">EN</a> | <a href = "/Airline?command=setLang&lang=ua">UA</a></li>
-            <li><a href=""><fmt:message key="sign" bundle="${bundle}" /></a></li>
-            <li><a href=""><fmt:message key="registration" bundle="${bundle}" /></a></li>
-        </ul>       
-    </nav>
+            <li> <form action="Airline" method="POST">
+                <div><input name="command" value="setLang" type="hidden"</div>
+                <div><input name="page" value="${page}" type="hidden"</div>
+                <input type="radio" id="lang" name="lang" value="en" checked="checked"/>EN
+                <input type="radio" id="lang" name="lang" value="ua" />UA
+                <button class="change-button" type="submit">
+                     <fmt:message key="changeLang" bundle="${bundle}" />
+            </button>
+            </form>
+            </li>
+            <c:if test="${empty status}">
+            <li><a href="/Airline?command=redirectSignIn"><fmt:message key="sign" bundle="${bundle}" /></a></li>
+            <li><a href="/Airline?command=redirectRegistration"><fmt:message key="registration" bundle="${bundle}" /></a></li>
+            </c:if>
+            <c:if test="${not empty status}">
+            <li><a href="/Airline?command=redirectProfile"><fmt:message key="profile" bundle="${bundle}" /></a></li>
+            <li><a href="/Airline?command=logout"><fmt:message key="logout" bundle="${bundle}" /></a></li>
+            </c:if>
+        </form>
+       
+        
 </header>
     </body>

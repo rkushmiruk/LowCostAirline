@@ -3,44 +3,26 @@
     <head>
         <meta charset="UTF-8">
         <title>Avie Company</title>
-        <style>
-            .table{
-                color: #0086f6;
-                position: absolute;
-                left : 300px;
-
-            }
-        </style>
     </head>
     <body>
         <%@include file="/WEB-INF/jsp/header.jsp" %>
-
-        <TABLE class = "table">
-            <TR>
-                <TH>Рейс</TH>
-                <TH>Аеропорт откуда</TH> 
-                <TH>Аеропорт куда</TH>
+        <table class = "table">
+            <tr>
+                <th>Рейс</th>
+                <th>Аеропорт откуда</th> 
+                <th>Аеропорт куда</th>
                 <th>Время вылета</th>
-            </TR>
+            </tr>
             <c:forEach var="flight" items="${flights}">
-                <TR>
-                    <TD><c:out value="${flight.id}"/></TD>
-                    <TD><c:out value="${flight.departureAirport.name} (${flight.departureAirport.city.name})"/></TD>
-                    <TD><c:out value="${flight.destinationAirport.name} (${flight.destinationAirport.city.name})"/><TD>
+                <tr>
+                    <td><c:out value="${flight.id}"/></td>
+                    <td><c:out value="${flight.departureAirport.name} (${flight.departureAirport.city.name})"/></td>
+                    <td><c:out value="${flight.destinationAirport.name} (${flight.destinationAirport.city.name})"/><td>
                     <td><c:out value="${flight.departureDateTime}"/></td>
-                </TR>
+                </tr>
             </c:forEach>
-        </TABLE>
+        </table>
 
-        <footer class="footer">
-            <div class="about">Design by E&R</div>
-            <div class="info">
-                <label class="support">Support</label>
-                <label class="email">r.kushmiruk@gmail.com</label>
-                <label class="phone">+380633959425</label>
-            </div>
-        </footer>
-
-        <div class="decoration1"></div>
+     <%@include file="/WEB-INF/jsp/footer.jsp" %>
     </body>
 </html>

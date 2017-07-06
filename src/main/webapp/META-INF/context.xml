@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Context path = "/">
-    <Resource name = "jdbc/airline" auth = "Container" type = "javax.sql.DataSource"
+    <Resource name = "jdbc/Airline" auth = "Container" type = "javax.sql.DataSource"
               maxActive = "50" maxIdle = "30" maxWait = "10000"
               username = "root" password = "231094"
               driverClassName = "com.mysql.jdbc.Driver"
+              connectionProperties = "useUnicode=yes;characterEncoding=UTF-8;allowMultiQueries=true;useSSL=false;useLegacyDatetimeCode=false;serverTimezone=UTC"
               url = "jdbc:mysql://localhost:3306/Airline"/>
 </Context>
 
