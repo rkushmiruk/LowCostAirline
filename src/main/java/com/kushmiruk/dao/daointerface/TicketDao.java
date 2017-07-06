@@ -9,10 +9,12 @@ import java.util.Optional;
  */
 public interface TicketDao extends GenericDao<Ticket, Long> {
     /**
-     * Retrieve ticket status from database identified by id.
+     * Retrieve ticket STATUS from database identified by id.
      *
      * @param id identifier of ticket
-     * @return ticket status
+     * @return ticket STATUS
      */
     Optional<String> findTicketStatus(Long id);
+
+
 }

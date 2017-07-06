@@ -40,6 +40,31 @@ public class MySqlUserAuthenticationDao extends EntityDao<UserAuthentication> im
     }
 
     @Override
+    public Optional<Long> findId(String login) {
+        String query = selectQueryBuilder
+                .addTable(tableName)
+                .addField(PARAMETER_ID)
+                .from()
+                .condition(PARAMETER_LOGIN)
+                .build();
+        try (Connection connection = dataSource.getConnection();
+             PreparedStatement statement = connection.prepareStatement(query)) {
+            statement.setString(1, login);
+            LOGGER.info(statement.toString());
+            try (ResultSet resultSet = statement.executeQuery()) {
+                if (resultSet.next()) {
+                    return Optional.ofNullable(resultSet.getLong(PARAMETER_ID));
+                }
+            }
+        } catch (SQLException e) {
+            LOGGER.error(LoggerMessage.DB_ERROR_SEARCH + tableName + LoggerMessage.ITEM_WITH_ID +
+                    LoggerMessage.EXCEPTION_MESSAGE + e.getMessage());
+        }
+        return Optional.empty();
+    }
+
+
+    @Override
     public Optional<UserAuthentication> findOneByLogin(String login) {
         String query = selectQueryBuilder
                 .addTable(tableName)
@@ -90,5 +115,6 @@ public class MySqlUserAuthenticationDao extends EntityDao<UserAuthentication> im
         result[1] = PARAMETER_PASSWORD;
         return result;
     }
+
 
 }

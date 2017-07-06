@@ -5,20 +5,27 @@ import com.kushmiruk.dao.impl.EntityDao;
 import com.kushmiruk.model.entity.order.PaymentMethod;
 import com.kushmiruk.model.entity.order.TicketOrder;
 import com.kushmiruk.model.entity.user.User;
+import com.kushmiruk.util.LoggerMessage;
+import com.kushmiruk.util.QueryMessage;
 
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.*;
+
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
+
+import org.apache.log4j.Logger;
 
 /**
  * MySql implementation for CountryDao interface
  */
 public class MySqlTicketOrderDao extends EntityDao<TicketOrder> implements TicketOrderDao {
+    private static final Logger LOGGER = Logger.getLogger(MySqlTicketOrderDao.class);
     private static final String TABLE_NAME = "ticket_order";
     private static final String PARAMETER_ID = "id";
     private static final String PARAMETER_EMAIL = "email";
     private static final String PARAMETER_PAYMENT_METHOD = "payment_method";
+    private static final String PARAMETER_DATETIME = "datetime";
     private static final String PARAMETER_USER = "user_id";
     private static final Integer PARAMETER_NUMBERS_WITHOUT_ID = 3;
     private static final Integer EMAIL_INDEX = 1;
@@ -28,6 +35,28 @@ public class MySqlTicketOrderDao extends EntityDao<TicketOrder> implements Ticke
 
     private MySqlTicketOrderDao() {
         super(TABLE_NAME);
+    }
+
+    @Override
+    public List<TicketOrder> findTicketOrdersByLogin(String login) {
+        List<TicketOrder> result = new ArrayList<>();
+        String query = QueryMessage.FIND_TICKET_ORDERS;
+        try (Connection connection = dataSource.getConnection();
+             PreparedStatement statement = connection.prepareStatement(query)) {
+            statement.setString(1, login);
+            LOGGER.info(statement.toString());
+            try (ResultSet resultSet = statement.executeQuery()) {
+                while (resultSet.next()) {
+                    if (getEntityFromResultSet(resultSet).isPresent()) {
+                        result.add(getEntityFromResultSet(resultSet).get());
+                    }
+                    LOGGER.info(LoggerMessage.ITEMS + tableName + LoggerMessage.FOUND_IN_TABLE);
+                }
+            }
+        } catch (SQLException e) {
+            LOGGER.error(LoggerMessage.DB_ERROR_SEARCH + tableName + LoggerMessage.EXCEPTION_MESSAGE + e.getMessage());
+        }
+        return result;
     }
 
     private static class MySqlTicketOrderDaoHolder {
@@ -44,11 +73,12 @@ public class MySqlTicketOrderDao extends EntityDao<TicketOrder> implements Ticke
         String email = resultSet.getString(PARAMETER_EMAIL);
         PaymentMethod paymentMethod = PaymentMethod.valueOf(resultSet.getString(PARAMETER_PAYMENT_METHOD).toUpperCase());
         User user = null;
+        Date date = resultSet.getDate(PARAMETER_DATETIME);
         if (MySqlUserDao.getInstance().findById(resultSet.getLong(PARAMETER_USER)).isPresent()) {
             user = MySqlUserDao.getInstance().findById(resultSet.getLong(PARAMETER_USER)).get();
         }
 
-        return Optional.of(new TicketOrder(id, email, paymentMethod, user));
+        return Optional.of(new TicketOrder(id, email, paymentMethod, user, date));
     }
 
     @Override

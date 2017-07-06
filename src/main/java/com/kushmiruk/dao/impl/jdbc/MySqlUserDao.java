@@ -84,8 +84,8 @@ public class MySqlUserDao extends EntityDao<User> implements UserDao {
         String lastName = resultSet.getString(PARAMETER_LAST_NAME);
         String email = resultSet.getString(PARAMETER_EMAIL);
         UserAuthentication userAuthentication = null;
-        if (MySqlUserAuthenticationDao.getInstance().findById(resultSet.getLong(PARAMETER_ROLE_ID)).isPresent()) {
-            userAuthentication = MySqlUserAuthenticationDao.getInstance().findById(resultSet.getLong(PARAMETER_ROLE_ID)).get();
+        if (MySqlUserAuthenticationDao.getInstance().findById(resultSet.getLong(PARAMETER_USER_AUTH)).isPresent()) {
+            userAuthentication = MySqlUserAuthenticationDao.getInstance().findById(resultSet.getLong(PARAMETER_USER_AUTH)).get();
         }
         UserRole userRole = null;
         if (findUserRole((resultSet.getLong(PARAMETER_ROLE_ID))).isPresent()) {
@@ -124,4 +124,5 @@ public class MySqlUserDao extends EntityDao<User> implements UserDao {
         result[4] = PARAMETER_ROLE_ID;
         return result;
     }
+
 }

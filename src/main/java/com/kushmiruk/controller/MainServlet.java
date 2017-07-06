@@ -4,6 +4,7 @@ import com.kushmiruk.command.CommandInvoker;
 import com.kushmiruk.util.ExceptionMessage;
 import com.kushmiruk.util.LoggerMessage;
 import com.kushmiruk.util.Pages;
+import com.kushmiruk.util.Parameters;
 import org.apache.log4j.Logger;
 
 import javax.servlet.ServletException;
@@ -40,7 +41,7 @@ public class MainServlet extends HttpServlet {
         String page;
         try {
             page = commandInvoker.invoke(request, response);
-            request.setAttribute("message", "Hello");
+            request.getSession().setAttribute(Parameters.PAGE, page);
             LOGGER.info(LoggerMessage.OPEN_PAGE + page);
         } catch (RuntimeException e) {
             LOGGER.error(ExceptionMessage.ERROR_PAGE + LoggerMessage.EXCEPTION_MESSAGE + e.getMessage());

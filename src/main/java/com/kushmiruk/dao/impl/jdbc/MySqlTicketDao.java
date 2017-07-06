@@ -22,7 +22,7 @@ public class MySqlTicketDao extends EntityDao<Ticket> implements TicketDao {
     private static final String PARAMETER_ID = "id";
     private static final String PARAMETER_FIRST_NAME = "passenger_first_name";
     private static final String PARAMETER_LAST_NAME = "passenger_last_name";
-    private static final String PARAMETER_EMAIL = "email";
+    private static final String PARAMETER_EMAIL = "passenger_email";
     private static final String PARAMETER_PRIORITY_REGISTRATION = "has_priority_registration";
     private static final String PARAMETER_BAGGAGE = "has_baggage";
     private static final String PARAMETER_PRICE = "price";
@@ -31,7 +31,7 @@ public class MySqlTicketDao extends EntityDao<Ticket> implements TicketDao {
     private static final String PARAMETER_FLIGHT = "flight_id";
     private static final String PARAMETER_EXTRA_PRICE = "extra_price_id";
     private static final String PARAMETER_STATUS_ID = "status_id";
-    private static final String PARAMETER_STATUS = "status";
+    private static final String PARAMETER_STATUS = "STATUS";
     private static final String STATUS_TABLE = "ticket_status";
     private static final Integer PARAMETER_NUMBERS_WITHOUT_ID = 11;
     private static final Integer FIRST_NAME_INDEX = 1;

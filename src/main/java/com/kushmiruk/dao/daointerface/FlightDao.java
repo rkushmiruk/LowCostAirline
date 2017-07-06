@@ -12,7 +12,7 @@ import java.util.List;
 public interface FlightDao extends GenericDao<Flight, Long> {
 
     /**
-     * Retrieves all flights from database from first city to second in some date.
+     * Retrieves all flights from database from first city to second in date.
      *
      * @param fromCityName departure city
      * @param toCityName   destination city
