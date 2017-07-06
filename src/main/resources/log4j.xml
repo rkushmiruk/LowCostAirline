@@ -15,7 +15,7 @@
         <param name="maxFileSize" value="50MB"/>
         <param name="maxBackupIndex" value="100"/>
         <param name="file"
-               value="/Users/roman/Desktop/Epam/webProjectExample/LowCostAirline/src/main/resources/log4j/log"/>
+               value="/Users/roman/Desktop/Epam/webProjectExample/LowCostAirline/src/main/resources/log"/>
         <layout class="org.apache.log4j.PatternLayout">
             <param name="ConversionPattern"
                    value="%d{yyyy-MM-dd HH:mm:ss} %-5p %c{1}:%L%n - %m%n"/>
