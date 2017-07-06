@@ -1,17 +1,17 @@
 package com.kushmiruk.service;
 
 import com.kushmiruk.dao.daointerface.BaggageDao;
+import com.kushmiruk.dao.factory.DaoFactory;
 import com.kushmiruk.model.entity.order.Baggage;
 
 /**
- *  Service for interact with DAO layer interface BaggageDao
+ * Service for interact with DAO layer interface BaggageDao
  */
-public class BaggageService extends GenericService<Baggage> {
-
+public class BaggageService {
+    private static final DaoFactory daoFactory = DaoFactory.getDaoFactory();
     private static BaggageDao baggageDao = daoFactory.createBaggageDao();
 
     private BaggageService() {
-        super(baggageDao);
     }
 
     private static class BaggageServiceHolder {
