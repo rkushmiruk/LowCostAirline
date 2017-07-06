@@ -12,6 +12,6 @@ build/
 nbbuild/
 dist/
 nbdist/
+nb-configuration.xml
 
-
-/src/main/resources/log4j/log
+/src/main/resources/log
