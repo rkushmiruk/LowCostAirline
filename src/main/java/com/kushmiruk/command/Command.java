@@ -5,6 +5,9 @@ import com.kushmiruk.exception.AppException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+/**
+ * Default interface for all commands
+ */
 public interface Command {
     /**
      * executes some command, returns address to JSP page which will be forwarded by servlet to show results
@@ -17,6 +20,8 @@ public interface Command {
     String execute(HttpServletRequest request, HttpServletResponse response) throws AppException;
 
     /**
+     * do some logic or throw new exception if exception occurred
+     *
      * @param request HTTP request from servlet
      * @param e       exception occurred in method execute
      * @return address to JSP page with message about error

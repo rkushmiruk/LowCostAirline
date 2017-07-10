@@ -7,11 +7,12 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 /**
- * Redirects to start index page (if command is null)
+ * Command which ends transaction with buying tickets
  */
-public class DefaultCommand implements Command {
+public class BuyTicketCommand implements Command {
+
     @Override
     public String execute(HttpServletRequest request, HttpServletResponse response) throws AppException {
-        return Pages.INDEX_PAGE;
+        return Pages.ORDER_PAGE;
     }
 }

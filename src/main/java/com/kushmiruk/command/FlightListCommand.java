@@ -2,6 +2,7 @@ package com.kushmiruk.command;
 
 import com.kushmiruk.exception.AppException;
 import com.kushmiruk.model.entity.order.Flight;
+
 import com.kushmiruk.service.FlightService;
 import com.kushmiruk.service.factory.ServiceFactory;
 import com.kushmiruk.util.LoggerMessage;
@@ -15,7 +16,7 @@ import com.kushmiruk.util.Parameters;
 import org.apache.log4j.Logger;
 
 /**
- * Command which finds all flights by departure and destination city and departure date
+ * Command which finds all flights by departure city,destination city and date
  */
 public class FlightListCommand implements Command {
     private static final Logger LOGGER = Logger.getLogger(FlightListCommand.class);
@@ -30,10 +31,11 @@ public class FlightListCommand implements Command {
         request.getSession().setAttribute(Parameters.FROM_CITY, cityFrom);
         request.getSession().setAttribute(Parameters.TO_CITY, cityTo);
         request.getSession().setAttribute(Parameters.DATE, date);
+        LOGGER.info(cityFrom);
 
         List<Flight> flights = flightService.searchFlights(cityFrom, cityTo, date);
         LOGGER.info(LoggerMessage.FLIGHTS + flights);
-        request.setAttribute(Parameters.FLIGHTS, flights);
+        request.getSession().setAttribute(Parameters.FLIGHTS, flights);
         return Pages.FLIGHTS_PAGE;
     }
 

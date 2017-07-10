@@ -2,7 +2,6 @@ package com.kushmiruk.command;
 
 import com.kushmiruk.exception.AppException;
 import com.kushmiruk.util.CommandNames;
-import com.kushmiruk.util.LoggerMessage;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -29,6 +28,9 @@ public class CommandInvoker {
         commandMap.put(CommandNames.LOGOUT_COMMAND, new LogoutCommand());
         commandMap.put(CommandNames.REDIRECT_PROFILE_COMMAND, new RedirectCommand(CommandNames.PROFILE_COMMAND));
         commandMap.put(CommandNames.PROFILE_COMMAND, new ProfileCommand());
+        commandMap.put(CommandNames.FIND_TICKET_COMMAND, new TicketCommand());
+        commandMap.put(CommandNames.ORDER_TICKET_COMMAND, new OrderTicketCommand());
+        commandMap.put(CommandNames.BUY_TICKET_COMMAND, new BuyTicketCommand());
     }
 
     private static class CommandInvokerHolder {

@@ -13,7 +13,7 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.log4j.Logger;
 
 /**
- * Checks user credentials and lets him to sign in
+ * It checks user's credentials and lets him to sign in
  */
 public class SignInCommand implements Command {
     private static final Logger LOGGER = Logger.getLogger(SignInCommand.class);
