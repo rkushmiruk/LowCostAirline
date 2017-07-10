@@ -15,5 +15,8 @@ public final class CommandNames {
     public static final String REDIRECT_REGISTRATION_COMMAND = "redirectRegistration";
     public static final String REDIRECT_PROFILE_COMMAND = "redirectProfile";
     public static final String LOGOUT_COMMAND = "logout";
+    public static final String FIND_TICKET_COMMAND = "findTicket";
+    public static final String ORDER_TICKET_COMMAND = "orderTicket";
+    public static final String BUY_TICKET_COMMAND = "buyTicket";
 
 }

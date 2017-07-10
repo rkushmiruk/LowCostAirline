@@ -20,8 +20,10 @@ public final class ExceptionMessage {
     public static final String EMAIL_EXIST_ERROR = "email.exist.error";
     public static final String FLIGHT_NOT_FOUND_ERROR = "flight.not.found.error";
     public static final String LOGIN_EXIST_ERROR = "login.exist.error";
-    public static final String ID_NOT_FOUND_ERROR = "id.not.found.error";
-    public static final String DELETE_ERROR = "delete.error";
+    public static final String WRONG_LOGIN_ERROR = "wrong.login.error";
+    public static final String WRONG_PASSWORD_ERROR = "wrong.password.error";
+    public static final String ORDER_NOT_FOUND_ERROR = "order.not.found.error";
+    public static final String UNIQUE_SEAT_NUMBER_ERROR = "unique.seat.number.error";
 
 
     public static final Locale ENGLISH = new Locale("en", "US");

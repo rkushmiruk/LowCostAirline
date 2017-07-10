@@ -4,11 +4,12 @@ import com.kushmiruk.model.entity.Entity;
 import com.kushmiruk.model.entity.location.Airport;
 
 import java.sql.Date;
+import java.sql.Time;
 
 /**
  * Entity to table Flight
  */
-public class Flight extends Entity implements Cloneable {
+public class Flight extends Entity {
     private Long id;
     private Airport departureAirport;
     private Airport destinationAirport;
@@ -16,6 +17,8 @@ public class Flight extends Entity implements Cloneable {
     private Date destinationDateTime;
     private Integer flightTime;
     private Integer totalSeatsNumber;
+    private Time time;
+    private Long startPrice;
 
     public Flight(Flight flight) {
         this.id = flight.id;
@@ -25,6 +28,8 @@ public class Flight extends Entity implements Cloneable {
         this.destinationDateTime = flight.destinationDateTime;
         this.flightTime = flight.flightTime;
         this.totalSeatsNumber = flight.totalSeatsNumber;
+        this.time = flight.time;
+        this.startPrice = flight.startPrice;
     }
 
     private Flight(Builder builder) {
@@ -35,6 +40,8 @@ public class Flight extends Entity implements Cloneable {
         this.destinationDateTime = builder.destinationDateTime;
         this.flightTime = builder.flightTime;
         this.totalSeatsNumber = builder.totalSeatsNumber;
+        this.time = builder.time;
+        this.startPrice = builder.startPrice;
     }
 
     /**
@@ -49,6 +56,8 @@ public class Flight extends Entity implements Cloneable {
         private Date destinationDateTime;
         private Integer flightTime;
         private Integer totalSeatsNumber;
+        private Time time;
+        private Long startPrice;
 
         public Builder id(Long id) {
             this.id = id;
@@ -82,6 +91,16 @@ public class Flight extends Entity implements Cloneable {
 
         public Builder destinationDateTime() {
             this.destinationDateTime = countDestinationDateTime();
+            return this;
+        }
+        
+        public Builder time(Time time){
+            this.time = time;
+            return this;
+        }
+        
+        public Builder startPrice(Long startPrice){
+            this.startPrice = startPrice;
             return this;
         }
 
@@ -152,11 +171,22 @@ public class Flight extends Entity implements Cloneable {
         this.totalSeatsNumber = totalSeatsNumber;
     }
 
-    @Override
-    protected Object clone() throws CloneNotSupportedException {
-        return new Flight(this);
+    public Time getTime() {
+        return time;
     }
 
+    public void setTime(Time time) {
+        this.time = time;
+    }
+
+    public Long getStartPrice() {
+        return startPrice;
+    }
+
+    public void setStartPrice(Long startPrice) {
+        this.startPrice = startPrice;
+    }
+    
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -200,6 +230,7 @@ public class Flight extends Entity implements Cloneable {
                 .append(", destinationDateTime=").append(destinationDateTime)
                 .append(", flightTime=").append(flightTime)
                 .append(", totalSeatsNumber=").append(totalSeatsNumber)
+                .append(", startPrice=").append(startPrice)
                 .append('}').toString();
     }
 }

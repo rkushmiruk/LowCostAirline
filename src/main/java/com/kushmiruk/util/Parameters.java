@@ -25,6 +25,14 @@ public final class Parameters {
     public static final String ORDERS = "orders";
     public static final String STATUS = "status";
     public static final String PATH_PREFIX = "WEB-INF/jsp/";
-    public static final String PATH_SUFFIX =".jsp";
-
+    public static final String PATH_SUFFIX = ".jsp";
+    public static final String ID = "id";
+    public static final String COUNT = "count";
+    public static final String COUNT_TICKET = "countTicket";
+    public static final String FREE_TICKETS = "freeTickets";
+    public static final String HAS_BAGGAGE = "hasBaggage";
+    public static final String HAS_PRIORITY_REGISTRATION = "hasPriorityRegistration";
+    public static final String ON = "on";
+    public static final String SEAT_NUMBER = "seatNumber";
+    public static final String ORDER_TICKETS = "orderTickets";
 }

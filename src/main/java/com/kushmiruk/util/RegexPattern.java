@@ -10,4 +10,5 @@ public final class RegexPattern {
     public static final String PASSWORD_PATTERN = "((?=.*\\d)(?=.*[a-z])(?=.*[A-Z]).{6,30})";
     public static final String NAME_PATTERN = "[A-Za-z]{2,30}";
     public static final String EMAIL_PATTERN = "^[A-Za-z0-9+_.-]+@(.+)$";
+    public static final String NUMBER_PATTERN = "\\d+";
 }
