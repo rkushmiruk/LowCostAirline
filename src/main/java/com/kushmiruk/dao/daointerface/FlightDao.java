@@ -1,9 +1,7 @@
 package com.kushmiruk.dao.daointerface;
 
-import com.kushmiruk.model.entity.location.City;
 import com.kushmiruk.model.entity.order.Flight;
 
-import java.sql.Date;
 import java.util.List;
 
 /**

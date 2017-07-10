@@ -27,28 +27,29 @@ public class MySqlUserAuthenticationDao extends EntityDao<UserAuthentication> im
     private static final Integer PASSWORD_INDEX = 2;
     private static final Integer ID_INDEX = 3;
 
-    private MySqlUserAuthenticationDao() {
-        super(TABLE_NAME);
+    private MySqlUserAuthenticationDao(Connection connection) {
+        super(TABLE_NAME, connection);
     }
 
     private static class MySqlUserAuthenticationDaoHolder {
-        private static final MySqlUserAuthenticationDao instance = new MySqlUserAuthenticationDao();
+        private static MySqlUserAuthenticationDao instance(Connection connection) {
+            return new MySqlUserAuthenticationDao(connection);
+        }
     }
 
-    public static MySqlUserAuthenticationDao getInstance() {
-        return MySqlUserAuthenticationDaoHolder.instance;
+    public static MySqlUserAuthenticationDao getInstance(Connection connection) {
+        return MySqlUserAuthenticationDaoHolder.instance(connection);
     }
 
     @Override
     public Optional<Long> findId(String login) {
         String query = selectQueryBuilder
-                .addTable(tableName)
-                .addField(PARAMETER_ID)
+                .table(tableName)
+                .field(PARAMETER_ID)
                 .from()
                 .condition(PARAMETER_LOGIN)
                 .build();
-        try (Connection connection = dataSource.getConnection();
-             PreparedStatement statement = connection.prepareStatement(query)) {
+        try (PreparedStatement statement = connection.prepareStatement(query)) {
             statement.setString(1, login);
             LOGGER.info(statement.toString());
             try (ResultSet resultSet = statement.executeQuery()) {
@@ -67,13 +68,12 @@ public class MySqlUserAuthenticationDao extends EntityDao<UserAuthentication> im
     @Override
     public Optional<UserAuthentication> findOneByLogin(String login) {
         String query = selectQueryBuilder
-                .addTable(tableName)
+                .table(tableName)
                 .getAll()
                 .from()
                 .condition(QueryMessage.LOGIN)
                 .build();
-        try (Connection connection = dataSource.getConnection();
-             PreparedStatement statement = connection.prepareStatement(query)) {
+        try (PreparedStatement statement = connection.prepareStatement(query)) {
             statement.setString(LOGIN_INDEX, login);
             LOGGER.info(statement.toString());
             try (ResultSet resultSet = statement.executeQuery()) {

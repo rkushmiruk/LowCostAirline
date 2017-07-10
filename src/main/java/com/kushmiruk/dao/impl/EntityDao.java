@@ -31,22 +31,22 @@ public abstract class EntityDao<T extends Entity> implements GenericDao<T, Long>
     protected InsertQueryBuilder insertQueryBuilder = factory.createInsertQueryBuilder();
     protected UpdateQueryBuilder updateQueryBuilder = factory.createUpdateQueryBuilder();
     protected DeleteQueryBuilder deleteQueryBuilder = factory.createDeleteQueryBuilder();
-    protected DataSource dataSource = DataSourceFactory.getInstance().getDataSource();
+    protected Connection connection;
 
-    public EntityDao(String tableName) {
+    public EntityDao(String tableName, Connection connection) {
         this.tableName = tableName;
+        this.connection = connection;
     }
 
     @Override
     public Optional<T> findById(Long id) {
         query = selectQueryBuilder
-                .addTable(tableName)
+                .table(tableName)
                 .getAll()
                 .from()
                 .condition(QueryMessage.ID)
                 .build();
-        try (Connection connection = dataSource.getConnection();
-             PreparedStatement statement = connection.prepareStatement(query)) {
+        try (PreparedStatement statement = connection.prepareStatement(query)) {
             statement.setLong(ID_INDEX, id);
             LOGGER.info(statement.toString());
             try (ResultSet resultSet = statement.executeQuery()) {
@@ -67,13 +67,12 @@ public abstract class EntityDao<T extends Entity> implements GenericDao<T, Long>
     public List<T> findAll() {
         List<T> result = new ArrayList<>();
         query = selectQueryBuilder
-                .addTable(tableName)
+                .table(tableName)
                 .getAll()
                 .from()
                 .orderBy(QueryMessage.ID)
                 .build();
-        try (Connection connection = dataSource.getConnection();
-             PreparedStatement statement = connection.prepareStatement(query);
+        try (PreparedStatement statement = connection.prepareStatement(query);
              ResultSet resultSet = statement.executeQuery()) {
             LOGGER.info(statement.toString());
             while (resultSet.next()) {
@@ -92,25 +91,15 @@ public abstract class EntityDao<T extends Entity> implements GenericDao<T, Long>
     public boolean insert(T entity) {
         Objects.requireNonNull(entity);
         query = insertQueryBuilder
-                .addTable(tableName)
+                .table(tableName)
                 .addValues(arrayOfEntityParameters(entity))
                 .build();
-        try (Connection connection = dataSource.getConnection()) {
-            connection.setAutoCommit(false);
-            try (PreparedStatement statement = connection.prepareStatement(query)) {
-                setEntityToParameters(entity, statement);
-                LOGGER.info(statement.toString());
-                statement.executeUpdate();
-                connection.commit();
-                LOGGER.info(entity.toString() + LoggerMessage.INSERT_INTO_TABLE + tableName);
-                return true;
-            } catch (SQLIntegrityConstraintViolationException e) {
-                LOGGER.error(LoggerMessage.DUPLICATE_ERROR + tableName + LoggerMessage.EXCEPTION_MESSAGE + e.getMessage());
-                connection.rollback();
-            } catch (SQLException e) {
-                LOGGER.error(LoggerMessage.DB_ERROR_INSERT + tableName + LoggerMessage.EXCEPTION_MESSAGE + e.getMessage());
-                connection.rollback();
-            }
+        try (PreparedStatement statement = connection.prepareStatement(query)) {
+            setEntityToParameters(entity, statement);
+            LOGGER.info(statement.toString());
+            statement.executeUpdate();
+            LOGGER.info(entity.toString() + LoggerMessage.INSERT_INTO_TABLE + tableName);
+            return true;
         } catch (SQLException e) {
             LOGGER.error(LoggerMessage.DB_ERROR_CONNECTION + LoggerMessage.EXCEPTION_MESSAGE + e.getMessage());
         }
@@ -121,26 +110,20 @@ public abstract class EntityDao<T extends Entity> implements GenericDao<T, Long>
     public boolean update(T entity) {
         Objects.requireNonNull(entity);
         query = updateQueryBuilder
-                .addTable(tableName)
+                .table(tableName)
                 .addValues(arrayOfEntityParameters(entity))
                 .condition(QueryMessage.ID)
                 .build();
-        try (Connection connection = dataSource.getConnection()) {
-            connection.setAutoCommit(false);
-            try (PreparedStatement statement = connection.prepareStatement(query)) {
-                setEntityToParameters(entity, statement);
-                statement.executeUpdate();
-                LOGGER.info(statement.toString());
-                int rowUpdated = statement.getUpdateCount();
-                connection.commit();
-                LOGGER.info(rowUpdated + " row(s) updated");
-                return rowUpdated > 0;
-            } catch (SQLException e) {
-                LOGGER.error(LoggerMessage.DB_ERROR_SEARCH + tableName + LoggerMessage.EXCEPTION_MESSAGE + e.getMessage());
-                connection.rollback();
-            }
+        try (PreparedStatement statement = connection.prepareStatement(query)) {
+            setEntityToParameters(entity, statement);
+            statement.executeUpdate();
+            LOGGER.info(statement.toString());
+            int rowUpdated = statement.getUpdateCount();
+            connection.commit();
+            LOGGER.info(rowUpdated + " row(s) updated");
+            return rowUpdated > 0;
         } catch (SQLException e) {
-            LOGGER.error(LoggerMessage.DB_ERROR_CONNECTION + LoggerMessage.EXCEPTION_MESSAGE + e.getMessage());
+            LOGGER.error(LoggerMessage.DB_ERROR_SEARCH + tableName + LoggerMessage.EXCEPTION_MESSAGE + e.getMessage());
         }
         return false;
     }
@@ -148,24 +131,18 @@ public abstract class EntityDao<T extends Entity> implements GenericDao<T, Long>
     @Override
     public boolean delete(Long id) {
         query = deleteQueryBuilder
-                .addTable(tableName)
+                .table(tableName)
                 .condition(QueryMessage.ID)
                 .build();
-        try (Connection connection = dataSource.getConnection()) {
-            connection.setAutoCommit(false);
-            try (PreparedStatement statement = connection.prepareStatement(query)) {
-                statement.setLong(ID_INDEX, id);
-                LOGGER.info(statement.toString());
-                int rowUpdated = statement.executeUpdate();
-                connection.commit();
-                LOGGER.info(rowUpdated + " row(s) deleted");
-                return statement.getUpdateCount() > 0;
-            } catch (SQLException e) {
-                LOGGER.error(LoggerMessage.DB_ERROR_SEARCH + tableName + LoggerMessage.EXCEPTION_MESSAGE + e.getMessage());
-                connection.rollback();
-            }
+        try (PreparedStatement statement = connection.prepareStatement(query)) {
+            statement.setLong(ID_INDEX, id);
+            LOGGER.info(statement.toString());
+            int rowUpdated = statement.executeUpdate();
+            connection.commit();
+            LOGGER.info(rowUpdated + " row(s) deleted");
+            return statement.getUpdateCount() > 0;
         } catch (SQLException e) {
-            LOGGER.error(LoggerMessage.DB_ERROR_CONNECTION + LoggerMessage.EXCEPTION_MESSAGE + e.getMessage());
+            LOGGER.error(LoggerMessage.DB_ERROR_SEARCH + tableName + LoggerMessage.EXCEPTION_MESSAGE + e.getMessage());
         }
         return false;
     }
@@ -180,6 +157,8 @@ public abstract class EntityDao<T extends Entity> implements GenericDao<T, Long>
      * retrieves entity from result set
      *
      * @param resultSet resultSet from statement
+     * @return Optional entity
+     * @throws SQLException if some error occurs in resultSet
      */
     protected abstract Optional<T> getEntityFromResultSet(ResultSet resultSet) throws SQLException;
 
@@ -188,8 +167,8 @@ public abstract class EntityDao<T extends Entity> implements GenericDao<T, Long>
      *
      * @param entity    our entity in query
      * @param statement current statement
+     * @throws SQLException if some error occurs while performing some logic
      */
-
     protected abstract void setEntityToParameters(T entity, PreparedStatement statement)
             throws SQLException;
 
@@ -197,6 +176,7 @@ public abstract class EntityDao<T extends Entity> implements GenericDao<T, Long>
      * return array of all entity parameters without id parameter
      *
      * @param entity our entity in query
+     * @return String[] array of parameters
      */
     protected abstract String[] arrayOfEntityParameters(T entity);
 }

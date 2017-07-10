@@ -1,5 +1,6 @@
 package com.kushmiruk.dao.daointerface;
 
+import java.sql.Connection;
 import java.util.List;
 import java.util.Optional;
 
@@ -10,7 +11,6 @@ import java.util.Optional;
  * @param <ID>     represents type of identifier
  */
 public interface GenericDao<Entity, ID> {
-
     /**
      * Retrieves entity from database identified by id.
      *

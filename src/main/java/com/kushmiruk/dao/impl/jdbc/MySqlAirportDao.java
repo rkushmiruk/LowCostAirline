@@ -5,6 +5,8 @@ import com.kushmiruk.dao.impl.EntityDao;
 import com.kushmiruk.model.entity.location.Airport;
 import com.kushmiruk.model.entity.location.City;
 
+import java.sql.Connection;
+
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -23,27 +25,29 @@ public class MySqlAirportDao extends EntityDao<Airport> implements AirportDao {
     private static final Integer CITY_INDEX = 2;
     private static final Integer ID_INDEX = 3;
 
-    private MySqlAirportDao() {
-        super(TABLE_NAME);
+    private MySqlAirportDao(Connection connection) {
+        super(TABLE_NAME, connection);
     }
 
     private static class MySqlAirportDaoHolder {
-        private static MySqlAirportDao instance = new MySqlAirportDao();
+        private static MySqlAirportDao instance(Connection connection) {
+            return new MySqlAirportDao(connection);
+        }
     }
 
-    public static MySqlAirportDao getInstance() {
-        return MySqlAirportDaoHolder.instance;
+    public static MySqlAirportDao getInstance(Connection connection) {
+        return MySqlAirportDaoHolder.instance(connection);
     }
 
     @Override
     protected Optional<Airport> getEntityFromResultSet(ResultSet resultSet) throws SQLException {
         Long id = resultSet.getLong(PARAMETER_ID);
         String name = resultSet.getString(PARAMETER_NAME);
+        Optional<City> optionalCity = MySqlCityDao.getInstance(connection).findById(resultSet.getLong(PARAMETER_CITY));
         City city = null;
-        if (MySqlCityDao.getInstance().findById(resultSet.getLong(PARAMETER_CITY)).isPresent()) {
-            city = MySqlCityDao.getInstance().findById(resultSet.getLong(PARAMETER_CITY)).get();
+        if (optionalCity.isPresent()) {
+            city = optionalCity.get();
         }
-
         return Optional.of(new Airport(id, name, city));
     }
 

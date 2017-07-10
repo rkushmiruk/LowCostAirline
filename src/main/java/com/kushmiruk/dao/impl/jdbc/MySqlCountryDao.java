@@ -4,6 +4,8 @@ import com.kushmiruk.dao.daointerface.CountryDao;
 import com.kushmiruk.dao.impl.EntityDao;
 import com.kushmiruk.model.entity.location.Country;
 
+import java.sql.Connection;
+
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -20,16 +22,18 @@ public class MySqlCountryDao extends EntityDao<Country> implements CountryDao {
     private static final Integer NAME_INDEX = 1;
     private static final Integer ID_INDEX = 2;
 
-    private MySqlCountryDao() {
-        super(TABLE_NAME);
+    private MySqlCountryDao(Connection connection) {
+        super(TABLE_NAME, connection);
     }
 
     private static class MySqlCountryDaoHolder {
-        private final static MySqlCountryDao instance = new MySqlCountryDao();
+        private static MySqlCountryDao instance(Connection connection) {
+            return new MySqlCountryDao(connection);
+        }
     }
 
-    public static MySqlCountryDao getInstance() {
-        return MySqlCountryDaoHolder.instance;
+    public static MySqlCountryDao getInstance(Connection connection) {
+        return MySqlCountryDaoHolder.instance(connection);
     }
 
     @Override

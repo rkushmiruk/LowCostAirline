@@ -7,7 +7,7 @@ import javax.sql.DataSource;
 import javax.naming.NamingException;
 
 /**
- * BasicDataSource connection pool
+ * DataSource connection pool
  */
 public class ConnectionPool {
     private static final Logger LOGGER = Logger.getLogger(ConnectionPool.class);

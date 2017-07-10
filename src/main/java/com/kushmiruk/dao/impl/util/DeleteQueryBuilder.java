@@ -15,7 +15,7 @@ public class DeleteQueryBuilder extends QueryBuilder {
         queryInit();
     }
 
-    public DeleteQueryBuilder addTable(String tableName) {
+    public DeleteQueryBuilder table(String tableName) {
         this.tableName = tableName.toLowerCase();
         query
                 .append(QueryMessage.SPACE)

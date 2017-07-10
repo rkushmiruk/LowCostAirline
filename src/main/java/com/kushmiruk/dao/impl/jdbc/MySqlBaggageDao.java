@@ -5,6 +5,8 @@ import com.kushmiruk.dao.impl.EntityDao;
 import com.kushmiruk.model.entity.order.Baggage;
 import com.kushmiruk.model.entity.order.Ticket;
 
+import java.sql.Connection;
+
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -27,16 +29,18 @@ public class MySqlBaggageDao extends EntityDao<Baggage> implements BaggageDao {
     private static final Integer TICKET_INDEX = 4;
     private static final Integer ID_INDEX = 5;
 
-    private MySqlBaggageDao() {
-        super(TABLE_NAME);
+    private MySqlBaggageDao(Connection connection) {
+        super(TABLE_NAME, connection);
     }
 
     private static class MySqlBaggageDaoHolder {
-        private static final MySqlBaggageDao instance = new MySqlBaggageDao();
+        private static MySqlBaggageDao instance(Connection connection) {
+            return new MySqlBaggageDao(connection);
+        }
     }
 
-    public static MySqlBaggageDao getInstance() {
-        return MySqlBaggageDaoHolder.instance;
+    public static MySqlBaggageDao getInstance(Connection connection) {
+        return MySqlBaggageDaoHolder.instance(connection);
     }
 
     @Override

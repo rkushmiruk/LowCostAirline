@@ -4,6 +4,8 @@ import com.kushmiruk.dao.daointerface.ExtraPriceDao;
 import com.kushmiruk.dao.impl.EntityDao;
 import com.kushmiruk.model.entity.order.ExtraPrice;
 
+import java.sql.Connection;
+
 import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -23,16 +25,18 @@ public class MySqlExtraPriceDao extends EntityDao<ExtraPrice> implements ExtraPr
     private static final Integer PURCHASE_DATETIME_INDEX = 2;
     private static final Integer ID_INDEX = 3;
 
-    private MySqlExtraPriceDao() {
-        super(TABLE_NAME);
+    private MySqlExtraPriceDao(Connection connection) {
+        super(TABLE_NAME, connection);
     }
 
     private static class MySqlExtraPriceDaoHolder {
-        private static final MySqlExtraPriceDao instance = new MySqlExtraPriceDao();
+        private static MySqlExtraPriceDao instance(Connection connection) {
+            return new MySqlExtraPriceDao(connection);
+        }
     }
 
-    public static MySqlExtraPriceDao getInstance() {
-        return MySqlExtraPriceDaoHolder.instance;
+    public static MySqlExtraPriceDao getInstance(Connection connection) {
+        return MySqlExtraPriceDaoHolder.instance(connection);
     }
 
     @Override
@@ -40,7 +44,6 @@ public class MySqlExtraPriceDao extends EntityDao<ExtraPrice> implements ExtraPr
         Long id = resultSet.getLong(PARAMETER_ID);
         Integer priorityRegistrationPrice = resultSet.getInt(PARAMETER_PRIORITY_REGISTRATION_PRICE);
         Date purchaseDateTime = resultSet.getDate(PARAMETER_PURCHASE_DATETIME);
-
         return Optional.of(new ExtraPrice(id, priorityRegistrationPrice, purchaseDateTime));
     }
 

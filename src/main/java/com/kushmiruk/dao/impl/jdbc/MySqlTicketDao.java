@@ -11,6 +11,8 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 /**
@@ -48,29 +50,56 @@ public class MySqlTicketDao extends EntityDao<Ticket> implements TicketDao {
     private static final Integer ID_INDEX = 12;
     private static final Integer STATUS_ID_INDEX = 1;
 
-    private MySqlTicketDao() {
-        super(TABLE_NAME);
+    private MySqlTicketDao(Connection connection) {
+        super(TABLE_NAME, connection);
     }
 
     private static class MySqlTicketDaoHolder {
-        private static final MySqlTicketDao instance = new MySqlTicketDao();
+        private static MySqlTicketDao instance(Connection connection) {
+            return new MySqlTicketDao(connection);
+        }
     }
 
-    public static MySqlTicketDao getInstance() {
-        return MySqlTicketDaoHolder.instance;
+    public static MySqlTicketDao getInstance(Connection connection) {
+        return MySqlTicketDaoHolder.instance(connection);
+    }
+
+    @Override
+    public List<Integer> findAllSellTicketsSeatNumbers(Long flightId) {
+        List<Integer> result = new ArrayList<>();
+        String query = selectQueryBuilder
+                .table(tableName)
+                .getAll()
+                .from()
+                .condition(PARAMETER_FLIGHT)
+                .build();
+        try (PreparedStatement statement = connection.prepareStatement(query)) {
+            statement.setLong(1, flightId);
+            LOGGER.info(statement.toString());
+            try (ResultSet resultSet = statement.executeQuery()) {
+                while (resultSet.next()) {
+                    if (getEntityFromResultSet(resultSet).isPresent()) {
+                        result.add(getEntityFromResultSet(resultSet).get().getSeatNumber());
+                    }
+                }
+            }
+            LOGGER.info(LoggerMessage.ITEMS + tableName + LoggerMessage.FOUND_IN_TABLE);
+        } catch (SQLException e) {
+            LOGGER.error(LoggerMessage.DB_ERROR_SEARCH + tableName + LoggerMessage.EXCEPTION_MESSAGE + e.getMessage());
+        }
+        return result;
     }
 
     @Override
     public Optional<String> findTicketStatus(Long id) {
         String query = selectQueryBuilder
-                .addTable(TABLE_NAME)
-                .addField(PARAMETER_STATUS)
+                .table(TABLE_NAME)
+                .field(PARAMETER_STATUS)
                 .from()
                 .join(JoinType.INNER, STATUS_TABLE, PARAMETER_STATUS_ID, PARAMETER_ID)
                 .condition(PARAMETER_ID)
                 .build();
-        try (Connection connection = dataSource.getConnection();
-             PreparedStatement statement = connection.prepareStatement(query)) {
+        try (PreparedStatement statement = connection.prepareStatement(query)) {
             statement.setLong(STATUS_ID_INDEX, id);
             LOGGER.info(statement.toString());
             try (ResultSet resultSet = statement.executeQuery()) {
@@ -98,17 +127,20 @@ public class MySqlTicketDao extends EntityDao<Ticket> implements TicketDao {
         Boolean hasBaggage = resultSet.getBoolean(PARAMETER_BAGGAGE);
         Integer price = resultSet.getInt(PARAMETER_PRICE);
         Integer seatNUmber = resultSet.getInt(PARAMETER_SEAT_NUMBER);
+        Optional<TicketOrder> optionalTickerOrder = MySqlTicketOrderDao.getInstance(connection).findById(resultSet.getLong(PARAMETER_TICKET_ORDER));
         TicketOrder ticketOrder = null;
-        if (MySqlTicketOrderDao.getInstance().findById(resultSet.getLong(PARAMETER_TICKET_ORDER)).isPresent()) {
-            ticketOrder = MySqlTicketOrderDao.getInstance().findById(resultSet.getLong(PARAMETER_TICKET_ORDER)).get();
+        if (optionalTickerOrder.isPresent()) {
+            ticketOrder = optionalTickerOrder.get();
         }
+        Optional<Flight> optionalFlight = MySqlFlightDao.getInstance(connection).findById(resultSet.getLong(PARAMETER_FLIGHT));
         Flight flight = null;
-        if (MySqlFlightDao.getInstance().findById(resultSet.getLong(PARAMETER_FLIGHT)).isPresent()) {
-            flight = MySqlFlightDao.getInstance().findById(resultSet.getLong(PARAMETER_FLIGHT)).get();
+        if (optionalFlight.isPresent()) {
+            flight = optionalFlight.get();
         }
+        Optional<ExtraPrice> optionalExtraPrice = MySqlExtraPriceDao.getInstance(connection).findById(resultSet.getLong(PARAMETER_EXTRA_PRICE));
         ExtraPrice extraPrice = null;
-        if (MySqlExtraPriceDao.getInstance().findById(resultSet.getLong(PARAMETER_EXTRA_PRICE)).isPresent()) {
-            extraPrice = MySqlExtraPriceDao.getInstance().findById(resultSet.getLong(PARAMETER_EXTRA_PRICE)).get();
+        if (optionalExtraPrice.isPresent()) {
+            extraPrice = optionalExtraPrice.get();
         }
         TicketStatus ticketStatus = null;
         if (findTicketStatus(resultSet.getLong(PARAMETER_STATUS_ID)).isPresent()) {

@@ -17,8 +17,9 @@ public abstract class QueryBuilder {
     /**
      * Add table to our current query
      *
-     * @param tableName
+     * @param tableName table name
+     * @return QueryBuilder
      */
-    public abstract QueryBuilder addTable(String tableName);
+    public abstract QueryBuilder table(String tableName);
 
 }

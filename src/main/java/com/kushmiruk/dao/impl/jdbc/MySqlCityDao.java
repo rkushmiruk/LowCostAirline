@@ -5,6 +5,8 @@ import com.kushmiruk.dao.impl.EntityDao;
 import com.kushmiruk.model.entity.location.City;
 import com.kushmiruk.model.entity.location.Country;
 
+import java.sql.Connection;
+
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -25,28 +27,30 @@ public class MySqlCityDao extends EntityDao<City> implements CityDao {
     private static final Integer COUNTRY_INDEX = 3;
     private static final Integer ID_INDEX = 4;
 
-    private MySqlCityDao() {
-        super(TABLE_NAME);
+    private MySqlCityDao(Connection connection) {
+        super(TABLE_NAME, connection);
     }
 
     private static class MySqlCityDaoHolder {
-        private static final MySqlCityDao instance = new MySqlCityDao();
+        private static MySqlCityDao instance(Connection connection) {
+            return new MySqlCityDao(connection);
+        }
     }
 
-    public static MySqlCityDao getInstance() {
-        return MySqlCityDaoHolder.instance;
+    public static MySqlCityDao getInstance(Connection connection) {
+        return MySqlCityDaoHolder.instance(connection);
     }
 
     @Override
     protected Optional<City> getEntityFromResultSet(ResultSet resultSet) throws SQLException {
         Long id = resultSet.getLong(PARAMETER_ID);
         String name = resultSet.getString(PARAMETER_NAME);
+        Optional<Country> optionalCountry = MySqlCountryDao.getInstance(connection).findById(resultSet.getLong(PARAMETER_COUNTRY));
         Country country = null;
-        if (MySqlCountryDao.getInstance().findById(resultSet.getLong(PARAMETER_COUNTRY)).isPresent()) {
-            country = MySqlCountryDao.getInstance().findById(resultSet.getLong(PARAMETER_COUNTRY)).get();
+        if (optionalCountry.isPresent()) {
+            country = optionalCountry.get();
         }
         Integer timeZone = resultSet.getInt(PARAMETER_TIMEZONE);
-
         return Optional.of(new City(id, name, timeZone, country));
     }
 

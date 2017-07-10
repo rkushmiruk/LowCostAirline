@@ -15,12 +15,12 @@ public class SelectQueryBuilder extends QueryBuilder {
         queryInit();
     }
 
-    public SelectQueryBuilder addTable(String tableName) {
+    public SelectQueryBuilder table(String tableName) {
         this.tableName = tableName.toLowerCase();
         return this;
     }
 
-    public SelectQueryBuilder addField(String field) {
+    public SelectQueryBuilder field(String field) {
         query
                 .append(field)
                 .append(QueryMessage.SPACE)

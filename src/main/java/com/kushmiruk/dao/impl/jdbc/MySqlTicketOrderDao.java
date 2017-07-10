@@ -33,16 +33,25 @@ public class MySqlTicketOrderDao extends EntityDao<TicketOrder> implements Ticke
     private static final Integer USER_INDEX = 3;
     private static final Integer ID_INDEX = 4;
 
-    private MySqlTicketOrderDao() {
-        super(TABLE_NAME);
+    private MySqlTicketOrderDao(Connection connection) {
+        super(TABLE_NAME, connection);
+    }
+
+    private static class MySqlTicketOrderDaoHolder {
+        private static MySqlTicketOrderDao instance(Connection connection) {
+            return new MySqlTicketOrderDao(connection);
+        }
+    }
+
+    public static MySqlTicketOrderDao getInstance(Connection connection) {
+        return MySqlTicketOrderDaoHolder.instance(connection);
     }
 
     @Override
     public List<TicketOrder> findTicketOrdersByLogin(String login) {
         List<TicketOrder> result = new ArrayList<>();
         String query = QueryMessage.FIND_TICKET_ORDERS;
-        try (Connection connection = dataSource.getConnection();
-             PreparedStatement statement = connection.prepareStatement(query)) {
+        try (PreparedStatement statement = connection.prepareStatement(query)) {
             statement.setString(1, login);
             LOGGER.info(statement.toString());
             try (ResultSet resultSet = statement.executeQuery()) {
@@ -59,24 +68,18 @@ public class MySqlTicketOrderDao extends EntityDao<TicketOrder> implements Ticke
         return result;
     }
 
-    private static class MySqlTicketOrderDaoHolder {
-        private static MySqlTicketOrderDao instance = new MySqlTicketOrderDao();
-    }
-
-    public static MySqlTicketOrderDao getInstance() {
-        return MySqlTicketOrderDaoHolder.instance;
-    }
-
     @Override
     protected Optional<TicketOrder> getEntityFromResultSet(ResultSet resultSet) throws SQLException {
         Long id = resultSet.getLong(PARAMETER_ID);
         String email = resultSet.getString(PARAMETER_EMAIL);
         PaymentMethod paymentMethod = PaymentMethod.valueOf(resultSet.getString(PARAMETER_PAYMENT_METHOD).toUpperCase());
+        Optional<User> optionalUser = MySqlUserDao.getInstance(connection).findById(resultSet.getLong(PARAMETER_USER));
         User user = null;
-        Date date = resultSet.getDate(PARAMETER_DATETIME);
-        if (MySqlUserDao.getInstance().findById(resultSet.getLong(PARAMETER_USER)).isPresent()) {
-            user = MySqlUserDao.getInstance().findById(resultSet.getLong(PARAMETER_USER)).get();
+        if (optionalUser.isPresent()) {
+            user = optionalUser.get();
         }
+        Date date = resultSet.getDate(PARAMETER_DATETIME);
+
 
         return Optional.of(new TicketOrder(id, email, paymentMethod, user, date));
     }

@@ -16,7 +16,7 @@ public class InsertQueryBuilder extends QueryBuilder {
         queryInit();
     }
 
-    public InsertQueryBuilder addTable(String tableName) {
+    public InsertQueryBuilder table(String tableName) {
         this.tableName = tableName.toLowerCase();
         query
                 .append(this.tableName)

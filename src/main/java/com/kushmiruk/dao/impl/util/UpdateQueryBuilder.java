@@ -15,7 +15,7 @@ public class UpdateQueryBuilder extends QueryBuilder {
         queryInit();
     }
 
-    public UpdateQueryBuilder addTable(String tableName) {
+    public UpdateQueryBuilder table(String tableName) {
         this.tableName = tableName.toLowerCase();
         query
                 .append(this.tableName)

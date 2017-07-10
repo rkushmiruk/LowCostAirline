@@ -4,10 +4,14 @@ import com.kushmiruk.dao.daointerface.*;
 
 import java.sql.Connection;
 
+import org.apache.log4j.Logger;
+
 /**
  * Abstract factory for application DAO
  */
 public abstract class DaoFactory {
+    private static final Logger LOGGER = Logger.getLogger(DaoFactory.class);
+
     public abstract AirportDao createAirportDao();
 
     public abstract BaggageDao createBaggageDao();
@@ -28,7 +32,8 @@ public abstract class DaoFactory {
 
     public abstract UserAuthenticationDao createUserAuthenticationDao();
 
-    public static DaoFactory getDaoFactory() {
-        return MySqlDaoFactory.getInstance();
+    public static DaoFactory getDaoFactory(Connection connection) {
+        LOGGER.info(connection);
+        return MySqlDaoFactory.getInstance(connection);
     }
 }

@@ -3,30 +3,41 @@ package com.kushmiruk.dao.factory;
 import com.kushmiruk.dao.daointerface.*;
 import com.kushmiruk.dao.impl.jdbc.*;
 
+import java.sql.Connection;
+
+import org.apache.log4j.Logger;
+
 /**
  * MySql implementation for DaoFactory
  */
 public class MySqlDaoFactory extends DaoFactory {
-    private static final AirportDao airportDao = MySqlAirportDao.getInstance();
-    private static final CountryDao countryDao = MySqlCountryDao.getInstance();
-    private static final CityDao cityDao = MySqlCityDao.getInstance();
-    private static final UserDao userDao = MySqlUserDao.getInstance();
-    private static final UserAuthenticationDao userAuthenticationDao = MySqlUserAuthenticationDao.getInstance();
-    private static final BaggageDao baggageDao = MySqlBaggageDao.getInstance();
-    private static final FlightDao flightDao = MySqlFlightDao.getInstance();
-    private static final TicketDao ticketDao = MySqlTicketDao.getInstance();
-    private static final ExtraPriceDao extraPriceDao = MySqlExtraPriceDao.getInstance();
-    private static final TicketOrderDao ticketOrderDao = MySqlTicketOrderDao.getInstance();
+    private static final Logger LOGGER = Logger.getLogger(MySqlDaoFactory.class);
+    private static Connection connection;
+    private AirportDao airportDao = MySqlAirportDao.getInstance(connection);
+    private CountryDao countryDao = MySqlCountryDao.getInstance(connection);
+    private CityDao cityDao = MySqlCityDao.getInstance(connection);
+    private UserDao userDao = MySqlUserDao.getInstance(connection);
+    private UserAuthenticationDao userAuthenticationDao = MySqlUserAuthenticationDao.getInstance(connection);
+    private BaggageDao baggageDao = MySqlBaggageDao.getInstance(connection);
+    private FlightDao flightDao = MySqlFlightDao.getInstance(connection);
+    private TicketDao ticketDao = MySqlTicketDao.getInstance(connection);
+    private ExtraPriceDao extraPriceDao = MySqlExtraPriceDao.getInstance(connection);
+    private TicketOrderDao ticketOrderDao = MySqlTicketOrderDao.getInstance(connection);
 
-    private MySqlDaoFactory() {
+    private MySqlDaoFactory(Connection connection) {
+        LOGGER.info(connection);
+
     }
 
     private static class MySqlDaoFactoryHolder {
-        private static final MySqlDaoFactory instance = new MySqlDaoFactory();
+        private static final MySqlDaoFactory instance(Connection connection) {
+            return new MySqlDaoFactory(connection);
+        }
     }
 
-    public static MySqlDaoFactory getInstance() {
-        return MySqlDaoFactoryHolder.instance;
+    public static MySqlDaoFactory getInstance(Connection connection) {
+        MySqlDaoFactory.connection = connection;
+        return MySqlDaoFactoryHolder.instance(connection);
     }
 
     @Override

@@ -12,7 +12,7 @@ public interface UserAuthenticationDao extends GenericDao<UserAuthentication, Lo
     /**
      * Retrieve  entity user from database identified by LOGIN.
      *
-     * @param login identifier of user
+     * @param login login of user
      * @return optional, which contains entity User or null
      */
     Optional<UserAuthentication> findOneByLogin(String login);
@@ -20,7 +20,7 @@ public interface UserAuthenticationDao extends GenericDao<UserAuthentication, Lo
     /**
      * Find entity id with common LOGIN
      *
-     * @param login
+     * @param login login of user
      * @return entity id
      */
     Optional<Long> findId(String login);

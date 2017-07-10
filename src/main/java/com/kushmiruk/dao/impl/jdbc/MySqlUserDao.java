@@ -38,29 +38,30 @@ public class MySqlUserDao extends EntityDao<User> implements UserDao {
     private static final Integer USER_ID_INDEX = 6;
     private static final Integer ID_INDEX = 1;
 
-    private MySqlUserDao() {
-        super(TABLE_NAME);
+    private MySqlUserDao(Connection connection) {
+        super(TABLE_NAME, connection);
     }
 
     private static class MySqlUserDaoHolder {
-        private static final MySqlUserDao instance = new MySqlUserDao();
+        private static MySqlUserDao instance(Connection connection) {
+            return new MySqlUserDao(connection);
+        }
     }
 
-    public static MySqlUserDao getInstance() {
-        return MySqlUserDaoHolder.instance;
+    public static MySqlUserDao getInstance(Connection connection) {
+        return MySqlUserDaoHolder.instance(connection);
     }
 
     @Override
     public Optional<String> findUserRole(Long id) {
         String query = selectQueryBuilder
-                .addTable(TABLE_NAME)
-                .addField(PARAMETER_ROLE)
+                .table(TABLE_NAME)
+                .field(PARAMETER_ROLE)
                 .from()
                 .join(JoinType.INNER, ROLE_TABLE, PARAMETER_ROLE_ID, PARAMETER_ID)
                 .condition(PARAMETER_ID)
                 .build();
-        try (Connection connection = dataSource.getConnection();
-             PreparedStatement statement = connection.prepareStatement(query)) {
+        try (PreparedStatement statement = connection.prepareStatement(query)) {
             statement.setLong(ID_INDEX, id);
             LOGGER.info(statement.toString());
             try (ResultSet resultSet = statement.executeQuery()) {
@@ -83,9 +84,10 @@ public class MySqlUserDao extends EntityDao<User> implements UserDao {
         String firstName = resultSet.getString(PARAMETER_FIRST_NAME);
         String lastName = resultSet.getString(PARAMETER_LAST_NAME);
         String email = resultSet.getString(PARAMETER_EMAIL);
+        Optional<UserAuthentication> optionalUserAuthentication = MySqlUserAuthenticationDao.getInstance(connection).findById(resultSet.getLong(PARAMETER_USER_AUTH));
         UserAuthentication userAuthentication = null;
-        if (MySqlUserAuthenticationDao.getInstance().findById(resultSet.getLong(PARAMETER_USER_AUTH)).isPresent()) {
-            userAuthentication = MySqlUserAuthenticationDao.getInstance().findById(resultSet.getLong(PARAMETER_USER_AUTH)).get();
+        if (optionalUserAuthentication.isPresent()) {
+            userAuthentication = optionalUserAuthentication.get();
         }
         UserRole userRole = null;
         if (findUserRole((resultSet.getLong(PARAMETER_ROLE_ID))).isPresent()) {
