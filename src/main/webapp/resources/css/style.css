@@ -264,13 +264,8 @@ a{
     top: 895px; 
 }
 
-.table{
-    color: #0086f6;
-    position: absolute;
-    left : 300px;
-}
 .error {
-    position: absolute;
+    position: relative;
     margin-left: 43%;
     margin-right: 30%;
     color : #FF0000;
@@ -303,4 +298,11 @@ a{
     cursor:pointer;
     overflow: hidden;
     outline:none;
+}
+
+.table{
+    color: black;
+    position: relative;
+    left : 400px;
+     margin-bottom: 30px;
 }

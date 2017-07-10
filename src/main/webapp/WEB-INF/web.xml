@@ -62,7 +62,7 @@
 
     <filter-mapping>
         <filter-name>SignInFilter</filter-name>
-        <url-pattern>/Airline</url-pattern>
+        <url-pattern>/*</url-pattern>
     </filter-mapping>
     <filter>
         <filter-name>SignedInFilter</filter-name>
@@ -71,7 +71,7 @@
 
     <filter-mapping>
         <filter-name>SignedInFilter</filter-name>
-        <url-pattern>/Airline</url-pattern>
+        <url-pattern>/*</url-pattern>
     </filter-mapping>
 
     <resource-ref>

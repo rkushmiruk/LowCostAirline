@@ -23,12 +23,12 @@
                     <td><label for=""><fmt:message key="seatsNumber" bundle="${bundle}" /></label>
                     </td>
                 </tr>
-                <c:forEach var="flight" items="${flights}">
+                <c:forEach var="ticket" items="${orderTickets}">
                 <tr>
                 <form class="section" action = "Airline" method="POST">
                     <div><input name="command" value="findTicket" type="hidden"/></div>
-                    <div><input name="id" value = "${flight.id}" type="hidden"/></div>
-                    <td><c:out value="${flight.id}"/></td>
+                    <div><input name="id" value = "${ticket.id}" type="hidden"/></div>
+                    <td><c:out value="${ticket.id}"/></td>
                     <td><c:out value="${flight.departureAirport.name} (${flight.departureAirport.city.name})"/></td>
                     <td><c:out value="${flight.destinationAirport.name} (${flight.destinationAirport.city.name})"/><td>
                     <td><c:out value="${flight.time} ${flight.departureDateTime}"/></td>

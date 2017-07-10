@@ -32,8 +32,6 @@
             <li><a href="/Airline?command=redirectProfile"><fmt:message key="profile" bundle="${bundle}" /></a></li>
             <li><a href="/Airline?command=logout"><fmt:message key="logout" bundle="${bundle}" /></a></li>
             </c:if>
-        </form>
-       
-        
+        </form>     
 </header>
     </body>
