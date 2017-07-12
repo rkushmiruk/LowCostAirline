@@ -6,7 +6,7 @@ DROP TABLE IF EXISTS `ticket_order`;
 DROP TABLE IF EXISTS `ticket`;
 DROP TABLE IF EXISTS `ticket_status`;
 DROP TABLE IF EXISTS `extra_price`;
-DROP TABLE IF EXISTS `baggage`;
+DROP TABLE IF EXISTS `baggage_type`;
 DROP TABLE IF EXISTS `flight`;
 DROP TABLE IF EXISTS `country`;
 DROP TABLE IF EXISTS `city`;
@@ -47,10 +47,11 @@ CREATE TABLE `ticket_order` (
 
 CREATE TABLE `ticket` (
   `id`                        INT(11) NOT NULL AUTO_INCREMENT,
-  `order_id`                  INT(11) NOT NULL,
+  `order_id`                  INT(11) NOT NULL ,
   `flight_id`                 INT(11) NOT NULL,
   `status_id`                 INT(11) NOT NULL,
-  `extra_price_id`            INT(11) NOT NULL,
+  `extra_price_id`            INT(11)  NOT NULL,
+  `baggage_id`				INT(11) NOT NULL,
   `passenger_first_name`      VARCHAR(50) NOT NULL,
   `passenger_last_name`       VARCHAR(50) NOT NULL,
   `passenger_email`           VARCHAR(255) NOT NULL ,
@@ -75,23 +76,21 @@ CREATE TABLE `flight` (
   `destination_datetime`   DATETIME,
   `flight_time`            INT(11)  NOT NULL,
   `total_seat_number`      INT(11)  NOT NULL,
+  `start_price`  INT(11) NOT NULL,
   PRIMARY KEY (`id`)
 );
 
 CREATE TABLE `extra_price` (
   `id`                          INT(11)  NOT NULL AUTO_INCREMENT,
-  `baggage_id`                  INT(11),
   `priority_registration_price` INT(11)  NOT NULL,
-  `purchase_datetime`           DATETIME NOT NULL,
+  `days_before_flight`           INT(11) NOT NULL,
   PRIMARY KEY (`id`)
 );
 
-CREATE TABLE `baggage` (
+CREATE TABLE `baggage_type` (
   `id`        INT(11) NOT NULL AUTO_INCREMENT,
-  `ticket_id` INT(11) NOT NULL,
-  `weight`    INT(11) NOT NULL,
-  `amount`    INT(11) NOT NULL,
-  `price`     INT(11)          DEFAULT 0,
+  `type`   VARCHAR(50) NOT NULL,
+  `price`     INT(11)     NOT NULL,
   PRIMARY KEY (`id`)
 );
 
@@ -153,6 +152,11 @@ ALTER TABLE `ticket`
   ADD CONSTRAINT `ticket_extra_price_fk` FOREIGN KEY (`extra_price_id`) REFERENCES `extra_price` (`id`)
   ON DELETE NO ACTION
   ON UPDATE NO ACTION;
+  
+ALTER TABLE `ticket`
+  ADD CONSTRAINT `ticket_baggage_fk` FOREIGN KEY (`baggage_id`) REFERENCES `baggage_type` (`id`)
+  ON DELETE NO ACTION
+  ON UPDATE NO ACTION;
 
 ALTER TABLE `flight`
   ADD CONSTRAINT `flight_departure_airport_fk` FOREIGN KEY (`departure_airport_id`) REFERENCES `airport` (`id`)
@@ -161,11 +165,6 @@ ALTER TABLE `flight`
 
 ALTER TABLE `flight`
   ADD CONSTRAINT `flight_destination_airport_fk` FOREIGN KEY (`destination_airport_id`) REFERENCES `airport` (`id`)
-  ON DELETE NO ACTION
-  ON UPDATE NO ACTION;
-
-ALTER TABLE `baggage`
-  ADD CONSTRAINT `baggage_ticket_fk` FOREIGN KEY (`ticket_id`) REFERENCES `ticket` (`id`)
   ON DELETE NO ACTION
   ON UPDATE NO ACTION;
 
@@ -193,7 +192,7 @@ ALTER TABLE `flight`
   AUTO_INCREMENT 1;
 ALTER TABLE `extra_price`
   AUTO_INCREMENT 1;
-ALTER TABLE `baggage`
+ALTER TABLE `baggage_type`
   AUTO_INCREMENT 1;
 ALTER TABLE `country`
   AUTO_INCREMENT 1;
@@ -258,18 +257,22 @@ INSERT INTO `airport` (city_id, name) VALUES
   (7, 'Fiumincino Airport');
 
 
-INSERT INTO `flight` (departure_airport_id, destination_airport_id, departure_datetime, flight_time, total_seat_number)
+INSERT INTO `flight` (departure_airport_id, destination_airport_id, departure_datetime, flight_time, total_seat_number,start_price)
 VALUES
-  (1, 2, '2017-07-01 07:30', 140, 150),
-  (2, 1, '2017-07-02 09:00', 140, 150),
-  (1, 3, '2017-07-03 09:00', 300, 150),
-  (3, 1, '2017-07-04 09:00', 300, 150),
-  (2, 4, '2017-07-05 09:00', 280, 150),
-  (2, 5, '2017-07-04 09:00', 280, 150),
-  (3, 5, '2017-07-04 09:00', 180, 150),
-  (3, 6, '2017-07-06 09:00', 240, 150),
-  (6, 1, '2017-07-05 09:00', 250, 150),
-  (6, 2, '2017-07-02 09:00', 260, 150),
-  (1, 7, '2017-07-01 09:00', 210, 150);
+  (1, 2, '2017-07-01 07:30', 140, 150,30),
+  (1, 2, '2017-07-01 08:30', 140, 350,40),
+  (2, 1, '2017-07-02 09:00', 140, 150,30),
+  (1, 3, '2017-07-03 09:00', 300, 150,30),
+  (3, 1, '2017-07-04 09:00', 300, 150,30),
+  (2, 4, '2017-07-05 09:00', 280, 150,30),
+  (2, 5, '2017-07-04 09:00', 280, 150,30),
+  (3, 5, '2017-07-04 09:00', 180, 150,30),
+  (3, 6, '2017-07-06 09:00', 240, 150,40),
+  (6, 1, '2017-07-05 09:00', 250, 150,50),
+  (6, 2, '2017-07-02 09:00', 260, 150,50),
+  (1, 7, '2017-07-01 09:00', 210, 150,30);
+  
+
+  
   
   
