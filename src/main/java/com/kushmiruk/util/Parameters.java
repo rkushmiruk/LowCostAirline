@@ -35,4 +35,5 @@ public final class Parameters {
     public static final String ON = "on";
     public static final String SEAT_NUMBER = "seatNumber";
     public static final String ORDER_TICKETS = "orderTickets";
+    public static final String CURRENT_FLIGHT = "currentFlight";
 }

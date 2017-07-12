@@ -8,6 +8,8 @@ import java.util.ResourceBundle;
  */
 public final class ExceptionMessage {
     public static final String ERROR_CONNECTION_INIT = "Error in database connection init";
+    public static final String EXTRA_PRICE_INSERT_ERROR = "Extra Price insert error";
+    public static final String TICKER_ORDER_INSERT_ERROR = " Ticket order insert.error";
     public static final String ERROR_PAGE = "Error page found ";
     public static final String MESSAGE_ERROR = "messageError";
     public static final String ERROR_DETAILS = "errorDetails";
@@ -24,7 +26,7 @@ public final class ExceptionMessage {
     public static final String WRONG_PASSWORD_ERROR = "wrong.password.error";
     public static final String ORDER_NOT_FOUND_ERROR = "order.not.found.error";
     public static final String UNIQUE_SEAT_NUMBER_ERROR = "unique.seat.number.error";
-
+    public static final String ID_NOT_FOUND_ERROR = "id.not.found.error";
 
     public static final Locale ENGLISH = new Locale("en", "US");
     public static final Locale UKRAINIAN = new Locale("uk", "UA");

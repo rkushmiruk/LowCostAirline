@@ -1,6 +1,5 @@
 package com.kushmiruk.service;
 
-import com.kushmiruk.command.LanguageCommand;
 import com.kushmiruk.dao.daointerface.FlightDao;
 import com.kushmiruk.dao.factory.DaoFactory;
 import com.kushmiruk.dao.factory.DataSourceFactory;
@@ -16,14 +15,10 @@ import java.util.List;
 import java.util.Optional;
 import javax.sql.DataSource;
 
-import org.apache.log4j.Logger;
-
 /**
  * Service for interact with DAO layer interface FlightDao
  */
 public class FlightService {
-    private static final Logger LOGGER = Logger.getLogger(FlightService.class);
-
     private FlightService() {
     }
 
@@ -86,7 +81,7 @@ public class FlightService {
             }
             connection.commit();
         } catch (SQLException e) {
-            throw new DaoException(e.getMessage() + "Roma");
+            throw new DaoException(e.getMessage());
         }
         return result;
     }
@@ -108,7 +103,7 @@ public class FlightService {
             value = flightDao.findById(id);
             if (!value.isPresent()) {
                 connection.rollback();
-                throw new DaoException("Flight not found");
+                throw new DaoException(ExceptionMessage.getMessage(ExceptionMessage.FLIGHT_NOT_FOUND_ERROR));
             }
             connection.commit();
         } catch (SQLException e) {

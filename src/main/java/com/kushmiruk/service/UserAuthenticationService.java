@@ -17,11 +17,11 @@ import javax.sql.DataSource;
  * Service for interact with DAO layer interface UserAuthenticationDao
  */
 public class UserAuthenticationService {
-
     private UserAuthenticationService() {
     }
 
     private static class UserAuthenticationServiceHolder {
+
         private static final UserAuthenticationService instance = new UserAuthenticationService();
     }
 
@@ -56,6 +56,31 @@ public class UserAuthenticationService {
             throw new DaoException(e.getMessage());
         }
         return value;
+    }
+
+    /**
+     * Retrieve id from userAuthentication table
+     *
+     * @param login login of user
+     * @return Long id
+     */
+    public Long getId(String login) {
+        DataSource dataSource = DataSourceFactory.getInstance().getDataSource();
+        Optional<Long> value;
+        try (Connection connection = dataSource.getConnection()) {
+            connection.setAutoCommit(false);
+            DaoFactory daoFactory = DaoFactory.getDaoFactory(connection);
+            UserAuthenticationDao userAuthenticationDao = daoFactory.createUserAuthenticationDao();
+            value = userAuthenticationDao.findId(login);
+            if (value.isPresent()) {
+                connection.rollback();
+                throw new DaoException(ExceptionMessage.getMessage(ExceptionMessage.ID_NOT_FOUND_ERROR));
+            }
+            connection.commit();
+        } catch (SQLException e) {
+            throw new DaoException(e.getMessage());
+        }
+        return value.get();
     }
 
 }

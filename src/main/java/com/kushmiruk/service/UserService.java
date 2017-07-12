@@ -6,6 +6,7 @@ import com.kushmiruk.dao.factory.DaoFactory;
 import com.kushmiruk.dao.factory.DataSourceFactory;
 import com.kushmiruk.exception.DaoException;
 import com.kushmiruk.model.entity.user.User;
+import com.kushmiruk.service.factory.ServiceFactory;
 import com.kushmiruk.util.ExceptionMessage;
 import com.kushmiruk.util.RegexPattern;
 
@@ -13,16 +14,19 @@ import java.sql.Connection;
 import java.sql.SQLException;
 import javax.sql.DataSource;
 
+import org.apache.log4j.Logger;
+
 /**
  * Service for interact with DAO layer interface UserDao
  */
 public class UserService {
+    private ServiceFactory serviceFactory = ServiceFactory.getInstance();
+    private UserAuthenticationService userAuthenticationService = serviceFactory.createUserAuthenticationService();
 
     private UserService() {
     }
 
     private static class UserServiceHolder {
-
         private static final UserService instance = new UserService();
     }
 
@@ -54,6 +58,9 @@ public class UserService {
                 connection.rollback();
                 throw new DaoException(ExceptionMessage.getMessage(ExceptionMessage.LOGIN_EXIST_ERROR));
             }
+            connection.commit();
+            userFromRequest.getUserAuthentication()
+                    .setId(userAuthenticationService.getId(userFromRequest.getUserAuthentication().getLogin()));
             value = userDao.insert(userFromRequest);
             if (!value) {
                 connection.rollback();
