@@ -5,88 +5,68 @@ import com.kushmiruk.dao.impl.jdbc.*;
 
 import java.sql.Connection;
 
-import org.apache.log4j.Logger;
-
 /**
  * MySql implementation for DaoFactory
  */
 public class MySqlDaoFactory extends DaoFactory {
-    private static final Logger LOGGER = Logger.getLogger(MySqlDaoFactory.class);
-    private static Connection connection;
-    private AirportDao airportDao = MySqlAirportDao.getInstance(connection);
-    private CountryDao countryDao = MySqlCountryDao.getInstance(connection);
-    private CityDao cityDao = MySqlCityDao.getInstance(connection);
-    private UserDao userDao = MySqlUserDao.getInstance(connection);
-    private UserAuthenticationDao userAuthenticationDao = MySqlUserAuthenticationDao.getInstance(connection);
-    private BaggageDao baggageDao = MySqlBaggageDao.getInstance(connection);
-    private FlightDao flightDao = MySqlFlightDao.getInstance(connection);
-    private TicketDao ticketDao = MySqlTicketDao.getInstance(connection);
-    private ExtraPriceDao extraPriceDao = MySqlExtraPriceDao.getInstance(connection);
-    private TicketOrderDao ticketOrderDao = MySqlTicketOrderDao.getInstance(connection);
+    private Connection connection;
 
     private MySqlDaoFactory(Connection connection) {
-        LOGGER.info(connection);
-
+        this.connection = connection;
     }
 
     private static class MySqlDaoFactoryHolder {
-        private static final MySqlDaoFactory instance(Connection connection) {
+        private static MySqlDaoFactory instance(Connection connection) {
             return new MySqlDaoFactory(connection);
         }
     }
 
     public static MySqlDaoFactory getInstance(Connection connection) {
-        MySqlDaoFactory.connection = connection;
         return MySqlDaoFactoryHolder.instance(connection);
     }
 
     @Override
     public AirportDao createAirportDao() {
-        return airportDao;
-    }
-
-    @Override
-    public BaggageDao createBaggageDao() {
-        return baggageDao;
+        return MySqlAirportDao.getInstance(connection);
     }
 
     @Override
     public CityDao createCityDao() {
-        return cityDao;
+        return MySqlCityDao.getInstance(connection);
     }
 
     @Override
     public CountryDao createCountryDao() {
-        return countryDao;
+        return MySqlCountryDao.getInstance(connection);
     }
 
     @Override
     public ExtraPriceDao createExtraPriceDao() {
-        return extraPriceDao;
+        return MySqlExtraPriceDao.getInstance(connection);
     }
 
     @Override
     public FlightDao createFlightDao() {
-        return flightDao;
+        return MySqlFlightDao.getInstance(connection);
     }
 
     @Override
     public TicketDao createTicketDao() {
-        return ticketDao;
+        return MySqlTicketDao.getInstance(connection);
     }
 
     @Override
     public TicketOrderDao createTicketOrderDao() {
-        return ticketOrderDao;
+        return MySqlTicketOrderDao.getInstance(connection);
     }
 
     @Override
     public UserDao createUserDao() {
-        return userDao;
+        return MySqlUserDao.getInstance(connection);
     }
 
     @Override
     public UserAuthenticationDao createUserAuthenticationDao() {
-        return userAuthenticationDao;
+        return MySqlUserAuthenticationDao.getInstance(connection);
     }
 }

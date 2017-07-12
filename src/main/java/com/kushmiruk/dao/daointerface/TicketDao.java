@@ -18,6 +18,13 @@ public interface TicketDao extends GenericDao<Ticket, Long> {
      */
     Optional<String> findTicketStatus(Long id);
 
+     /**
+     * Retrieve ticket baggage from database identified by id.
+     *
+     * @param id identifier of baggage
+     * @return baggage type
+     */
+    Optional<String> findTicketBaggage(Long id);
     /**
      * Retrieve list of all sell tickets seat numbers from database.
      *
@@ -25,4 +32,5 @@ public interface TicketDao extends GenericDao<Ticket, Long> {
      * @return list of sell tickets seat numbers
      */
     List<Integer> findAllSellTicketsSeatNumbers(Long flightId);
+
 }

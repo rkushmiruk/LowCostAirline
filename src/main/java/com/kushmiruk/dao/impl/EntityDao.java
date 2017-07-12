@@ -1,14 +1,12 @@
 package com.kushmiruk.dao.impl;
 
 import com.kushmiruk.dao.daointerface.GenericDao;
-import com.kushmiruk.dao.factory.DataSourceFactory;
 import com.kushmiruk.dao.impl.util.*;
 import com.kushmiruk.model.entity.Entity;
 import com.kushmiruk.util.LoggerMessage;
 import com.kushmiruk.util.QueryMessage;
 import org.apache.log4j.Logger;
 
-import javax.sql.DataSource;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -95,6 +93,7 @@ public abstract class EntityDao<T extends Entity> implements GenericDao<T, Long>
                 .addValues(arrayOfEntityParameters(entity))
                 .build();
         try (PreparedStatement statement = connection.prepareStatement(query)) {
+            LOGGER.info(entity);
             setEntityToParameters(entity, statement);
             LOGGER.info(statement.toString());
             statement.executeUpdate();
@@ -145,6 +144,24 @@ public abstract class EntityDao<T extends Entity> implements GenericDao<T, Long>
             LOGGER.error(LoggerMessage.DB_ERROR_SEARCH + tableName + LoggerMessage.EXCEPTION_MESSAGE + e.getMessage());
         }
         return false;
+    }
+
+    @Override
+    public Optional<Long> findId() {
+        String query = QueryMessage.FIND_ID + tableName;
+        try (PreparedStatement statement = connection.prepareStatement(query)) {
+            LOGGER.info(statement.toString());
+            try (ResultSet resultSet = statement.executeQuery()) {
+                if (resultSet.next()) {
+                    return Optional.ofNullable(resultSet.getLong(1));
+                }
+            }
+        } catch (SQLException e) {
+            LOGGER.error(LoggerMessage.DB_ERROR_SEARCH + tableName + LoggerMessage.ITEM_WITH_ID +
+                    LoggerMessage.EXCEPTION_MESSAGE + e.getMessage());
+        }
+        return Optional.empty();
+
     }
 
     @Override

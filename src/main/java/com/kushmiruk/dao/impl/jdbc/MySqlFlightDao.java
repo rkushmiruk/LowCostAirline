@@ -45,14 +45,11 @@ public class MySqlFlightDao extends EntityDao<Flight> implements FlightDao {
     private static final Integer ID_INDEX = 8;
 
     private MySqlFlightDao(Connection connection) {
-
         super(TABLE_NAME, connection);
-        LOGGER.info(connection);
     }
 
     private static class MySqlFlightDaoHolder {
         private static MySqlFlightDao instance(Connection connection) {
-            LOGGER.info(connection);
             return new MySqlFlightDao(connection);
         }
     }
@@ -66,7 +63,6 @@ public class MySqlFlightDao extends EntityDao<Flight> implements FlightDao {
     public List<Flight> findFlights(String fromCityName, String toCityName, String date) {
         List<Flight> result = new ArrayList<>();
         String query = QueryMessage.FIND_FLIGHTS;
-        LOGGER.info(connection);
         try (PreparedStatement statement = connection.prepareStatement(query)) {
             statement.setString(1, fromCityName);
             statement.setString(2, toCityName);

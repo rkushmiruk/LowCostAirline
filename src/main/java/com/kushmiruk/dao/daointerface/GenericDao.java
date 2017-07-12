@@ -51,6 +51,14 @@ public interface GenericDao<Entity, ID> {
     boolean delete(ID id);
 
     /**
+     * Find entity id
+     *
+     * @return entity id
+     */
+    Optional<Long> findId();
+
+
+    /**
      * returns entity name
      *
      * @return entity name

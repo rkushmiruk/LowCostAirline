@@ -64,7 +64,6 @@ public class MySqlUserAuthenticationDao extends EntityDao<UserAuthentication> im
         return Optional.empty();
     }
 
-
     @Override
     public Optional<UserAuthentication> findOneByLogin(String login) {
         String query = selectQueryBuilder

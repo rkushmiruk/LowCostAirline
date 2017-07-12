@@ -26,7 +26,7 @@ public class MySqlTicketDao extends EntityDao<Ticket> implements TicketDao {
     private static final String PARAMETER_LAST_NAME = "passenger_last_name";
     private static final String PARAMETER_EMAIL = "passenger_email";
     private static final String PARAMETER_PRIORITY_REGISTRATION = "has_priority_registration";
-    private static final String PARAMETER_BAGGAGE = "has_baggage";
+    private static final String PARAMETER_BAGGAGE_ID = "baggage_id";
     private static final String PARAMETER_PRICE = "price";
     private static final String PARAMETER_SEAT_NUMBER = "seat_number";
     private static final String PARAMETER_TICKET_ORDER = "order_id";
@@ -34,7 +34,9 @@ public class MySqlTicketDao extends EntityDao<Ticket> implements TicketDao {
     private static final String PARAMETER_EXTRA_PRICE = "extra_price_id";
     private static final String PARAMETER_STATUS_ID = "status_id";
     private static final String PARAMETER_STATUS = "STATUS";
+    private static final String PARAMETER_BAGGAGE = "type";
     private static final String STATUS_TABLE = "ticket_status";
+    private static final String BAGGAGE_TABLE = "baggage_type";
     private static final Integer PARAMETER_NUMBERS_WITHOUT_ID = 11;
     private static final Integer FIRST_NAME_INDEX = 1;
     private static final Integer LAST_NAME_INDEX = 2;
@@ -46,7 +48,7 @@ public class MySqlTicketDao extends EntityDao<Ticket> implements TicketDao {
     private static final Integer TICKET_ORDER_INDEX = 8;
     private static final Integer FLIGHT_INDEX = 9;
     private static final Integer EXTRA_PRICE_INDEX = 10;
-    private static final Integer TICKET_STATUS_INDEX = 10;
+    private static final Integer TICKET_STATUS_INDEX = 11;
     private static final Integer ID_INDEX = 12;
     private static final Integer STATUS_ID_INDEX = 1;
 
@@ -116,6 +118,31 @@ public class MySqlTicketDao extends EntityDao<Ticket> implements TicketDao {
         return Optional.empty();
     }
 
+    public Optional<String> findTicketBaggage(Long id) {
+        String query = selectQueryBuilder
+                .table(TABLE_NAME)
+                .field(PARAMETER_BAGGAGE)
+                .from()
+                .join(JoinType.INNER, BAGGAGE_TABLE, PARAMETER_BAGGAGE_ID, PARAMETER_ID)
+                .condition(PARAMETER_ID)
+                .build();
+        try (PreparedStatement statement = connection.prepareStatement(query)) {
+            statement.setLong(STATUS_ID_INDEX, id);
+            LOGGER.info(statement.toString());
+            try (ResultSet resultSet = statement.executeQuery()) {
+                if (resultSet.next()) {
+                    LOGGER.info(LoggerMessage.ITEM + STATUS_TABLE + LoggerMessage.WITH_ID + id);
+                    return Optional.of(resultSet.getString(PARAMETER_STATUS));
+                }
+            }
+        } catch (SQLException e) {
+            LOGGER.error(LoggerMessage.DB_ERROR_SEARCH + STATUS_TABLE + LoggerMessage.ITEM_WITH_ID + id +
+                    LoggerMessage.EXCEPTION_MESSAGE + e.getMessage());
+        }
+
+        return Optional.empty();
+    }
+
 
     @Override
     protected Optional<Ticket> getEntityFromResultSet(ResultSet resultSet) throws SQLException {
@@ -124,8 +151,11 @@ public class MySqlTicketDao extends EntityDao<Ticket> implements TicketDao {
         String lastName = resultSet.getString(PARAMETER_LAST_NAME);
         String email = resultSet.getString(PARAMETER_EMAIL);
         Boolean hasPriorityRegistration = resultSet.getBoolean(PARAMETER_PRIORITY_REGISTRATION);
-        Boolean hasBaggage = resultSet.getBoolean(PARAMETER_BAGGAGE);
-        Integer price = resultSet.getInt(PARAMETER_PRICE);
+        Baggage baggage = null;
+        if (findTicketBaggage(resultSet.getLong(PARAMETER_BAGGAGE_ID)).isPresent()) {
+            baggage = Baggage.valueOf(findTicketBaggage(resultSet.getLong(PARAMETER_BAGGAGE_ID)).get());
+        }
+        Long price = resultSet.getLong(PARAMETER_PRICE);
         Integer seatNUmber = resultSet.getInt(PARAMETER_SEAT_NUMBER);
         Optional<TicketOrder> optionalTickerOrder = MySqlTicketOrderDao.getInstance(connection).findById(resultSet.getLong(PARAMETER_TICKET_ORDER));
         TicketOrder ticketOrder = null;
@@ -153,7 +183,7 @@ public class MySqlTicketDao extends EntityDao<Ticket> implements TicketDao {
                 .passengerLastName(lastName)
                 .email(email)
                 .hasPriorityRegistration(hasPriorityRegistration)
-                .hasBaggage(hasBaggage)
+                .baggage(baggage)
                 .price(price)
                 .seatNumber(seatNUmber)
                 .ticketOrder(ticketOrder)
@@ -169,17 +199,18 @@ public class MySqlTicketDao extends EntityDao<Ticket> implements TicketDao {
         statement.setString(LAST_NAME_INDEX, entity.getPassngerLastName());
         statement.setString(EMAIL_INDEX, entity.getEmail());
         statement.setBoolean(PRIORITY_REGISTRATION_INDEX, entity.getHasPriorityRegistration());
-        statement.setBoolean(BAGGAGE_INDEX, entity.getHasBaggage());
-        statement.setInt(PRICE_INDEX, entity.getPrice());
+        statement.setLong(BAGGAGE_INDEX, entity.getBaggage().getId());
+        statement.setLong(PRICE_INDEX, entity.getPrice());
         statement.setInt(SEAT_NUMBER_INDEX, entity.getSeatNumber());
         statement.setLong(TICKET_ORDER_INDEX, entity.getTicketOrder().getId());
         statement.setLong(FLIGHT_INDEX, entity.getFlight().getId());
         statement.setLong(EXTRA_PRICE_INDEX, entity.getExtraPrice().getId());
-        statement.setString(TICKET_STATUS_INDEX, entity.getTicketStatus().toString());
+        statement.setLong(TICKET_STATUS_INDEX, entity.getTicketStatus().getId());
         if (statement.getParameterMetaData().getParameterCount() == ID_INDEX) {
             statement.setLong(ID_INDEX, entity.getId());
         }
     }
+
 
     @Override
     protected String[] arrayOfEntityParameters(Ticket entity) {
@@ -188,7 +219,7 @@ public class MySqlTicketDao extends EntityDao<Ticket> implements TicketDao {
         result[1] = PARAMETER_LAST_NAME;
         result[2] = PARAMETER_EMAIL;
         result[3] = PARAMETER_PRIORITY_REGISTRATION;
-        result[4] = PARAMETER_BAGGAGE;
+        result[4] = PARAMETER_BAGGAGE_ID;
         result[5] = PARAMETER_PRICE;
         result[6] = PARAMETER_SEAT_NUMBER;
         result[7] = PARAMETER_TICKET_ORDER;
