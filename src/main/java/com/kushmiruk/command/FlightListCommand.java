@@ -31,8 +31,6 @@ public class FlightListCommand implements Command {
         request.getSession().setAttribute(Parameters.FROM_CITY, cityFrom);
         request.getSession().setAttribute(Parameters.TO_CITY, cityTo);
         request.getSession().setAttribute(Parameters.DATE, date);
-        LOGGER.info(cityFrom);
-
         List<Flight> flights = flightService.searchFlights(cityFrom, cityTo, date);
         LOGGER.info(LoggerMessage.FLIGHTS + flights);
         request.getSession().setAttribute(Parameters.FLIGHTS, flights);

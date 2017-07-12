@@ -14,9 +14,6 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.apache.log4j.Logger;
 
-/**
- * It checks user's credentials and lets him to sign in
- */
 public class TicketCommand implements Command {
     private static final Logger LOGGER = Logger.getLogger(TicketCommand.class);
     private ServiceFactory serviceFactory = ServiceFactory.getInstance();
@@ -31,6 +28,7 @@ public class TicketCommand implements Command {
         request.getSession().setAttribute(Parameters.FREE_TICKETS, freeTickets);
         Integer countTicket = ticketService.parseInteger(request.getParameter(Parameters.COUNT));
         request.getSession().setAttribute(Parameters.COUNT_TICKET, countTicket);
+        request.getSession().setAttribute(Parameters.CURRENT_FLIGHT, flight);
         LOGGER.info(id);
         LOGGER.info(countTicket);
         return Pages.TICKET_PAGE;

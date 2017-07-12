@@ -24,7 +24,6 @@ public class SignInCommand implements Command {
     public String execute(HttpServletRequest request, HttpServletResponse response) throws AppException {
         String login = request.getParameter(Parameters.LOGIN);
         String password = request.getParameter(Parameters.PASSWORD);
-
         UserAuthentication userAuthentication = new UserAuthentication(login, password);
         request.getSession().setAttribute(Parameters.USER_AUTH, userAuthentication);
         userAuthenticationService.authentication(userAuthentication);

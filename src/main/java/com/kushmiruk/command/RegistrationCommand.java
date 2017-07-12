@@ -42,7 +42,6 @@ public class RegistrationCommand implements Command {
     private UserAuthentication createUserAuthentication(HttpServletRequest request) {
         String login = request.getParameter(Parameters.LOGIN);
         String password = request.getParameter(Parameters.PASSWORD);
-
         UserAuthentication userAuthentication = new UserAuthentication(login, password);
         request.getSession().setAttribute(Parameters.USER_AUTH, userAuthentication);
         return userAuthentication;
@@ -52,7 +51,6 @@ public class RegistrationCommand implements Command {
         String firstName = request.getParameter(Parameters.FIRST_NAME);
         String lastName = request.getParameter(Parameters.LAST_NAME);
         String email = request.getParameter(Parameters.EMAIL);
-
         User user = new User.Builder()
                 .firstName(firstName)
                 .lastName(lastName)
@@ -62,7 +60,6 @@ public class RegistrationCommand implements Command {
                 .build();
         request.getSession().setAttribute(Parameters.USER, user);
         userService.save(user);
-
     }
 
 }
