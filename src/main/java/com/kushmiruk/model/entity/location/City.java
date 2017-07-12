@@ -5,7 +5,7 @@ import com.kushmiruk.model.entity.Entity;
 /**
  * Entity to table City
  */
-public class City extends Entity implements Cloneable {
+public class City extends Entity {
     private Long id;
     private String name;
     private Integer timeZone;
@@ -55,11 +55,6 @@ public class City extends Entity implements Cloneable {
 
     public void setCountry(Country country) {
         this.country = country;
-    }
-
-    @Override
-    protected Object clone() throws CloneNotSupportedException {
-        return new City(this);
     }
 
     @Override

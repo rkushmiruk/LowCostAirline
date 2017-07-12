@@ -5,19 +5,20 @@ import com.kushmiruk.model.entity.Entity;
 /**
  * Entity to table Ticket
  */
-public class Ticket extends Entity implements Cloneable {
+public class Ticket extends Entity {
     private Long id;
     private String passengerFirstName;
     private String passengerLastName;
     private String email;
     private Boolean hasPriorityRegistration;
-    private Boolean hasBaggage;
-    private Integer price;
+    private Baggage baggage;
+    private Long price;
     private Integer seatNumber;
     private TicketOrder ticketOrder;
     private Flight flight;
     private ExtraPrice extraPrice;
     private TicketStatus ticketStatus;
+    
 
     public Ticket(Ticket ticket) {
         this.id = ticket.id;
@@ -25,7 +26,7 @@ public class Ticket extends Entity implements Cloneable {
         this.passengerLastName = ticket.passengerLastName;
         this.email = ticket.email;
         this.hasPriorityRegistration = ticket.hasPriorityRegistration;
-        this.hasBaggage = ticket.hasBaggage;
+        this.baggage = ticket.baggage;
         this.price = ticket.price;
         this.seatNumber = ticket.seatNumber;
         this.ticketOrder = ticket.ticketOrder;
@@ -40,12 +41,13 @@ public class Ticket extends Entity implements Cloneable {
         this.passengerLastName = builder.passengerLastName;
         this.email = builder.email;
         this.hasPriorityRegistration = builder.hasPriorityRegistration;
-        this.hasBaggage = builder.hasBaggage;
+        this.baggage = builder.baggage;
         this.price = builder.price;
         this.seatNumber = builder.seatNumber;
         this.ticketOrder = builder.ticketOrder;
         this.flight = builder.flight;
         this.extraPrice = builder.extraPrice;
+        this.ticketStatus = builder.ticketStatus;
     }
 
     /**
@@ -57,8 +59,8 @@ public class Ticket extends Entity implements Cloneable {
         private String passengerLastName;
         private String email;
         private Boolean hasPriorityRegistration;
-        private Boolean hasBaggage;
-        private Integer price;
+        private Baggage baggage;
+        private Long price;
         private Integer seatNumber;
         private TicketOrder ticketOrder;
         private Flight flight;
@@ -90,12 +92,12 @@ public class Ticket extends Entity implements Cloneable {
             return this;
         }
 
-        public Builder hasBaggage(Boolean hasBaggage) {
-            this.hasBaggage = hasBaggage;
+        public Builder baggage(Baggage baggage) {
+            this.baggage = baggage;
             return this;
         }
 
-        public Builder price(Integer price) {
+        public Builder price(Long price) {
             this.price = price;
             return this;
         }
@@ -170,19 +172,19 @@ public class Ticket extends Entity implements Cloneable {
         this.hasPriorityRegistration = hasPriorityRegistration;
     }
 
-    public Boolean getHasBaggage() {
-        return hasBaggage;
+    public Baggage getBaggage() {
+        return baggage;
     }
 
-    public void setHasBaggage(Boolean hasBaggage) {
-        this.hasBaggage = hasBaggage;
+    public void setBaggage(Baggage baggage) {
+        this.baggage = baggage;
     }
 
-    public Integer getPrice() {
+    public Long getPrice() {
         return price;
     }
 
-    public void setPrice(Integer price) {
+    public void setPrice(Long price) {
         this.price = price;
     }
 
@@ -226,12 +228,6 @@ public class Ticket extends Entity implements Cloneable {
         this.ticketStatus = ticketStatus;
     }
 
-
-    @Override
-    protected Object clone() throws CloneNotSupportedException {
-        return new Ticket(this);
-    }
-
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -247,7 +243,7 @@ public class Ticket extends Entity implements Cloneable {
         if (email != null ? !email.equals(ticket.email) : ticket.email != null) return false;
         if (hasPriorityRegistration != null ? !hasPriorityRegistration.equals(ticket.hasPriorityRegistration) : ticket.hasPriorityRegistration != null)
             return false;
-        if (hasBaggage != null ? !hasBaggage.equals(ticket.hasBaggage) : ticket.hasBaggage != null) return false;
+        if (baggage != null ? !baggage.equals(ticket.baggage) : ticket.baggage != null) return false;
         if (price != null ? !price.equals(ticket.price) : ticket.price != null) return false;
         if (seatNumber != null ? !seatNumber.equals(ticket.seatNumber) : ticket.seatNumber != null) return false;
         if (ticketOrder != null ? !ticketOrder.equals(ticket.ticketOrder) : ticket.ticketOrder != null) return false;
@@ -262,7 +258,7 @@ public class Ticket extends Entity implements Cloneable {
         result = 61 * result + (passengerLastName != null ? passengerLastName.hashCode() : 0);
         result = 61 * result + (email != null ? email.hashCode() : 0);
         result = 61 * result + (hasPriorityRegistration != null ? hasPriorityRegistration.hashCode() : 0);
-        result = 61 * result + (hasBaggage != null ? hasBaggage.hashCode() : 0);
+        result = 61 * result + (baggage != null ? baggage.hashCode() : 0);
         result = 61 * result + (price != null ? price.hashCode() : 0);
         result = 61 * result + (seatNumber != null ? seatNumber.hashCode() : 0);
         result = 61 * result + (ticketOrder != null ? ticketOrder.hashCode() : 0);
@@ -280,12 +276,13 @@ public class Ticket extends Entity implements Cloneable {
                 .append(", passengerLastName='").append(passengerLastName)
                 .append(", EMAIL='").append(email)
                 .append(", hasPriorityRegistration=").append(hasPriorityRegistration)
-                .append(", hasBaggage=").append(hasBaggage)
+                .append(", baggage=").append(baggage)
                 .append(", price=").append(price)
                 .append(", seatNumber=").append(seatNumber)
                 .append(", ticketOrder=").append(ticketOrder)
                 .append(", flight=").append(flight)
                 .append(", extraPrice=").append(extraPrice)
+                .append(",ticketStatus=").append(ticketStatus)
                 .append('}').toString();
     }
 }

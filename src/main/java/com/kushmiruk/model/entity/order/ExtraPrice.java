@@ -2,26 +2,29 @@ package com.kushmiruk.model.entity.order;
 
 import com.kushmiruk.model.entity.Entity;
 
-import java.sql.Date;
-
 /**
  * Entity to table ExtraPrice
  */
-public class ExtraPrice extends Entity implements Cloneable {
+public class ExtraPrice extends Entity {
     private Long id;
     private Integer priorityRegistrationPrice;
-    private Date purchaseDateTime;
+    private Integer daysBeforeFlight;
 
-    public ExtraPrice(Long id, Integer priorityRegistrationPrice, Date purchaseDateTime) {
+    public ExtraPrice(Long id, Integer priorityRegistrationPrice,Integer daysBeforeFlight) {
         this.id = id;
         this.priorityRegistrationPrice = priorityRegistrationPrice;
-        this.purchaseDateTime = purchaseDateTime;
+        this.daysBeforeFlight = daysBeforeFlight;
+    }
+    
+     public ExtraPrice(Integer priorityRegistrationPrice, Integer daysBeforeFlight) {
+        this.priorityRegistrationPrice = priorityRegistrationPrice;
+        this.daysBeforeFlight = daysBeforeFlight;
     }
 
     public ExtraPrice(ExtraPrice extraPrice) {
         this.id = extraPrice.id;
         this.priorityRegistrationPrice = extraPrice.priorityRegistrationPrice;
-        this.purchaseDateTime = extraPrice.purchaseDateTime;
+        this.daysBeforeFlight = extraPrice.daysBeforeFlight;
     }
 
     public Long getId() {
@@ -40,17 +43,12 @@ public class ExtraPrice extends Entity implements Cloneable {
         this.priorityRegistrationPrice = priorityRegistrationPrice;
     }
 
-    public Date getPurchaseDateTime() {
-        return purchaseDateTime;
+    public Integer getDaysBeforeFlight() {
+        return daysBeforeFlight;
     }
 
-    public void setPurchaseDateTime(Date purchaseDateTime) {
-        this.purchaseDateTime = purchaseDateTime;
-    }
-
-    @Override
-    protected Object clone() throws CloneNotSupportedException {
-        return new ExtraPrice(this);
+    public void setDaysBeforeFlight(Integer daysBeforeFlight) {
+        this.daysBeforeFlight = daysBeforeFlight;
     }
 
     @Override
@@ -63,14 +61,14 @@ public class ExtraPrice extends Entity implements Cloneable {
         if (id != null ? !id.equals(that.id) : that.id != null) return false;
         if (priorityRegistrationPrice != null ? !priorityRegistrationPrice.equals(that.priorityRegistrationPrice) : that.priorityRegistrationPrice != null)
             return false;
-        return purchaseDateTime != null ? purchaseDateTime.equals(that.purchaseDateTime) : that.purchaseDateTime == null;
+        return daysBeforeFlight != null ? daysBeforeFlight.equals(that.daysBeforeFlight) : that.daysBeforeFlight == null;
     }
 
     @Override
     public int hashCode() {
         int result = id != null ? id.hashCode() : 0;
         result = 43 * result + (priorityRegistrationPrice != null ? priorityRegistrationPrice.hashCode() : 0);
-        result = 43 * result + (purchaseDateTime != null ? purchaseDateTime.hashCode() : 0);
+        result = 43 * result + (daysBeforeFlight != null ? daysBeforeFlight.hashCode() : 0);
         return result;
     }
 
@@ -79,7 +77,7 @@ public class ExtraPrice extends Entity implements Cloneable {
         return new StringBuilder().append("ExtraPrice{")
                 .append("id=").append(id)
                 .append(", priorityRegistrationPrice=").append(priorityRegistrationPrice)
-                .append(", purchaseDateTime=").append(purchaseDateTime)
+                .append(", daysBeforeFlight=").append(daysBeforeFlight)
                 .append('}').toString();
     }
 }

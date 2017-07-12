@@ -5,7 +5,7 @@ import com.kushmiruk.model.entity.Entity;
 /**
  * Entity to table Country
  */
-public class Country extends Entity implements Cloneable {
+public class Country extends Entity {
     private Long id;
     private String name;
 
@@ -33,11 +33,6 @@ public class Country extends Entity implements Cloneable {
 
     public void setName(String name) {
         this.name = name;
-    }
-
-    @Override
-    protected Object clone() throws CloneNotSupportedException {
-        return new Country(this);
     }
 
     @Override

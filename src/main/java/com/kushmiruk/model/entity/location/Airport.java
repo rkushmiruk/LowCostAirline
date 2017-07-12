@@ -5,7 +5,7 @@ import com.kushmiruk.model.entity.Entity;
 /**
  * Entity to table Airport
  */
-public class Airport extends Entity implements Cloneable {
+public class Airport extends Entity {
     private Long id;
     private String name;
     private City city;
@@ -45,11 +45,6 @@ public class Airport extends Entity implements Cloneable {
 
     public void setCity(City city) {
         this.city = city;
-    }
-
-    @Override
-    protected Object clone() throws CloneNotSupportedException {
-        return new Airport(this);
     }
 
     @Override

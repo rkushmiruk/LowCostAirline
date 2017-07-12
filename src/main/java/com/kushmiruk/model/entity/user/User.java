@@ -5,13 +5,15 @@ import com.kushmiruk.model.entity.Entity;
 /**
  * Entity to table User
  */
-public class User extends Entity implements Cloneable {
+public class User extends Entity {
     private Long id;
     private String firstName;
     private String lastName;
     private String email;
     private UserAuthentication userAuthentication;
     private UserRole userRole;
+    
+    
 
     private User(Builder builder) {
         this.id = builder.id;
@@ -123,11 +125,6 @@ public class User extends Entity implements Cloneable {
 
     public void setUserRole(UserRole userRole) {
         this.userRole = userRole;
-    }
-
-    @Override
-    protected Object clone() throws CloneNotSupportedException {
-        return new User(this);
     }
 
     @Override

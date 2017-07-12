@@ -5,7 +5,7 @@ import com.kushmiruk.model.entity.Entity;
 /**
  * Entity to table UserAuthentication
  */
-public class UserAuthentication extends Entity implements Cloneable {
+public class UserAuthentication extends Entity {
     private Long id;
     private String login;
     private String password;
@@ -49,11 +49,6 @@ public class UserAuthentication extends Entity implements Cloneable {
 
     public void setPassword(String password) {
         this.password = password;
-    }
-
-    @Override
-    protected UserAuthentication clone() throws CloneNotSupportedException {
-        return new UserAuthentication(this);
     }
 
     @Override

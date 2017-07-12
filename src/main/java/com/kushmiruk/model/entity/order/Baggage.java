@@ -1,160 +1,35 @@
 package com.kushmiruk.model.entity.order;
 
-import com.kushmiruk.model.entity.Entity;
+public enum Baggage {
+    NO(1L, 0), LOW(2L, 5), MEDIUM(3L, 7), BIG(4L, 10);
 
-/**
- * Entity to table Baggage
- */
-public class Baggage extends Entity implements Cloneable {
     private Long id;
-    private Integer weight;
-    private Integer amount;
     private Integer price;
-    private Ticket ticket;
 
-    private Baggage(Builder builder) {
-        this.id = builder.id;
-        this.weight = builder.weight;
-        this.amount = builder.amount;
-        this.price = builder.price;
-        this.ticket = builder.ticket;
-    }
-
-    public Baggage(Long id, Integer weight, Integer amount, Integer price, Ticket ticket) {
+    Baggage(Long id, Integer price) {
         this.id = id;
-        this.weight = weight;
-        this.amount = amount;
         this.price = price;
-        this.ticket = ticket;
-    }
-
-    public Baggage(Baggage baggage) {
-        this.id = baggage.id;
-        this.weight = baggage.weight;
-        this.amount = baggage.amount;
-        this.price = baggage.price;
-        this.ticket = baggage.ticket;
-    }
-
-    /**
-     * Builder for Baggage entities
-     */
-    public static class Builder {
-        private static final Integer BAGGAGE_RATE = 2;
-        private Long id;
-        private Integer weight;
-        private Integer amount;
-        private Integer price;
-        private Ticket ticket;
-
-        public Builder id(Long id) {
-            this.id = id;
-            return this;
-        }
-
-        public Builder weight(Integer weight) {
-            this.weight = weight;
-            return this;
-        }
-
-        public Builder amount(Integer amount) {
-            this.amount = amount;
-            return this;
-        }
-
-        public Builder price(Integer price) {
-            this.price = (amount + weight) / BAGGAGE_RATE;
-            return this;
-        }
-
-        public Builder ticket(Ticket ticket) {
-            this.ticket = ticket;
-            return this;
-        }
-
-        public Baggage build() {
-            return new Baggage(this);
-        }
     }
 
     public Long getId() {
         return id;
     }
 
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public Integer getWeight() {
-        return weight;
-    }
-
-    public void setWeight(Integer weight) {
-        this.weight = weight;
-    }
-
-    public Integer getAmount() {
-        return amount;
-    }
-
-    public void setAmount(Integer amount) {
-        this.amount = amount;
-    }
-
     public Integer getPrice() {
         return price;
     }
 
-    public void setPrice() {
-        this.price = (amount + weight) * 20;
-    }
-
-    public Ticket getTicket() {
-        return ticket;
-    }
-
-    public void setTicket(Ticket ticket) {
-        this.ticket = ticket;
-    }
-
-    @Override
-    protected Object clone() throws CloneNotSupportedException {
-        return new Baggage(this);
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-
-        Baggage baggage = (Baggage) o;
-
-        if (id != null ? !id.equals(baggage.id) : baggage.id != null) return false;
-        if (weight != null ? !weight.equals(baggage.weight) : baggage.weight != null) return false;
-        if (amount != null ? !amount.equals(baggage.amount) : baggage.amount != null) return false;
-        if (price != null ? !price.equals(baggage.price) : baggage.price != null) return false;
-        return ticket != null ? ticket.equals(baggage.ticket) : baggage.ticket == null;
-    }
-
-    @Override
-    public int hashCode() {
-        int result = id != null ? id.hashCode() : 0;
-        result = 59 * result + (weight != null ? weight.hashCode() : 0);
-        result = 59 * result + (amount != null ? amount.hashCode() : 0);
-        result = 59 * result + (price != null ? price.hashCode() : 0);
-        result = 59 * result + (ticket != null ? ticket.hashCode() : 0);
-        return result;
+    public static Baggage getById(Long id) {
+        for (Baggage e : values()) {
+            if (e.id.equals(id)) {
+                return e;
+            }
+        }
+        return null;
     }
 
     @Override
     public String toString() {
-        return new StringBuilder()
-                .append("Baggage{")
-                .append("id=").append(id)
-                .append(", weight=").append(weight)
-                .append(", amount=").append(amount)
-                .append(", price=").append(price)
-                .append(", ticket=").append(ticket)
-                .append('}').toString();
+        return name().toLowerCase();
     }
 }
