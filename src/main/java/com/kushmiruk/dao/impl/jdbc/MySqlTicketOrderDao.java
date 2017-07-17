@@ -47,6 +47,31 @@ public class MySqlTicketOrderDao extends EntityDao<TicketOrder> implements Ticke
     }
 
     @Override
+    public List<TicketOrder> findAll(Integer start, Integer numbersOfItems) {
+        List<TicketOrder> result = new ArrayList<>();
+        String query = selectQueryBuilder
+                .table(tableName)
+                .getAll()
+                .from()
+                .limit(start, numbersOfItems)
+                .build();
+        try (PreparedStatement statement = connection.prepareStatement(query);
+             ResultSet resultSet = statement.executeQuery()) {
+            LOGGER.info(statement.toString());
+            while (resultSet.next()) {
+                if (getEntityFromResultSet(resultSet).isPresent()) {
+                    result.add(getEntityFromResultSet(resultSet).get());
+                }
+            }
+            LOGGER.info(LoggerMessage.ITEMS + tableName + LoggerMessage.FOUND_IN_TABLE);
+        } catch (SQLException e) {
+            LOGGER.error(LoggerMessage.DB_ERROR_SEARCH + tableName + LoggerMessage.EXCEPTION_MESSAGE + e.getMessage());
+        }
+        return result;
+    }
+
+
+    @Override
     public List<TicketOrder> findTicketOrdersByLogin(String login) {
         List<TicketOrder> result = new ArrayList<>();
         String query = QueryMessage.FIND_TICKET_ORDERS;

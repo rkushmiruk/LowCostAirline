@@ -7,6 +7,7 @@ import com.kushmiruk.model.entity.user.User;
 import com.kushmiruk.model.entity.user.UserAuthentication;
 import com.kushmiruk.model.entity.user.UserRole;
 import com.kushmiruk.util.LoggerMessage;
+import com.kushmiruk.util.QueryMessage;
 import org.apache.log4j.Logger;
 
 import java.sql.Connection;
@@ -50,6 +51,26 @@ public class MySqlUserDao extends EntityDao<User> implements UserDao {
 
     public static MySqlUserDao getInstance(Connection connection) {
         return MySqlUserDaoHolder.instance(connection);
+    }
+
+    @Override
+    public Optional<User> findByLogin(String login) {
+        String query = QueryMessage.FIND_BY_LOGIN;
+        try (PreparedStatement statement = connection.prepareStatement(query)) {
+            statement.setString(1, login);
+            LOGGER.info(statement.toString());
+            try (ResultSet resultSet = statement.executeQuery()) {
+                if (resultSet.next()) {
+                    LOGGER.info(LoggerMessage.ITEM + tableName +
+                            LoggerMessage.FOUND_IN_TABLE);
+                    return getEntityFromResultSet(resultSet);
+                }
+            }
+        } catch (SQLException e) {
+            LOGGER.error(LoggerMessage.DB_ERROR_SEARCH + tableName +
+                    LoggerMessage.EXCEPTION_MESSAGE + e.getMessage());
+        }
+        return Optional.empty();
     }
 
     @Override

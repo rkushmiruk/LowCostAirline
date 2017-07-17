@@ -1,12 +1,12 @@
 package com.kushmiruk.model.entity.order;
 
 public enum Baggage {
-    NO(1L, 0), LOW(2L, 5), MEDIUM(3L, 7), BIG(4L, 10);
+    NO(1L, 0L), LOW(2L, 5L), MEDIUM(3L, 7L), BIG(4L, 10L);
 
     private Long id;
-    private Integer price;
+    private Long price;
 
-    Baggage(Long id, Integer price) {
+    Baggage(Long id, Long price) {
         this.id = id;
         this.price = price;
     }
@@ -15,7 +15,7 @@ public enum Baggage {
         return id;
     }
 
-    public Integer getPrice() {
+    public Long getPrice() {
         return price;
     }
 

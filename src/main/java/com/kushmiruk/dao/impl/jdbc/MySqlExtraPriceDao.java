@@ -3,8 +3,6 @@ package com.kushmiruk.dao.impl.jdbc;
 import com.kushmiruk.dao.daointerface.ExtraPriceDao;
 import com.kushmiruk.dao.impl.EntityDao;
 import com.kushmiruk.model.entity.order.ExtraPrice;
-import com.kushmiruk.util.LoggerMessage;
-import org.apache.log4j.Logger;
 
 import java.sql.Connection;
 
@@ -17,7 +15,6 @@ import java.util.Optional;
  * MySql implementation for CountryDao interface
  */
 public class MySqlExtraPriceDao extends EntityDao<ExtraPrice> implements ExtraPriceDao {
-    private static final Logger LOGGER = Logger.getLogger(MySqlExtraPriceDao.class);
     private static final String TABLE_NAME = "extra_price";
     private static final String PARAMETER_ID = "id";
     private static final String PARAMETER_PRIORITY_REGISTRATION_PRICE = "priority_registration_price";

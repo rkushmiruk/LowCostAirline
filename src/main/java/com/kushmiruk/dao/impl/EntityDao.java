@@ -46,11 +46,8 @@ public abstract class EntityDao<T extends Entity> implements GenericDao<T, Long>
                 .build();
         try (PreparedStatement statement = connection.prepareStatement(query)) {
             statement.setLong(ID_INDEX, id);
-            LOGGER.info(statement.toString());
             try (ResultSet resultSet = statement.executeQuery()) {
                 if (resultSet.next()) {
-                    LOGGER.info(LoggerMessage.ITEM + tableName + LoggerMessage.WITH_ID + id +
-                            LoggerMessage.FOUND_IN_TABLE);
                     return getEntityFromResultSet(resultSet);
                 }
             }
@@ -148,11 +145,12 @@ public abstract class EntityDao<T extends Entity> implements GenericDao<T, Long>
 
     @Override
     public Optional<Long> findId() {
-        String query = QueryMessage.FIND_ID + tableName;
+        query = QueryMessage.FIND_ID + tableName;
         try (PreparedStatement statement = connection.prepareStatement(query)) {
             LOGGER.info(statement.toString());
             try (ResultSet resultSet = statement.executeQuery()) {
                 if (resultSet.next()) {
+                    LOGGER.info(resultSet.getLong(1));
                     return Optional.ofNullable(resultSet.getLong(1));
                 }
             }

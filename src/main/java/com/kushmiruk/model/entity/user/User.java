@@ -12,8 +12,6 @@ public class User extends Entity {
     private String email;
     private UserAuthentication userAuthentication;
     private UserRole userRole;
-    
-    
 
     private User(Builder builder) {
         this.id = builder.id;

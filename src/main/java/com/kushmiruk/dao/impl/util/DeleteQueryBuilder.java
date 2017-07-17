@@ -1,14 +1,11 @@
 package com.kushmiruk.dao.impl.util;
 
-import com.kushmiruk.util.LoggerMessage;
 import com.kushmiruk.util.QueryMessage;
-import org.apache.log4j.Logger;
 
 /**
  * Util class for build Delete queries
  */
 public class DeleteQueryBuilder extends QueryBuilder {
-    private final Logger LOGGER = Logger.getLogger(DeleteQueryBuilder.class.getName());
     private StringBuilder query;
 
     public DeleteQueryBuilder() {
@@ -34,7 +31,6 @@ public class DeleteQueryBuilder extends QueryBuilder {
     }
 
     public String build() {
-        LOGGER.info(LoggerMessage.BUILD_DELETE_QUERY + query.toString());
         StringBuilder tmp = query;
         queryInit();
         return tmp.toString();

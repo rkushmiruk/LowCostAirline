@@ -5,6 +5,7 @@ import com.kushmiruk.dao.impl.EntityDao;
 import com.kushmiruk.dao.impl.util.JoinType;
 import com.kushmiruk.model.entity.order.*;
 import com.kushmiruk.util.LoggerMessage;
+import com.kushmiruk.util.QueryMessage;
 import org.apache.log4j.Logger;
 
 import java.sql.Connection;
@@ -19,6 +20,7 @@ import java.util.Optional;
  * MySql implementation for CountryDao interface
  */
 public class MySqlTicketDao extends EntityDao<Ticket> implements TicketDao {
+
     private static final Logger LOGGER = Logger.getLogger(MySqlTicketDao.class);
     private static final String TABLE_NAME = "ticket";
     private static final String PARAMETER_ID = "id";
@@ -57,6 +59,7 @@ public class MySqlTicketDao extends EntityDao<Ticket> implements TicketDao {
     }
 
     private static class MySqlTicketDaoHolder {
+
         private static MySqlTicketDao instance(Connection connection) {
             return new MySqlTicketDao(connection);
         }
@@ -64,6 +67,46 @@ public class MySqlTicketDao extends EntityDao<Ticket> implements TicketDao {
 
     public static MySqlTicketDao getInstance(Connection connection) {
         return MySqlTicketDaoHolder.instance(connection);
+    }
+
+    @Override
+    public List<Ticket> getOrderDetails(Long ticketOrderId) {
+        List<Ticket> result = new ArrayList<>();
+        String query = QueryMessage.ORDER_DETAILS;
+        try (PreparedStatement statement = connection.prepareStatement(query)) {
+            statement.setLong(1, ticketOrderId);
+            LOGGER.info(statement.toString());
+            try (ResultSet resultSet = statement.executeQuery()) {
+                while (resultSet.next()) {
+                    if (getEntityFromResultSet(resultSet).isPresent()) {
+                        result.add(getEntityFromResultSet(resultSet).get());
+                    }
+                }
+            }
+            LOGGER.info(LoggerMessage.ITEMS + tableName + LoggerMessage.FOUND_IN_TABLE);
+        } catch (SQLException e) {
+            LOGGER.error(LoggerMessage.DB_ERROR_SEARCH + tableName + LoggerMessage.EXCEPTION_MESSAGE + e.getMessage());
+        }
+        return result;
+    }
+
+    @Override
+    public Optional<Long> findTicketIdByFlightAndSeatNumber(Long flightId, Integer seatNumber) {
+        String query = QueryMessage.FIND_TICKET_ID_BY_FLIGHT_AND_SEAT_NUMBER;
+        try (PreparedStatement statement = connection.prepareStatement(query)) {
+            statement.setLong(1, flightId);
+            statement.setInt(2, seatNumber);
+            LOGGER.info(statement.toString());
+            try (ResultSet resultSet = statement.executeQuery()) {
+                if (resultSet.next()) {
+                    LOGGER.info(resultSet.getLong(PARAMETER_ID));
+                    return Optional.of(resultSet.getLong(PARAMETER_ID));
+                }
+            }
+        } catch (SQLException e) {
+            LOGGER.error(LoggerMessage.DB_ERROR_SEARCH + tableName + LoggerMessage.EXCEPTION_MESSAGE + e.getMessage());
+        }
+        return Optional.empty();
     }
 
     @Override
@@ -111,13 +154,14 @@ public class MySqlTicketDao extends EntityDao<Ticket> implements TicketDao {
                 }
             }
         } catch (SQLException e) {
-            LOGGER.error(LoggerMessage.DB_ERROR_SEARCH + STATUS_TABLE + LoggerMessage.ITEM_WITH_ID + id +
-                    LoggerMessage.EXCEPTION_MESSAGE + e.getMessage());
+            LOGGER.error(LoggerMessage.DB_ERROR_SEARCH + STATUS_TABLE + LoggerMessage.ITEM_WITH_ID + id
+                    + LoggerMessage.EXCEPTION_MESSAGE + e.getMessage());
         }
 
         return Optional.empty();
     }
 
+    @Override
     public Optional<String> findTicketBaggage(Long id) {
         String query = selectQueryBuilder
                 .table(TABLE_NAME)
@@ -136,13 +180,12 @@ public class MySqlTicketDao extends EntityDao<Ticket> implements TicketDao {
                 }
             }
         } catch (SQLException e) {
-            LOGGER.error(LoggerMessage.DB_ERROR_SEARCH + STATUS_TABLE + LoggerMessage.ITEM_WITH_ID + id +
-                    LoggerMessage.EXCEPTION_MESSAGE + e.getMessage());
+            LOGGER.error(LoggerMessage.DB_ERROR_SEARCH + STATUS_TABLE + LoggerMessage.ITEM_WITH_ID + id
+                    + LoggerMessage.EXCEPTION_MESSAGE + e.getMessage());
         }
 
         return Optional.empty();
     }
-
 
     @Override
     protected Optional<Ticket> getEntityFromResultSet(ResultSet resultSet) throws SQLException {
@@ -195,8 +238,8 @@ public class MySqlTicketDao extends EntityDao<Ticket> implements TicketDao {
 
     @Override
     protected void setEntityToParameters(Ticket entity, PreparedStatement statement) throws SQLException {
-        statement.setString(FIRST_NAME_INDEX, entity.getPassangerFirstName());
-        statement.setString(LAST_NAME_INDEX, entity.getPassngerLastName());
+        statement.setString(FIRST_NAME_INDEX, entity.getPassengerFirstName());
+        statement.setString(LAST_NAME_INDEX, entity.getPassengerLastName());
         statement.setString(EMAIL_INDEX, entity.getEmail());
         statement.setBoolean(PRIORITY_REGISTRATION_INDEX, entity.getHasPriorityRegistration());
         statement.setLong(BAGGAGE_INDEX, entity.getBaggage().getId());
@@ -210,7 +253,6 @@ public class MySqlTicketDao extends EntityDao<Ticket> implements TicketDao {
             statement.setLong(ID_INDEX, entity.getId());
         }
     }
-
 
     @Override
     protected String[] arrayOfEntityParameters(Ticket entity) {

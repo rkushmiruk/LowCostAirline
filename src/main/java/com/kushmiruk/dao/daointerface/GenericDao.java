@@ -1,11 +1,10 @@
 package com.kushmiruk.dao.daointerface;
 
-import java.sql.Connection;
 import java.util.List;
 import java.util.Optional;
 
 /**
- * Base interface for all dao.
+ * Base interface for all DAO.
  *
  * @param <Entity> represents type of entity
  * @param <ID>     represents type of identifier
@@ -56,7 +55,6 @@ public interface GenericDao<Entity, ID> {
      * @return entity id
      */
     Optional<Long> findId();
-
 
     /**
      * returns entity name

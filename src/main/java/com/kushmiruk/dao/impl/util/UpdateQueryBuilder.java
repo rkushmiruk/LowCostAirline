@@ -1,14 +1,11 @@
 package com.kushmiruk.dao.impl.util;
 
-import com.kushmiruk.util.LoggerMessage;
 import com.kushmiruk.util.QueryMessage;
-import org.apache.log4j.Logger;
 
 /**
  * Util class for build Update queries
  */
 public class UpdateQueryBuilder extends QueryBuilder {
-    private final Logger LOGGER = Logger.getLogger(UpdateQueryBuilder.class.getName());
     private StringBuilder query;
 
     public UpdateQueryBuilder() {
@@ -49,7 +46,6 @@ public class UpdateQueryBuilder extends QueryBuilder {
     }
 
     public String build() {
-        LOGGER.info(LoggerMessage.BUILD_UPDATE_QUERY + query.toString());
         StringBuilder tmp = query;
         queryInit();
         return tmp.toString();

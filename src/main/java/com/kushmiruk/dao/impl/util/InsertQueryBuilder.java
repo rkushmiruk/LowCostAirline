@@ -1,14 +1,11 @@
 package com.kushmiruk.dao.impl.util;
 
-import com.kushmiruk.util.LoggerMessage;
 import com.kushmiruk.util.QueryMessage;
-import org.apache.log4j.Logger;
 
 /**
  * Util class for build Insert queries
  */
 public class InsertQueryBuilder extends QueryBuilder {
-    private final Logger LOGGER = Logger.getLogger(InsertQueryBuilder.class.getName());
     private StringBuilder query;
     private int count = 0;
 
@@ -80,7 +77,6 @@ public class InsertQueryBuilder extends QueryBuilder {
 
 
     public String build() {
-        LOGGER.info(LoggerMessage.BUILD_INSERT_QUERY + query.toString());
         StringBuilder tmp = query;
         queryInit();
         return tmp.toString();

@@ -1,14 +1,11 @@
 package com.kushmiruk.dao.impl.util;
 
-import com.kushmiruk.util.LoggerMessage;
 import com.kushmiruk.util.QueryMessage;
-import org.apache.log4j.Logger;
 
 /**
  * Util class for build Select queries
  */
 public class SelectQueryBuilder extends QueryBuilder {
-    private final Logger LOGGER = Logger.getLogger(SelectQueryBuilder.class.getName());
     private StringBuilder query;
 
     public SelectQueryBuilder() {
@@ -70,13 +67,12 @@ public class SelectQueryBuilder extends QueryBuilder {
         return this;
     }
 
-    public SelectQueryBuilder limit(int start, int end) {
+    public SelectQueryBuilder limit(int start, int countOfItems) {
         query
-                .deleteCharAt(query.length() - NUMBER_OF_FINISH_SYMBOLS_IN_QUERY)
                 .append(QueryMessage.LIMIT)
                 .append(start)
                 .append(QueryMessage.COMMA)
-                .append(end)
+                .append(countOfItems)
                 .append(QueryMessage.SEMICOLON);
         return this;
     }
@@ -103,7 +99,6 @@ public class SelectQueryBuilder extends QueryBuilder {
     }
 
     public String build() {
-        LOGGER.info(LoggerMessage.BUILD_SELECT_QUERY + query.toString());
         StringBuilder tmp = query;
         queryInit();
         if (tmp.toString().contains(QueryMessage.WHERE)

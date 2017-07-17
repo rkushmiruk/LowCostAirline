@@ -18,7 +18,7 @@ public class Ticket extends Entity {
     private Flight flight;
     private ExtraPrice extraPrice;
     private TicketStatus ticketStatus;
-    
+
 
     public Ticket(Ticket ticket) {
         this.id = ticket.id;
@@ -140,7 +140,7 @@ public class Ticket extends Entity {
         this.id = id;
     }
 
-    public String getPassangerFirstName() {
+    public String getPassengerFirstName() {
         return passengerFirstName;
     }
 
@@ -148,7 +148,7 @@ public class Ticket extends Entity {
         this.passengerFirstName = passengerFirstName;
     }
 
-    public String getPassngerLastName() {
+    public String getPassengerLastName() {
         return passengerLastName;
     }
 

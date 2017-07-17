@@ -16,4 +16,12 @@ public interface UserDao extends GenericDao<User, Long> {
      * @return user role
      */
     Optional<String> findUserRole(Long id);
+
+    /**
+     * Retrieves user from database identified by login.
+     *
+     * @param login login of user.
+     * @return optional, which contains entity or null
+     */
+    Optional<User> findByLogin(String login);
 }
