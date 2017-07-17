@@ -11,6 +11,8 @@ import com.kushmiruk.model.entity.order.Flight;
 import com.kushmiruk.model.entity.order.PaymentMethod;
 import com.kushmiruk.model.entity.order.Ticket;
 import com.kushmiruk.model.entity.order.TicketOrder;
+import com.kushmiruk.model.entity.user.UserAuthentication;
+import com.kushmiruk.service.factory.ServiceFactory;
 import com.kushmiruk.util.ExceptionMessage;
 import com.kushmiruk.util.Parameters;
 import com.kushmiruk.util.RegexPattern;
@@ -23,6 +25,7 @@ import org.joda.time.Days;
 import org.joda.time.LocalDate;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 import java.util.TreeSet;
 import javax.sql.DataSource;
@@ -31,12 +34,15 @@ import javax.sql.DataSource;
  * Service for interact with DAO layer interface TicketDao
  */
 public class TicketService {
+
     private static final int PRIORITY_REGISTRATION_PRICE = 30;
+    private static final int PRICE_FACTOR = 20;
 
     private TicketService() {
     }
 
     private static class TicketServiceHolder {
+
         private static final TicketService instance = new TicketService();
     }
 
@@ -47,7 +53,7 @@ public class TicketService {
     /**
      * Find all tickets which already have sold
      *
-     * @param flightId
+     * @param flightId identifier of flight
      * @return list of sell tickets
      */
     public List<Integer> findAllSellTickets(Long flightId) {
@@ -69,14 +75,24 @@ public class TicketService {
      * Parse string input into Integer if operation is not successful throw new
      * DaoException
      *
-     * @param input input string
+     * @param input  input string
+     * @param flight current flight
      * @return integer from string
      */
-    public Integer parseInteger(String input) {
+    public Integer numberOfCountTickets(String input, Flight flight) {
         if (!input.matches(RegexPattern.NUMBER_PATTERN)) {
-            throw new DaoException(ExceptionMessage.getMessage(ExceptionMessage.NAME_PATTERN_ERROR));//TODO
+            throw new DaoException("Error input number of tickets");
         }
-        return Integer.parseInt(input);
+        Integer value = Integer.parseInt(input);
+
+        if (value > freeTickets(flight).size()) {
+            throw new DaoException("More than free tickets");
+        }
+
+        if (value > 10) {
+            throw new DaoException("You cant order more than 10 tickets");
+        }
+        return value;
     }
 
     /**
@@ -86,13 +102,14 @@ public class TicketService {
      * @param ticket ticket
      */
     public void checkTicketInput(Ticket ticket) {
-        if (!ticket.getPassangerFirstName().matches(RegexPattern.NAME_PATTERN)
-                || !ticket.getPassngerLastName().matches(RegexPattern.NAME_PATTERN)) {
+        if (!ticket.getPassengerFirstName().matches(RegexPattern.NAME_PATTERN)
+                || !ticket.getPassengerLastName().matches(RegexPattern.NAME_PATTERN)) {
             throw new DaoException(ExceptionMessage.getMessage(ExceptionMessage.NAME_PATTERN_ERROR));
         }
         if (!ticket.getEmail().matches(RegexPattern.EMAIL_PATTERN)) {
             throw new DaoException(ExceptionMessage.getMessage(ExceptionMessage.EMAIL_PATTERN_ERROR));
         }
+
     }
 
     /**
@@ -114,32 +131,35 @@ public class TicketService {
     /**
      * save user to database
      *
-     * @param ticketFromRequest user
+     * @param tickets
      * @throws DaoException if operation is not successful
      */
-    public boolean getTicketsBlocked(Ticket ticketFromRequest) throws DaoException {
+    public void getTicketsBlocked(List<Ticket> tickets) throws DaoException {
         DataSource dataSource = DataSourceFactory.getInstance().getDataSource();
         boolean value;
         try (Connection connection = dataSource.getConnection()) {
             connection.setAutoCommit(false);
             DaoFactory daoFactory = DaoFactory.getDaoFactory(connection);
             TicketDao ticketDao = daoFactory.createTicketDao();
-            value = ticketDao.insert(ticketFromRequest);
-            if (!value) {
-                connection.rollback();
-                throw new DaoException(ExceptionMessage.getMessage(ExceptionMessage.LOGIN_EXIST_ERROR));
+            for (Ticket ticket : tickets) {
+                checkTicketInput(ticket);
+                checkSeatNumber(ticket, ticketDao);
+                value = ticketDao.insert(ticket);
+                if (!value) {
+                    connection.rollback();
+                    throw new DaoException(ExceptionMessage.getMessage(ExceptionMessage.LOGIN_EXIST_ERROR));
+                }
             }
             connection.commit();
-
         } catch (SQLException e) {
             throw new DaoException(e.getMessage());
         }
-        return value;
     }
 
     /**
      * Retrieve id from extraPrice table
      *
+     * @param days days before flight
      * @return Long id
      */
     public ExtraPrice getExtraPrice(Integer days) {
@@ -166,15 +186,21 @@ public class TicketService {
     /**
      * Retrieve id from ticketOrder table
      *
+     * @param userAuthentication user credentials
      * @return Long id
      */
-    public TicketOrder getTicketOrder() {
+    public TicketOrder getTicketOrder(UserAuthentication userAuthentication) {
         DataSource dataSource = DataSourceFactory.getInstance().getDataSource();
+        ServiceFactory serviceFactory = ServiceFactory.getInstance();
+        UserService userService = serviceFactory.createUserService();
         try (Connection connection = dataSource.getConnection()) {
             connection.setAutoCommit(false);
             DaoFactory daoFactory = DaoFactory.getDaoFactory(connection);
             TicketOrderDao ticketOrderDao = daoFactory.createTicketOrderDao();
             TicketOrder ticketOrder = new TicketOrder(PaymentMethod.CASH);
+            if (userAuthentication != null) {
+                ticketOrder.setUser(userService.findUserByLogin(userAuthentication.getLogin()));
+            }
             boolean ticketOrderInsert = ticketOrderDao.insert(ticketOrder);
             if (!ticketOrderInsert) {
                 connection.rollback();
@@ -211,6 +237,85 @@ public class TicketService {
             hasPriorityRegistration = true;
         }
         return hasPriorityRegistration;
+    }
+
+    /**
+     * Count ticket cost like:
+     * startPrice + priorityRegistrationPrice +20/freeTickets + 20/daysBeforeFlight
+     * Price Factor = 20;
+     *
+     * @param ticket
+     * @param flight
+     * @param extraPrice
+     * @return price
+     */
+    public Long countTicketCost(Ticket ticket, Flight flight, ExtraPrice extraPrice) {
+        Long value;
+        if (ticket.getHasPriorityRegistration()) {
+            value = (long) extraPrice.getPriorityRegistrationPrice();
+        } else {
+            value = 0L;
+        }
+        value += flight.getStartPrice() + ticket.getBaggage().getPrice() + PRICE_FACTOR / extraPrice.getDaysBeforeFlight()
+                + PRICE_FACTOR / freeTickets(flight).size();
+        return value;
+    }
+
+    /**
+     * Update ticket in a database.
+     *
+     * @param ticket entity to update
+     */
+    public void update(Ticket ticket) {
+        DataSource dataSource = DataSourceFactory.getInstance().getDataSource();
+        try (Connection connection = dataSource.getConnection()) {
+            connection.setAutoCommit(false);
+            DaoFactory daoFactory = DaoFactory.getDaoFactory(connection);
+            TicketDao ticketDao = daoFactory.createTicketDao();
+            Boolean value = ticketDao.update(ticket);
+            if (!value) {
+                connection.rollback();
+                throw new DaoException("Error update");
+            }
+        } catch (SQLException e) {
+            throw new DaoException(e.getMessage());
+        }
+
+    }
+
+    /**
+     * Retrieve id from ticket table
+     *
+     * @param ticket
+     * @return Long id
+     */
+    public Optional<Long> findTicketId(Ticket ticket) {
+        Optional<Long> value;
+        DataSource dataSource = DataSourceFactory.getInstance().getDataSource();
+        try (Connection connection = dataSource.getConnection()) {
+            DaoFactory daoFactory = DaoFactory.getDaoFactory(connection);
+            TicketDao ticketDao = daoFactory.createTicketDao();
+            value = ticketDao.findTicketIdByFlightAndSeatNumber(ticket.getFlight().getId(), ticket.getSeatNumber());
+            if (!value.isPresent()) {
+                throw new DaoException("Can t find id");
+            }
+        } catch (SQLException e) {
+            throw new DaoException(e.getMessage());
+        }
+        return value;
+    }
+
+    /**
+     * Check seat number in ticket
+     *
+     * @param ticket    ticket param from request
+     * @param ticketDao dao with same connection
+     */
+    private void checkSeatNumber(Ticket ticket, TicketDao ticketDao) {
+        Optional<Long> id = ticketDao.findTicketIdByFlightAndSeatNumber(ticket.getFlight().getId(), ticket.getSeatNumber());
+        if (id.isPresent()) {
+            throw new DaoException("This ticket ordered");
+        }
     }
 
 }

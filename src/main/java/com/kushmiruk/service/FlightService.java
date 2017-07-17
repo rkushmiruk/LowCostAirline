@@ -10,6 +10,9 @@ import com.kushmiruk.util.RegexPattern;
 
 import java.sql.Connection;
 import java.sql.SQLException;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 import java.util.List;
 import java.util.Optional;
@@ -19,6 +22,8 @@ import javax.sql.DataSource;
  * Service for interact with DAO layer interface FlightDao
  */
 public class FlightService {
+    private static final Integer TIME_IN_DAY = 1000 * 60 * 60 * 24;
+
     private FlightService() {
     }
 
@@ -50,8 +55,17 @@ public class FlightService {
      * @param date
      */
     private static void checkDate(String date) {
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
         if (!date.matches(RegexPattern.DATE_PATTERN)) {
             throw new DaoException(ExceptionMessage.getMessage(ExceptionMessage.DATE_PATTERN_ERROR));
+        }
+        try {
+            Date formatDate = simpleDateFormat.parse(date);
+            if (formatDate.getTime() + TIME_IN_DAY < new Date().getTime()) {
+                throw new DaoException("Date must be in Future");
+            }
+        } catch (ParseException ex) {
+            throw new DaoException(ex.getMessage());
         }
     }
 

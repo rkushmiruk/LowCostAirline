@@ -6,6 +6,7 @@ import com.kushmiruk.dao.factory.DaoFactory;
 import com.kushmiruk.dao.factory.DataSourceFactory;
 import com.kushmiruk.exception.DaoException;
 import com.kushmiruk.model.entity.user.User;
+import com.kushmiruk.model.entity.user.UserAuthentication;
 import com.kushmiruk.service.factory.ServiceFactory;
 import com.kushmiruk.util.ExceptionMessage;
 import com.kushmiruk.util.RegexPattern;
@@ -13,8 +14,6 @@ import com.kushmiruk.util.RegexPattern;
 import java.sql.Connection;
 import java.sql.SQLException;
 import javax.sql.DataSource;
-
-import org.apache.log4j.Logger;
 
 /**
  * Service for interact with DAO layer interface UserDao
@@ -32,6 +31,64 @@ public class UserService {
 
     public static UserService getInstance() {
         return UserServiceHolder.instance;
+    }
+
+    /**
+     * Retrieves user from database identified by login.
+     *
+     * @param login login of user.
+     * @return user, which contains entity or null
+     */
+    public User findUserByLogin(String login) {
+        User user;
+        DataSource dataSource = DataSourceFactory.getInstance().getDataSource();
+        try (Connection connection = dataSource.getConnection()) {
+            DaoFactory daoFactory = DaoFactory.getDaoFactory(connection);
+            UserDao userDao = daoFactory.createUserDao();
+            user = userDao.findByLogin(login).get();
+        } catch (SQLException e) {
+            throw new DaoException(e.getMessage());
+        }
+        return user;
+    }
+
+    /**
+     * Update user in database
+     *
+     * @param userFromRequest user
+     * @throws DaoException if operation is not successful
+     */
+    public void update(User userFromRequest) {
+        DataSource dataSource = DataSourceFactory.getInstance().getDataSource();
+        boolean value;
+        try (Connection connection = dataSource.getConnection()) {
+            connection.setAutoCommit(false);
+            DaoFactory daoFactory = DaoFactory.getDaoFactory(connection);
+            UserDao userDao = daoFactory.createUserDao();
+            UserAuthenticationDao userAuthenticationDao = daoFactory.createUserAuthenticationDao();
+            checkName(userFromRequest.getFirstName());
+            checkName(userFromRequest.getLastName());
+            checkEmail(userFromRequest.getEmail());
+            checkLogin(userFromRequest.getUserAuthentication().getLogin());
+            checkPassword(userFromRequest.getUserAuthentication().getPassword());
+            UserAuthentication userAuth = userFromRequest.getUserAuthentication();
+            userAuth.setId(userAuthenticationService.getId(userFromRequest.getUserAuthentication().getLogin()));
+            boolean userAuthValue = userAuthenticationDao.update(userAuth);
+            if (!userAuthValue) {
+                connection.rollback();
+                throw new DaoException(ExceptionMessage.getMessage(ExceptionMessage.LOGIN_EXIST_ERROR));
+            }
+            connection.commit();
+            userFromRequest.setId(findUserByLogin(userAuth.getLogin()).getId());
+            value = userDao.update(userFromRequest);
+            if (!value) {
+                connection.rollback();
+                throw new DaoException(ExceptionMessage.getMessage(ExceptionMessage.EMAIL_EXIST_ERROR));
+            }
+            connection.commit();
+        } catch (SQLException e) {
+            throw new DaoException(e.getMessage());
+        }
     }
 
     /**
@@ -120,6 +177,5 @@ public class UserService {
             throw new DaoException(ExceptionMessage.getMessage(ExceptionMessage.PASSWORD_PATTERN_ERROR));
         }
     }
-
 
 }

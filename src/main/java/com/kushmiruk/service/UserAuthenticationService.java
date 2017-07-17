@@ -72,7 +72,7 @@ public class UserAuthenticationService {
             DaoFactory daoFactory = DaoFactory.getDaoFactory(connection);
             UserAuthenticationDao userAuthenticationDao = daoFactory.createUserAuthenticationDao();
             value = userAuthenticationDao.findId(login);
-            if (value.isPresent()) {
+            if (!value.isPresent()) {
                 connection.rollback();
                 throw new DaoException(ExceptionMessage.getMessage(ExceptionMessage.ID_NOT_FOUND_ERROR));
             }
