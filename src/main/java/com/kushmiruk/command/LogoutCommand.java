@@ -18,7 +18,6 @@ public class LogoutCommand implements Command {
     @Override
     public String execute(HttpServletRequest request, HttpServletResponse response) throws AppException {
         LOGGER.info(LoggerMessage.USER_LOGOUT + request.getSession().getAttribute(Parameters.USER_AUTH));
-
         request.getSession().invalidate();
         return Pages.INDEX_PAGE;
     }

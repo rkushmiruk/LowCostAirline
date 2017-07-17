@@ -4,7 +4,6 @@ import com.kushmiruk.exception.AppException;
 import com.kushmiruk.model.entity.order.Flight;
 import com.kushmiruk.service.FlightService;
 import com.kushmiruk.service.TicketService;
-import com.kushmiruk.service.factory.ServiceFactory;
 import com.kushmiruk.util.Pages;
 import com.kushmiruk.util.Parameters;
 
@@ -14,11 +13,18 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.apache.log4j.Logger;
 
+/**
+ * Take number of order tickets and redirect to order page
+ */
 public class TicketCommand implements Command {
     private static final Logger LOGGER = Logger.getLogger(TicketCommand.class);
-    private ServiceFactory serviceFactory = ServiceFactory.getInstance();
-    private TicketService ticketService = serviceFactory.createTicketService();
-    private FlightService flightService = serviceFactory.createFlightService();
+    private TicketService ticketService;
+    private FlightService flightService;
+
+    public TicketCommand(TicketService ticketService, FlightService flightService) {
+        this.ticketService = ticketService;
+        this.flightService = flightService;
+    }
 
     @Override
     public String execute(HttpServletRequest request, HttpServletResponse response) throws AppException {
@@ -26,11 +32,9 @@ public class TicketCommand implements Command {
         Flight flight = flightService.findFlight(id).get();
         Set<Integer> freeTickets = ticketService.freeTickets(flight);
         request.getSession().setAttribute(Parameters.FREE_TICKETS, freeTickets);
-        Integer countTicket = ticketService.parseInteger(request.getParameter(Parameters.COUNT));
+        Integer countTicket = ticketService.numberOfCountTickets(request.getParameter(Parameters.COUNT), flight);
         request.getSession().setAttribute(Parameters.COUNT_TICKET, countTicket);
         request.getSession().setAttribute(Parameters.CURRENT_FLIGHT, flight);
-        LOGGER.info(id);
-        LOGGER.info(countTicket);
         return Pages.TICKET_PAGE;
     }
 

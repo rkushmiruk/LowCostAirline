@@ -2,7 +2,9 @@ package com.kushmiruk.command;
 
 import com.kushmiruk.exception.AppException;
 import com.kushmiruk.model.entity.user.UserAuthentication;
+import com.kushmiruk.model.entity.user.UserRole;
 import com.kushmiruk.service.UserAuthenticationService;
+import com.kushmiruk.service.UserService;
 import com.kushmiruk.service.factory.ServiceFactory;
 import com.kushmiruk.util.Pages;
 import com.kushmiruk.util.Parameters;
@@ -16,9 +18,11 @@ import org.apache.log4j.Logger;
  * It checks user's credentials and lets him to sign in
  */
 public class SignInCommand implements Command {
+
     private static final Logger LOGGER = Logger.getLogger(SignInCommand.class);
     private ServiceFactory serviceFactory = ServiceFactory.getInstance();
     private UserAuthenticationService userAuthenticationService = serviceFactory.createUserAuthenticationService();
+    private UserService userService = serviceFactory.createUserService();
 
     @Override
     public String execute(HttpServletRequest request, HttpServletResponse response) throws AppException {
@@ -28,6 +32,9 @@ public class SignInCommand implements Command {
         request.getSession().setAttribute(Parameters.USER_AUTH, userAuthentication);
         userAuthenticationService.authentication(userAuthentication);
         request.getSession().setAttribute(Parameters.STATUS, true);
+        if (userService.findUserByLogin(login).getUserRole().toString().equals(UserRole.ADMIN.toString())) {
+            request.getSession().setAttribute(Parameters.ADMIN_PARAM, true);
+        }
         return Pages.INDEX_PAGE;
     }
 
@@ -37,6 +44,5 @@ public class SignInCommand implements Command {
         request.setAttribute(Parameters.EXCEPTION, e.getMessage());
         return Pages.SIGN_IN_PAGE;
     }
-
 
 }

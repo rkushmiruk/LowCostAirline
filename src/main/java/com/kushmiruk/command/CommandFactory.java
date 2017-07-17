@@ -1,6 +1,7 @@
 package com.kushmiruk.command;
 
 import com.kushmiruk.exception.AppException;
+import com.kushmiruk.service.factory.ServiceFactory;
 import com.kushmiruk.util.CommandNames;
 
 import javax.servlet.http.HttpServletRequest;
@@ -13,32 +14,39 @@ import org.apache.log4j.Logger;
 /**
  * Retrieves command from request and takes appropriate command from Map
  */
-public class CommandInvoker {
-    private static final Logger LOGGER = Logger.getLogger(CommandInvoker.class);
+public class CommandFactory {
+    private static final Logger LOGGER = Logger.getLogger(CommandFactory.class);
     private Map<String, Command> commandMap = new HashMap<>();
+    private ServiceFactory serviceFactory = ServiceFactory.getInstance();
 
-    private CommandInvoker() {
+    private CommandFactory() {
         commandMap.put(CommandNames.INDEX_COMMAND, new DefaultCommand());
         commandMap.put(CommandNames.LANG_COMMAND, new LanguageCommand());
-        commandMap.put(CommandNames.FIND_FLIGHTS_COMMAND, new FlightListCommand());
-        commandMap.put(CommandNames.REGISTRATION_COMMAND, new RegistrationCommand());
+        commandMap.put(CommandNames.FIND_FLIGHTS_COMMAND, new FlightListCommand(serviceFactory.createFlightService()));
+        commandMap.put(CommandNames.REGISTRATION_COMMAND, new RegistrationCommand(serviceFactory.createUserService()));
         commandMap.put(CommandNames.REDIRECT_REGISTRATION_COMMAND, new RedirectCommand(CommandNames.REGISTRATION_COMMAND));
         commandMap.put(CommandNames.SIGN_IN_COMMAND, new SignInCommand());
         commandMap.put(CommandNames.REDIRECT_SIGN_IN_COMMAND, new RedirectCommand(CommandNames.SIGN_IN_COMMAND));
         commandMap.put(CommandNames.LOGOUT_COMMAND, new LogoutCommand());
         commandMap.put(CommandNames.REDIRECT_PROFILE_COMMAND, new RedirectCommand(CommandNames.PROFILE_COMMAND));
-        commandMap.put(CommandNames.PROFILE_COMMAND, new ProfileCommand());
-        commandMap.put(CommandNames.FIND_TICKET_COMMAND, new TicketCommand());
-        commandMap.put(CommandNames.ORDER_TICKET_COMMAND, new OrderTicketCommand());
-        commandMap.put(CommandNames.BUY_TICKET_COMMAND, new BuyTicketCommand());
+        commandMap.put(CommandNames.REDIRECT_PROFILE_ADMIN, new RedirectCommand(CommandNames.PROFILE_ADMIN));
+        commandMap.put(CommandNames.PROFILE_COMMAND, new ProfileCommand(serviceFactory.createTicketOrderService()));
+        commandMap.put(CommandNames.FIND_TICKET_COMMAND, new TicketCommand(serviceFactory.createTicketService(),serviceFactory.createFlightService()));
+        commandMap.put(CommandNames.ORDER_TICKET_COMMAND, new OrderTicketCommand(serviceFactory.createTicketService()));
+        commandMap.put(CommandNames.BUY_TICKET_COMMAND, new BuyTicketCommand(serviceFactory.createTicketService()));
+        commandMap.put(CommandNames.HISTORY_DETAIL, new HistoryDetailCommand(serviceFactory.createTicketOrderService()));
+        commandMap.put(CommandNames.EDIT_PROFILE, new EditProfileCommand(serviceFactory.createUserService()));
+        commandMap.put(CommandNames.UPDATE_PROFILE, new UpdateProfileCommand());
+        commandMap.put(CommandNames.PROFILE_ADMIN, new ProfileAdminCommand(serviceFactory.createTicketOrderService()));
+
     }
 
-    private static class CommandInvokerHolder {
-        private static final CommandInvoker instance = new CommandInvoker();
+    private static class CommandFactoryHolder {
+        private static final CommandFactory instance = new CommandFactory();
     }
 
-    public static CommandInvoker getInstance() {
-        return CommandInvokerHolder.instance;
+    public static CommandFactory getInstance() {
+        return CommandFactoryHolder.instance;
     }
 
     public String invoke(HttpServletRequest request, HttpServletResponse response) throws RuntimeException {

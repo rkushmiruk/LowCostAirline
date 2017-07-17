@@ -4,8 +4,6 @@ import com.kushmiruk.exception.AppException;
 import com.kushmiruk.model.entity.order.Flight;
 
 import com.kushmiruk.service.FlightService;
-import com.kushmiruk.service.factory.ServiceFactory;
-import com.kushmiruk.util.LoggerMessage;
 import com.kushmiruk.util.Pages;
 
 import java.util.List;
@@ -20,8 +18,11 @@ import org.apache.log4j.Logger;
  */
 public class FlightListCommand implements Command {
     private static final Logger LOGGER = Logger.getLogger(FlightListCommand.class);
-    private ServiceFactory serviceFactory = ServiceFactory.getInstance();
-    private FlightService flightService = serviceFactory.createFlightService();
+    private FlightService flightService;
+
+    public FlightListCommand(FlightService flightService) {
+        this.flightService = flightService;
+    }
 
     @Override
     public String execute(HttpServletRequest request, HttpServletResponse response) throws AppException {
@@ -32,7 +33,6 @@ public class FlightListCommand implements Command {
         request.getSession().setAttribute(Parameters.TO_CITY, cityTo);
         request.getSession().setAttribute(Parameters.DATE, date);
         List<Flight> flights = flightService.searchFlights(cityFrom, cityTo, date);
-        LOGGER.info(LoggerMessage.FLIGHTS + flights);
         request.getSession().setAttribute(Parameters.FLIGHTS, flights);
         return Pages.FLIGHTS_PAGE;
     }
