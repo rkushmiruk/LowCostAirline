@@ -32,8 +32,8 @@
                     </tr>
                 </c:forEach> 
             <form class="section" action = "Airline" method="POST">
-                <th>Put Address:</th>
-                <td><input type="text" id="address" name="address" required /></td>
+                <th><fmt:message key="address" bundle="${bundle}" /></th>
+                <td><input type="text" id="address" name="address"  required /></td>
                 <th>Total Price:</th>
                 <td><label><c:out value="${totalPrice}" /></label></td>
         </tbody>
