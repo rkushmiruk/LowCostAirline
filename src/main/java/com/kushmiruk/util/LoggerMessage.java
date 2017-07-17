@@ -14,10 +14,6 @@ public final class LoggerMessage {
     public static final String FOUND_IN_TABLE = " found in table";
     public static final String ITEMS = "Items ";
     public static final String DATASOURCE_INIT_ERROR = "Datasource init error: ";
-    public static final String BUILD_SELECT_QUERY = "Build select query: ";
-    public static final String BUILD_INSERT_QUERY = "Build insert query: ";
-    public static final String BUILD_UPDATE_QUERY = "Build update query: ";
-    public static final String BUILD_DELETE_QUERY = "Build delete query: ";
     public static final String DUPLICATE_ERROR = "This entity is already in database ";
     public static final String INSERT_INTO_TABLE = " insert into table ";
     public static final String OPEN_PAGE = "Open ";

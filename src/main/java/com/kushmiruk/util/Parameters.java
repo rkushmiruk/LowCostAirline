@@ -36,4 +36,10 @@ public final class Parameters {
     public static final String SEAT_NUMBER = "seatNumber";
     public static final String ORDER_TICKETS = "orderTickets";
     public static final String CURRENT_FLIGHT = "currentFlight";
+    public static final String ADDRESS = "address";
+    public static final String ORDER_ID = "orderId";
+    public static final String TOTAL_PRICE = "totalPrice";
+    public static final String NUMBER_OF_PAGES = "numberOfPages";
+    public static final String CURRENT_PAGE = "currentPage";
+    public static final String ADMIN_PARAM = "admin";
 }

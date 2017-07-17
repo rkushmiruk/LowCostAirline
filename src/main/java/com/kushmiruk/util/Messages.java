@@ -14,7 +14,7 @@ public final class Messages {
 
     private static final String BUNDLE_NAME = "/i18n/messages";
     private static ResourceBundle resourceBundle = ResourceBundle.getBundle(BUNDLE_NAME, ENGLISH);
-
+    
     public static void setLocale(Locale locale) {
         resourceBundle = ResourceBundle.getBundle(BUNDLE_NAME, locale);
     }

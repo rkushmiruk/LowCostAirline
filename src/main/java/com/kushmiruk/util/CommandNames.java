@@ -18,5 +18,10 @@ public final class CommandNames {
     public static final String FIND_TICKET_COMMAND = "findTicket";
     public static final String ORDER_TICKET_COMMAND = "orderTicket";
     public static final String BUY_TICKET_COMMAND = "buyTicket";
+    public static final String REDIRECT_PROFILE_ADMIN = "redirectProfileAdmin";
+    public static final String PROFILE_ADMIN = "profileAdmin";
+    public static final String HISTORY_DETAIL = "historyDetail";
+    public static final String EDIT_PROFILE = "editProfile";
+    public static final String UPDATE_PROFILE = "updateProfile";
 
 }

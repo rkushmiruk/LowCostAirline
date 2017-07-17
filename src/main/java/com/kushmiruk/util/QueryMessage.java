@@ -35,16 +35,21 @@ public final class QueryMessage {
             "  where departure.name = ? AND destination.name=? AND DATE(departure_datetime) = ?";
 
 
-    public static final String FIND_TICKET_ORDERS = "Select * from user_authentication\n" +
+    public static final String FIND_TICKET_ORDERS = "  Select ticket_order.id, user_id,datetime, payment_method  from user_authentication\n" +
             "  inner join user On user_authentication.id = auth_id\n" +
             "  inner join ticket_order On user.id = user_id\n" +
-            "  inner join ticket On ticket_order.id = order_id\n" +
-            "  inner join flight On flight_id = flight.id\n" +
-            "  inner join airport dep on departure_airport_id =  dep.id\n" +
-            "  inner join airport des on destination_airport_id  = des.id\n" +
-            "  inner join city departure on dep.city_id = departure.id\n" +
-            "  inner join city destination on des.city_id = destination.id\n" +
             "  where user_authentication.LOGIN = ?";
 
     public static final String FIND_ID = "SELECT MAX(id) from ";
+
+    public static final String ORDER_DETAILS = "Select ticket.id,order_id,flight_id,status_id,extra_price_id,baggage_id,passenger_first_name,passenger_last_name,"
+            + "passenger_email,has_priority_registration, has_baggage, price, seat_number"
+            + " from ticket inner join ticket_order on ticket_order.id = order_id where ticket_order.id = ?";
+
+    public static final String FIND_TICKET_ID_BY_FLIGHT_AND_SEAT_NUMBER = "Select id from ticket where flight_id = ? and seat_number = ?";
+
+    public static final String FIND_BY_LOGIN = "Select user.id ,first_name, last_name, email,role_id, auth_id  "
+            + "from user inner join user_authentication on auth_id = user_authentication.id where login = ?";
 }
+
+
