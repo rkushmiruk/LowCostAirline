@@ -12,24 +12,26 @@
             <div><input name="countTicket" value="${countTicket}" type="hidden"/></div>
             <div><input name="currentFlight" value="${currentFlight}" type =hidden /><div>
                     <c:forEach begin="1" end="${countTicket}" var = "i" varStatus="loop">
-                        <table class="table" border="1"> 
-                            <tbody align="center">
+                        <table align="center"> 
+                            <tbody>
                                 <tr>
-                                    <td>
+                                    <th>
                                         <label for=""><fmt:message key="firstName" bundle="${bundle}" />
                                             <input type="text" id="firstName" name="firstName${i}" required />
-                                    </td>
-                                    <td><label for=""><fmt:message key="lastName" bundle="${bundle}" />
-                                        <input type="text" id="lastName" name="lastName${i}" required /></td>
-                                    <td><label for=""><fmt:message key="email" bundle="${bundle}" />
-                                        <input type="text" id="email" name="email${i}" required /></td>
+                                    </th>
+                                    <th><label for=""><fmt:message key="lastName" bundle="${bundle}" />
+                                            <input type="text" id="lastName" name="lastName${i}" required />
+                                    </th>
+                                    <th><label for=""><fmt:message key="email" bundle="${bundle}" />
+                                            <input type="text" id="email" name="email${i}" required />
+                                    </th>
                                 </tr>
                                 <tr>
                                     <td><label for=""><fmt:message key="hasBaggage" bundle="${bundle}" />
                                             <select name="hasBaggage${i}">
                                                 <option value="1">No baggage</option>
-                                                <option value="2">small Baggage</option>
-                                                <option value="3">medium Baggage</option>
+                                                <option value="2">Small Baggage</option>
+                                                <option value="3">Medium Baggage</option>
                                                 <option value="4">Big Baggage</option>
                                             </select></td>
                                     <td><label for=""><fmt:message key="hasPriorityRegistration" bundle="${bundle}" />
@@ -51,7 +53,7 @@
                         <div class="input-block">
                             <label for="">
                                 <button class="button" type="submit">
-                                    <fmt:message key="search" bundle="${bundle}" />
+                                    <fmt:message key="order" bundle="${bundle}" />
                                 </button>
                             </label>
                         </div>

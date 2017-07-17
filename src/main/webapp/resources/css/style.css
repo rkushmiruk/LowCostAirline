@@ -42,6 +42,9 @@ a{
 .navbar{
     float: right
 }
+#new{
+    float : left
+}
 .navbar ul{
     list-style: none;
     padding: 0;
@@ -280,6 +283,15 @@ a{
     font-weight: 300;
 }
 
+.new_button{
+    padding: 10px;
+    border: none;
+    color: #0086f6;
+    background: #FFFFFF;
+    font-size: 18px;
+    font-weight: 300;
+}
+
 .registration{
     position: absolute;
     margin-left: 43%;
@@ -300,9 +312,16 @@ a{
     outline:none;
 }
 
-.table{
-    color: black;
-    position: relative;
-    left : 400px;
-     margin-bottom: 30px;
+tr:nth-of-type(odd) { 
+  background: #eee; 
+}
+th { 
+  background: #333; 
+  color: white; 
+  font-weight: bold; 
+}
+td, th { 
+  padding: 6px; 
+  border: 1px solid #ccc; 
+  text-align: left; 
 }

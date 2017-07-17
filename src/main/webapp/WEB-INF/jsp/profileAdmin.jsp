@@ -8,8 +8,7 @@
         <%@include file="/WEB-INF/jsp/header.jsp" %>
         <nav class="navbar" id="new">
             <ul>
-                <li><a href="/Airline?command=profile">History</a></li>  
-                <li><a href="/Airline?command=editProfile">Edit</a></li> 
+                <li><a href="/Airline?command=profileAdmin">All orders</a></li>  
             </ul>
         </nav>
         <label class="error" for=""><c:out value="${exception}"/></label>
@@ -37,8 +36,15 @@
                     </form>
                 </c:forEach>
             </c:if>
+            <tr>
+                <c:forEach begin="1" end="${numberOfPages}" var="i">
+                    <td><a href="/Airline?command=profileAdmin&page=${i}">${i}</a></td>
+                    </c:forEach>
+            </tr>
         </tbody>
     </table> 
+
+
     <div class="input-search">
         <div class="input-block">
             <label for="">

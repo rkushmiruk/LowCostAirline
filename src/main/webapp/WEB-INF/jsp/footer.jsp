@@ -7,7 +7,5 @@
     </div>
 </footer>
 
-<div class="decoration1"></div>
-<div class="decoration2"></div>
 <div class="decoration3"></div>
 <div class="decoration4"></div>

@@ -9,6 +9,10 @@
         <exception-type>java.lang.Exception</exception-type>
         <location>/WEB-INF/jsp/error.jsp</location>
     </error-page>
+    <error-page>
+        <error-code>404</error-code>
+        <location>/WEB-INF/jsp/error404.jsp</location>
+    </error-page>
     
     <welcome-file-list>
         <welcome-file>/WEB-INF/jsp/index.jsp</welcome-file>
@@ -63,7 +67,6 @@
         <filter-name>NoCacheFilter</filter-name>
         <url-pattern>/*</url-pattern>
     </filter-mapping>
-    
     <filter>
         <filter-name>SignInFilter</filter-name>
         <filter-class>com.kushmiruk.filter.SignInFilter</filter-class>
@@ -71,6 +74,15 @@
 
     <filter-mapping>
         <filter-name>SignInFilter</filter-name>
+        <url-pattern>/*</url-pattern>
+    </filter-mapping>
+    <filter>
+        <filter-name>AdminFilter</filter-name>
+        <filter-class>com.kushmiruk.filter.AdminFilter</filter-class>
+    </filter>
+
+    <filter-mapping>
+        <filter-name>AdminFilter</filter-name>
         <url-pattern>/*</url-pattern>
     </filter-mapping>
     <filter>
