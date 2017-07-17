@@ -1,4 +1,3 @@
-
 package com.kushmiruk.filter;
 
 import com.kushmiruk.util.CommandNames;
@@ -16,6 +15,7 @@ import javax.servlet.http.HttpSession;
  * Filter for signed in user. Can't visit not allowed pages
  */
 public class SignedInFilter implements Filter {
+
     private List<String> notAllowedActions = new ArrayList<>();
 
     @Override

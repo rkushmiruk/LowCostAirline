@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package com.kushmiruk.filter;
 
 import java.io.IOException;
@@ -14,11 +9,6 @@ import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletResponse;
 
-
-/**
- *
- * @author roman
- */
 public class NoCacheFilter implements Filter {
 
     @Override

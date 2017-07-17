@@ -21,6 +21,12 @@ public class SignInFilter implements Filter {
     public void init(FilterConfig fc) throws ServletException {
         notAllowedActions.add(CommandNames.PROFILE_COMMAND);
         notAllowedActions.add(CommandNames.REDIRECT_PROFILE_COMMAND);
+        notAllowedActions.add(CommandNames.PROFILE_ADMIN);
+        notAllowedActions.add(CommandNames.EDIT_PROFILE);
+        notAllowedActions.add(CommandNames.UPDATE_PROFILE);
+        notAllowedActions.add(CommandNames.HISTORY_DETAIL);
+        notAllowedActions.add(CommandNames.REDIRECT_PROFILE_ADMIN);
+        notAllowedActions.add(CommandNames.LOGOUT_COMMAND);
     }
 
     @Override
