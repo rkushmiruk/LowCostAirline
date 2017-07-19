@@ -50,6 +50,8 @@ public final class QueryMessage {
 
     public static final String FIND_BY_LOGIN = "Select user.id ,first_name, last_name, email,role_id, auth_id  "
             + "from user inner join user_authentication on auth_id = user_authentication.id where login = ?";
+    
+    public static final String COUNT_TABLE_ROWS = "SELECT COUNT(id) as 'count' FROM ticket_order";
 }
 
 

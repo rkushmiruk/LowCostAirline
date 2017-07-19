@@ -1,5 +1,6 @@
 package com.kushmiruk.filter;
 
+import com.kushmiruk.model.entity.user.UserRole;
 import com.kushmiruk.util.CommandNames;
 import com.kushmiruk.util.Pages;
 import com.kushmiruk.util.Parameters;
@@ -12,30 +13,34 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
 /**
- * Filter for unauthorized user. Can't visit not allowed pages
+ * Filter for signed in user. Can't visit not allowed pages
  */
-public class SignInFilter implements Filter {
+public class UserFilter implements Filter {
+
     private List<String> notAllowedActions = new ArrayList<>();
 
     @Override
-    public void init(FilterConfig fc) throws ServletException {
-        notAllowedActions.add(CommandNames.PROFILE_COMMAND);
-        notAllowedActions.add(CommandNames.REDIRECT_PROFILE_COMMAND);
-        notAllowedActions.add(CommandNames.EDIT_PROFILE);
-        notAllowedActions.add(CommandNames.UPDATE_PROFILE);
-        notAllowedActions.add(CommandNames.HISTORY_DETAIL);
+    public void init(FilterConfig filterConfig) throws ServletException {
+        notAllowedActions.add(CommandNames.SIGN_IN_COMMAND);
+        notAllowedActions.add(CommandNames.REDIRECT_SIGN_IN_COMMAND);
+        notAllowedActions.add(CommandNames.REGISTRATION_COMMAND);
+        notAllowedActions.add(CommandNames.REDIRECT_REGISTRATION_COMMAND);
         notAllowedActions.add(CommandNames.PROFILE_ADMIN);
         notAllowedActions.add(CommandNames.REDIRECT_PROFILE_ADMIN);
-        notAllowedActions.add(CommandNames.LOGOUT_COMMAND);
     }
 
     @Override
-    public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
+    public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain)
+            throws IOException, ServletException {
         HttpServletRequest req = (HttpServletRequest) request;
         HttpSession session = req.getSession(false);
-
+        String status = null;
+        if (session != null) {
+            status = (String) session.getAttribute(Parameters.STATUS);
+        }
         boolean notAllowedRequest = isNotAllowedRequest(request);
-        if (notAllowedRequest && (session == null || session.getAttribute(Parameters.STATUS) == null)) {
+
+        if (notAllowedRequest && ((status != null && status.equals(UserRole.USER.toString())))) {
             RequestDispatcher dispatcher = request.getRequestDispatcher(Pages.INDEX_PAGE);
             dispatcher.forward(request, response);
         } else {
@@ -52,5 +57,4 @@ public class SignInFilter implements Filter {
     public void destroy() {
 
     }
-
 }

@@ -99,14 +99,14 @@ public class TicketOrderService {
      *
      * @return List of ticket orders
      */
-    public List<TicketOrder> getAll() {
-        List<TicketOrder> value;
+    public Integer getNumberOfItems() {
+        Integer value;
         DataSource dataSource = DataSourceFactory.getInstance().getDataSource();
         try (Connection connection = dataSource.getConnection()) {
             connection.setAutoCommit(false);
             DaoFactory daoFactory = DaoFactory.getDaoFactory(connection);
             TicketOrderDao ticketOrderDao = daoFactory.createTicketOrderDao();
-            value = ticketOrderDao.findAll();
+            value = ticketOrderDao.getTableSize().get();
             connection.commit();
         } catch (SQLException e) {
             throw new DaoException(e.getMessage());

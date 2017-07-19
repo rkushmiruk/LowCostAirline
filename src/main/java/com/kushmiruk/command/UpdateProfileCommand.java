@@ -1,4 +1,3 @@
-
 package com.kushmiruk.command;
 
 import com.kushmiruk.exception.AppException;
@@ -14,8 +13,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import org.apache.log4j.Logger;
 
-public class UpdateProfileCommand implements Command{
-  private static final Logger LOGGER = Logger.getLogger(UpdateProfileCommand.class);
+public class UpdateProfileCommand implements Command {
+    private static final Logger LOGGER = Logger.getLogger(UpdateProfileCommand.class);
     private ServiceFactory serviceFactory = ServiceFactory.getInstance();
     private UserService userService = serviceFactory.createUserService();
 

@@ -13,12 +13,15 @@ import com.kushmiruk.util.RegexPattern;
 
 import java.sql.Connection;
 import java.sql.SQLException;
+import java.util.Objects;
 import javax.sql.DataSource;
+import org.apache.log4j.Logger;
 
 /**
  * Service for interact with DAO layer interface UserDao
  */
 public class UserService {
+    private static final Logger LOGGER = Logger.getLogger(UserService.class);
     private ServiceFactory serviceFactory = ServiceFactory.getInstance();
     private UserAuthenticationService userAuthenticationService = serviceFactory.createUserAuthenticationService();
 

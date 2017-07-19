@@ -28,6 +28,7 @@ public class MySqlTicketOrderDao extends EntityDao<TicketOrder> implements Ticke
     private static final String PARAMETER_USER = "user_id";
     private static final Integer PARAMETER_NUMBERS_WITHOUT_ID = 2;
     private static final Integer PAYMENT_METHOD_INDEX = 1;
+    private static final String PARAMETER_COUNT = "count";
     private static final Integer USER_INDEX = 2;
     private static final Integer ID_INDEX = 3;
 
@@ -44,6 +45,22 @@ public class MySqlTicketOrderDao extends EntityDao<TicketOrder> implements Ticke
 
     public static MySqlTicketOrderDao getInstance(Connection connection) {
         return MySqlTicketOrderDaoHolder.instance(connection);
+    }
+
+    @Override
+    public Optional<Integer> getTableSize() {
+        String query = QueryMessage.COUNT_TABLE_ROWS;
+        try (PreparedStatement statement = connection.prepareStatement(query)) {
+            LOGGER.info(statement.toString());
+            try (ResultSet resultSet = statement.executeQuery()) {
+                if (resultSet.next()) {
+                    return Optional.of(resultSet.getInt(PARAMETER_COUNT));
+                }
+            }
+        } catch (SQLException e) {
+            LOGGER.error(LoggerMessage.DB_ERROR_SEARCH + tableName + LoggerMessage.EXCEPTION_MESSAGE + e.getMessage());
+        }
+        return Optional.empty();
     }
 
     @Override

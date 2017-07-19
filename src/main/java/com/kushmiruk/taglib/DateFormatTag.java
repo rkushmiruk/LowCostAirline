@@ -17,10 +17,6 @@ public class DateFormatTag extends TagSupport {
     private String format;
     private Date date;
 
-    public void setFormat(String format) {
-        this.format = format;
-    }
-
     public void setDate(Date date) {
         this.date = date;
     }

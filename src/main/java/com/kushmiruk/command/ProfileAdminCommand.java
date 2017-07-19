@@ -25,9 +25,9 @@ public class ProfileAdminCommand implements Command {
 
     @Override
     public String execute(HttpServletRequest request, HttpServletResponse response) throws AppException {
-        List<TicketOrder> allOrders = ticketOrderService.getAll();
-        Integer numberOfPages = allOrders.size() / NUMBER_OF_ITEMS;
-        if (allOrders.size() % NUMBER_OF_ITEMS > 0) {
+        Integer allItems= ticketOrderService.getNumberOfItems();
+        Integer numberOfPages = allItems / NUMBER_OF_ITEMS;
+        if (allItems % NUMBER_OF_ITEMS > 0) {
             numberOfPages++;
         }
         String currentPage = request.getParameter(Parameters.PAGE);

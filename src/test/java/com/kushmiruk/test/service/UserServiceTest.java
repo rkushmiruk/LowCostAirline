@@ -1,66 +1,61 @@
 package com.kushmiruk.test.service;
 
-import com.kushmiruk.dao.daointerface.UserAuthenticationDao;
 import com.kushmiruk.dao.daointerface.UserDao;
 import com.kushmiruk.dao.factory.DaoFactory;
+import com.kushmiruk.dao.factory.DataSourceFactory;
 import com.kushmiruk.model.entity.user.User;
-import com.kushmiruk.model.entity.user.UserAuthentication;
 import com.kushmiruk.service.UserService;
-import com.kushmiruk.service.factory.ServiceFactory;
-
 import java.sql.Connection;
+
+
 import java.sql.SQLException;
-import java.util.Optional;
-
-import org.junit.Ignore;
-import org.junit.Test;
-
 import javax.sql.DataSource;
 
+
+import org.junit.Test;
+
 import static org.junit.Assert.*;
+import org.junit.Ignore;
 import static org.mockito.Mockito.*;
 
 public class UserServiceTest {
-    ServiceFactory serviceFactory;
-    UserService userService;
-    DaoFactory daoFactory;
-    Connection connection;
-    UserDao userDao;
-    User user;
-    DataSource dataSource;
-    UserAuthentication userAuthentication;
-    UserAuthenticationDao userAuthenticationDao;
+    private UserService userService;
+    private UserDao userDao;
+    private DataSource dataSource;
+    private Connection connection;
+    private DaoFactory daoFactory;
+    private DataSourceFactory dataSourceFactory;
+    private User user;
 
+    //TODO remake services for mocking dao for services;
     private void doInitialization() {
-        serviceFactory = mock(ServiceFactory.class);
         userDao = mock(UserDao.class);
+        dataSource = mock(DataSource.class);
         connection = mock(Connection.class);
         daoFactory = mock(DaoFactory.class);
+        dataSourceFactory = mock(DataSourceFactory.class);
         user = mock(User.class);
-        dataSource = mock(DataSource.class);
-        userAuthentication = mock(UserAuthentication.class);
-        userAuthenticationDao = mock(UserAuthenticationDao.class);
-        userService = serviceFactory.createUserService();
+        userService = UserService.getInstance();
     }
-
-    private void stubDao() throws SQLException {
+    
+    private void stubDaoFactory() throws SQLException{
+        when(dataSourceFactory.getDataSource()).thenReturn(dataSource);
         when(dataSource.getConnection()).thenReturn(connection);
         when(daoFactory.createUserDao()).thenReturn(userDao);
-        when(daoFactory.createUserAuthenticationDao()).thenReturn(userAuthenticationDao);
     }
 
+    
     @Test
-//    @Ignore
-    public void testSave() throws SQLException {
+    @Ignore
+    public void testFindUser() throws SQLException {
         doInitialization();
-        stubDao();
-
-        when(userDao.findByLogin(anyString())).thenReturn(Optional.empty());
-        System.out.println(user);
-        boolean result = userService.save(user);
-        assertTrue(result);
-
-        verify(dataSource).getConnection();
-        verify(connection).close();
+        stubDaoFactory();
+        
+        user = userService.findUserByLogin("Ivan");
+        assertNotNull(user);
+        assertEquals(user.getFirstName(), "Dima");
+        assertNotEquals(user.getUserAuthentication().getPassword(), "222");
+        
+        
     }
 }

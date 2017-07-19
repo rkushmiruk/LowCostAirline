@@ -15,6 +15,7 @@ import javax.servlet.http.HttpServletResponse;
  */
 public class HistoryDetailCommand implements Command {
     private TicketOrderService ticketOrderService;
+    private List<Ticket> tickets;
 
     public HistoryDetailCommand(TicketOrderService ticketOrderService) {
         this.ticketOrderService = ticketOrderService;
@@ -22,10 +23,14 @@ public class HistoryDetailCommand implements Command {
 
     @Override
     public String execute(HttpServletRequest request, HttpServletResponse response) throws AppException {
-        Long orderId = Long.parseLong(request.getParameter(Parameters.ORDER_ID));
-        List<Ticket> tickets = ticketOrderService.getOrderDetails(orderId);
+        tickets = getTickets(request);
         request.getSession().setAttribute(Parameters.ORDER_TICKETS, tickets);
         return Pages.HISTORY_PAGE;
+    }
+    
+    public List<Ticket> getTickets(HttpServletRequest request){
+        Long orderId = Long.parseLong(request.getParameter(Parameters.ORDER_ID));
+        return ticketOrderService.getOrderDetails(orderId);
     }
 
 }

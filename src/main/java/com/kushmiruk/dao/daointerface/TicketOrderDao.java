@@ -3,6 +3,7 @@ package com.kushmiruk.dao.daointerface;
 import com.kushmiruk.model.entity.order.TicketOrder;
 
 import java.util.List;
+import java.util.Optional;
 
 /**
  * DAO interface for CRUD operations with entity TicketOrder
@@ -25,4 +26,11 @@ public interface TicketOrderDao extends GenericDao<TicketOrder, Long> {
      * @return List of entities
      */
     List<TicketOrder> findAll(Integer start, Integer numbersOfItems);
+    
+    /**
+     * Get ticket order table size;
+     * 
+     * @return size
+     */
+    Optional<Integer> getTableSize();
 }

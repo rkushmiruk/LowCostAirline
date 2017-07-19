@@ -9,6 +9,7 @@
         <nav class="navbar" id="new">
             <ul>
                 <li><a href="/Airline?command=profileAdmin">All orders</a></li>  
+                <li><a href="/Airline?command=editProfile">Edit</a></li> 
             </ul>
         </nav>
         <label class="error" for=""><c:out value="${exception}"/></label>
@@ -37,9 +38,11 @@
                 </c:forEach>
             </c:if>
             <tr>
+                <td>
                 <c:forEach begin="1" end="${numberOfPages}" var="i">
-                    <td><a href="/Airline?command=profileAdmin&page=${i}">${i}</a></td>
-                    </c:forEach>
+                    <a href="/Airline?command=profileAdmin&page=${i}">${i} </a>
+                 </c:forEach>
+                </td>
             </tr>
         </tbody>
     </table> 

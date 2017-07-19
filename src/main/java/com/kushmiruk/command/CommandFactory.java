@@ -25,7 +25,7 @@ public class CommandFactory {
         commandMap.put(CommandNames.FIND_FLIGHTS_COMMAND, new FlightListCommand(serviceFactory.createFlightService()));
         commandMap.put(CommandNames.REGISTRATION_COMMAND, new RegistrationCommand(serviceFactory.createUserService()));
         commandMap.put(CommandNames.REDIRECT_REGISTRATION_COMMAND, new RedirectCommand(CommandNames.REGISTRATION_COMMAND));
-        commandMap.put(CommandNames.SIGN_IN_COMMAND, new SignInCommand());
+        commandMap.put(CommandNames.SIGN_IN_COMMAND, new SignInCommand(serviceFactory.createUserAuthenticationService(),serviceFactory.createUserService()));
         commandMap.put(CommandNames.REDIRECT_SIGN_IN_COMMAND, new RedirectCommand(CommandNames.SIGN_IN_COMMAND));
         commandMap.put(CommandNames.LOGOUT_COMMAND, new LogoutCommand());
         commandMap.put(CommandNames.REDIRECT_PROFILE_COMMAND, new RedirectCommand(CommandNames.PROFILE_COMMAND));

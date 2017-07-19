@@ -8,7 +8,9 @@
 <%@include file="/WEB-INF/jsp/header.jsp" %>
 
 <label class="registration" for=""><c:out value="${successRegistration}"/></label>
-<label class="registration" for=""><c:out value="${clientAddress}"/></label>
+<c:if test="${not empty address}">
+<label class="registration" for=""><c:out value="Courier go with tickets to ${address}"/></label>
+</c:if>
 <label class="error" for=""><c:out value="${exception}"/></label>
 <form class="section" action = "Airline" method="POST">
     <div><input name="command" value="findFlights" type="hidden"/></div>
